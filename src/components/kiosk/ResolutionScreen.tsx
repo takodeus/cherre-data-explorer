@@ -5,8 +5,13 @@ interface ResolutionScreenProps {
 const ResolutionScreen = ({ onTalk }: ResolutionScreenProps) => {
   return (
     <div className="flex flex-col justify-center items-center" style={{ position: 'absolute', inset: 0, background: 'hsl(var(--primary))', padding: '48px 40px' }}>
+      {/* Retro stripe top */}
+      <div className="absolute top-0 left-0 right-0 h-[6px]" style={{
+        background: 'repeating-linear-gradient(90deg, hsl(var(--primary-foreground)) 0px, hsl(var(--primary-foreground)) 20px, hsl(var(--primary)) 20px, hsl(var(--primary)) 24px)'
+      }} />
+
       <div className="max-w-[600px] w-full flex flex-col items-start">
-        <div className="text-[10px] font-bold tracking-[0.22em] uppercase text-primary-foreground/50 mb-5">
+        <div className="text-[10px] font-bold tracking-[0.22em] uppercase text-primary-foreground/60 mb-5 font-mono">
           cherre.com — unified real estate data
         </div>
 
@@ -14,22 +19,22 @@ const ResolutionScreen = ({ onTalk }: ResolutionScreenProps) => {
           One item.<br />One definition.<br />One answer.
         </div>
 
-        <div className="text-primary-foreground/75 font-normal leading-relaxed max-w-[480px] mb-12" style={{ fontSize: 'clamp(14px, 2vw, 18px)' }}>
+        <div className="text-primary-foreground/80 font-normal leading-relaxed max-w-[480px] mb-12" style={{ fontSize: 'clamp(14px, 2vw, 18px)' }}>
           Cherre maps every data point to a unified ontology built for real estate. No reconciliation. No ambiguity. No 6-hour spreadsheet.
         </div>
 
         {/* Stats */}
-        <div className="flex border border-primary-foreground/20 rounded-md overflow-hidden w-full max-w-[480px] mb-13">
+        <div className="flex border-2 border-primary-foreground/30 rounded-none overflow-hidden w-full max-w-[480px] mb-12">
           {[
             { num: '4B+', label: 'Legal entities resolved' },
             { num: '160M', label: 'Parcels mapped' },
             { num: '120+', label: 'Data vendors connected' },
           ].map((stat, i) => (
-            <div key={i} className={`flex-1 px-6 py-5 ${i < 2 ? 'border-r border-primary-foreground/15' : ''}`}>
+            <div key={i} className={`flex-1 px-6 py-5 ${i < 2 ? 'border-r-2 border-primary-foreground/20' : ''}`}>
               <div className="text-primary-foreground font-black leading-none tracking-tight mb-1" style={{ fontSize: 'clamp(22px, 3.5vw, 36px)' }}>
                 {stat.num}
               </div>
-              <div className="text-[10px] font-semibold tracking-[0.1em] uppercase text-primary-foreground/50">
+              <div className="text-[10px] font-bold tracking-[0.1em] uppercase text-primary-foreground/50 font-mono">
                 {stat.label}
               </div>
             </div>
@@ -40,13 +45,13 @@ const ResolutionScreen = ({ onTalk }: ResolutionScreenProps) => {
         <div className="flex items-center gap-8 w-full max-w-[480px]">
           <button
             onClick={onTalk}
-            className="bg-primary-foreground text-primary border-none rounded px-10 py-4 font-sans text-[13px] font-extrabold tracking-[0.1em] uppercase cursor-pointer transition-all hover:bg-primary-light-bg active:scale-[0.97] flex-shrink-0"
+            className="bg-primary-foreground text-primary border-none rounded-none px-10 py-4 font-sans text-[13px] font-extrabold tracking-[0.1em] uppercase cursor-pointer transition-all hover:bg-primary-light-bg active:scale-[0.97] flex-shrink-0 shadow-[4px_4px_0_hsl(var(--primary-deep))]"
           >
             Talk to the team
           </button>
 
           <div className="flex items-center gap-3.5">
-            <div className="w-16 h-16 bg-primary-foreground rounded p-1.5 flex-shrink-0">
+            <div className="w-16 h-16 bg-primary-foreground rounded-none p-1.5 flex-shrink-0 border-2 border-primary-foreground">
               <svg className="w-full h-full" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
                 <rect width="52" height="52" fill="white" />
                 <g fill="hsl(var(--primary))">
@@ -90,11 +95,16 @@ const ResolutionScreen = ({ onTalk }: ResolutionScreenProps) => {
               <div className="text-[11px] text-primary-foreground/60 leading-snug font-normal">
                 Scan to connect<br />with the Cherre team
               </div>
-              <div className="text-xs font-bold text-primary-foreground/90 mt-0.5">cherre.com</div>
+              <div className="text-xs font-bold text-primary-foreground/90 mt-0.5 font-mono">cherre.com</div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Retro stripe bottom */}
+      <div className="absolute bottom-0 left-0 right-0 h-[6px]" style={{
+        background: 'repeating-linear-gradient(90deg, hsl(var(--primary-foreground)) 0px, hsl(var(--primary-foreground)) 20px, hsl(var(--primary)) 20px, hsl(var(--primary)) 24px)'
+      }} />
     </div>
   );
 };

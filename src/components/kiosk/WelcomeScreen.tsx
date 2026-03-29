@@ -23,37 +23,45 @@ const WelcomeScreen = ({ onStart }: WelcomeScreenProps) => {
   }, []);
 
   return (
-    <div className="flex flex-col justify-center items-center text-center p-10" style={{ position: 'absolute', inset: 0 }}>
-      <img src={cherreLogo} alt="Cherre" className="h-12 mb-5 object-contain" />
+    <div className="flex flex-col justify-center items-center text-center retro-dot-grid" style={{ position: 'absolute', inset: 0, padding: '40px' }}>
+      {/* Retro top stripe */}
+      <div className="retro-stripe-top absolute top-0 left-0 right-0" />
 
-      <div className="text-[11px] font-semibold tracking-[0.22em] text-primary uppercase mb-7">
+      {/* Logo */}
+      <img src={cherreLogo} alt="Cherre" className="h-14 mb-6 object-contain" />
+
+      {/* Retro tag */}
+      <div className="price-tag text-[10px] font-bold tracking-[0.22em] uppercase mb-8">
         Price Check on Aisle F
       </div>
 
-      <div className="text-foreground font-black leading-none tracking-tight mb-2" style={{ fontSize: 'clamp(38px, 7vw, 72px)' }}>
+      <div className="text-foreground font-black leading-none tracking-tight mb-3" style={{ fontSize: 'clamp(38px, 7vw, 72px)' }}>
         Cherre<br /><span className="text-primary">Data Mart</span>
       </div>
 
-      <div className="text-muted-foreground font-normal mb-12 tracking-wide" style={{ fontSize: 'clamp(14px, 2vw, 18px)' }}>
+      <div className="text-muted-foreground font-normal mb-8 tracking-wide max-w-[400px]" style={{ fontSize: 'clamp(14px, 2vw, 18px)' }}>
         Scan, search, or look up your item to begin checkout.
       </div>
 
-      <div className="text-[12px] text-foreground/20 italic font-light mb-13 max-w-[360px] leading-relaxed border border-foreground/[0.06] rounded-lg px-5 py-3.5 mb-12">
+      <div className="text-[12px] text-foreground/40 italic font-light max-w-[380px] leading-relaxed border-2 border-dashed border-border rounded-none px-6 py-4 mb-10 bg-card/60">
         "This store has been running on four different inventory systems since 2003. Good luck."
       </div>
 
       <button
         onClick={onStart}
-        className="bg-primary text-primary-foreground border-none rounded px-13 py-4.5 font-sans text-sm font-bold tracking-[0.12em] uppercase cursor-pointer transition-all hover:bg-primary-light active:scale-[0.98]"
+        className="bg-primary text-primary-foreground border-none rounded-none px-14 py-5 font-sans text-sm font-bold tracking-[0.14em] uppercase cursor-pointer transition-all hover:bg-primary-light active:scale-[0.98] shadow-[4px_4px_0_hsl(var(--foreground))]"
       >
         Start Lookup
       </button>
 
       <div
         ref={barcodeRef}
-        className="mt-12 flex gap-0.5 justify-center items-end opacity-[0.12]"
+        className="mt-10 flex gap-0.5 justify-center items-end opacity-[0.15]"
         aria-hidden="true"
       />
+
+      {/* Retro bottom stripe */}
+      <div className="retro-stripe-top absolute bottom-0 left-0 right-0" />
     </div>
   );
 };

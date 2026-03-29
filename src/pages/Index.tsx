@@ -13,10 +13,9 @@ const Index = () => {
   const goTo = useCallback((n: number) => {
     if (soundOn) clickBeep();
 
-    // Flash transition
     const flash = document.getElementById('transition-flash');
     if (flash) {
-      flash.style.opacity = '0.15';
+      flash.style.opacity = '0.12';
       setTimeout(() => { flash.style.opacity = '0'; }, 150);
     }
 
@@ -40,16 +39,16 @@ const Index = () => {
 
   return (
     <div className="w-full h-full flex flex-col bg-background relative overflow-hidden">
-      {/* Aisle sign */}
+      {/* Aisle sign - retro stripe */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-primary z-10" />
 
       {/* Sound toggle */}
       <button
         onClick={toggleSound}
-        className={`absolute top-5 right-6 z-[100] rounded-[20px] px-3.5 py-1.5 font-sans text-[11px] font-medium tracking-[0.06em] cursor-pointer transition-all ${
+        className={`absolute top-5 right-6 z-[100] rounded-none px-3.5 py-1.5 font-mono text-[10px] font-bold tracking-[0.08em] cursor-pointer transition-all border-2 ${
           soundOn
-            ? 'text-primary-light-bg border border-primary-light/40 bg-primary-light/10'
-            : 'text-foreground/50 border border-foreground/15 bg-foreground/[0.08] hover:text-foreground/80 hover:border-foreground/30'
+            ? 'text-primary border-primary bg-primary-light-bg shadow-[2px_2px_0_hsl(var(--primary))]'
+            : 'text-muted-foreground border-border bg-background hover:text-foreground hover:border-primary shadow-[2px_2px_0_hsl(var(--border))]'
         }`}
       >
         {soundOn ? 'SOUND ON' : 'SOUND OFF'}

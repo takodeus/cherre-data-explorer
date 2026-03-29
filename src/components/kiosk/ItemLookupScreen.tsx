@@ -74,23 +74,26 @@ const ItemLookupScreen = ({ soundOn, onCheckout }: ItemLookupScreenProps) => {
 
   const textStyle = (type: LookupType) => {
     if (type === 'ok') return 'text-foreground';
-    if (type === 'err') return 'text-destructive/70 font-mono text-xs';
+    if (type === 'err') return 'text-destructive font-mono text-xs';
     return 'text-warning-foreground';
   };
 
   return (
-    <div className="flex flex-col" style={{ position: 'absolute', inset: 0, background: '#0e0e0e' }}>
+    <div className="flex flex-col bg-background" style={{ position: 'absolute', inset: 0 }}>
+      {/* Retro stripe */}
+      <div className="retro-stripe-top" />
+
       {/* Header */}
-      <div className="bg-primary px-10 pt-7 pb-5 flex items-end justify-between">
+      <div className="bg-primary px-10 pt-6 pb-5 flex items-end justify-between retro-border-bottom">
         <div>
-          <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-primary-foreground/60 mb-1">
+          <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-primary-foreground/70 mb-1 font-mono">
             Self-checkout — Item Lookup
           </div>
           <div className="text-primary-foreground font-extrabold tracking-tight" style={{ fontSize: 'clamp(22px, 4vw, 32px)' }}>
             Select an item. Try all four systems.
           </div>
         </div>
-        <div className="text-[11px] font-semibold tracking-[0.08em] text-primary-foreground/50 text-right">
+        <div className="price-tag text-[10px] font-bold tracking-[0.08em]">
           Step 2 of 5
         </div>
       </div>
@@ -98,42 +101,42 @@ const ItemLookupScreen = ({ soundOn, onCheckout }: ItemLookupScreenProps) => {
       {/* Body */}
       <div className="flex-1 flex overflow-hidden">
         {/* Items column */}
-        <div className="w-[200px] flex-shrink-0 border-r border-foreground/[0.06] py-6 flex flex-col">
+        <div className="w-[220px] flex-shrink-0 border-r-2 border-border bg-card py-4 flex flex-col gap-1 px-2">
           {ITEMS.map((item, i) => (
             <button
               key={i}
               onClick={() => selectItem(i)}
-              className={`flex items-center gap-3.5 px-6 py-4 cursor-pointer border-none text-left w-full transition-all border-l-[3px] ${
+              className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer border-2 text-left w-full transition-all rounded-none ${
                 i === currentItem
-                  ? 'bg-primary/15 border-l-primary'
-                  : 'bg-transparent border-l-transparent hover:bg-primary/[0.08]'
+                  ? 'bg-primary-light-bg border-primary shadow-[3px_3px_0_hsl(var(--primary))]'
+                  : 'bg-background border-border hover:border-primary/40 hover:bg-primary-light-bg/50'
               }`}
             >
-              <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center text-base flex-shrink-0">
+              <div className="w-10 h-10 rounded-none border-2 border-primary/30 bg-background flex items-center justify-center text-lg flex-shrink-0">
                 {item.icon}
               </div>
               <div>
-                <div className="text-[13px] font-semibold text-foreground tracking-wide">{item.name}</div>
-                <div className="text-[10px] text-muted-foreground font-normal mt-px">{item.category}</div>
+                <div className="text-[13px] font-bold text-foreground">{item.name}</div>
+                <div className="text-[10px] text-muted-foreground font-normal mt-px font-mono">{item.category}</div>
               </div>
             </button>
           ))}
         </div>
 
         {/* Main area */}
-        <div className="flex-1 px-9 py-7 overflow-y-auto flex flex-col gap-5" ref={resultsRef}>
+        <div className="flex-1 px-8 py-6 overflow-y-auto flex flex-col gap-5 retro-dot-grid" ref={resultsRef}>
           <div>
-            <div className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted mb-3">Lookup method</div>
-            <div className="grid grid-cols-4 gap-2 mb-6">
+            <div className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-3 font-mono">Lookup method</div>
+            <div className="grid grid-cols-4 gap-2 mb-5">
               {LOOKUP_METHODS.map((method, i) => (
                 <button
                   key={i}
                   onClick={() => runLookup(i)}
                   disabled={loading}
-                  className={`bg-foreground/[0.04] border rounded-md py-2.5 px-2 font-sans text-[11px] font-semibold tracking-[0.06em] uppercase text-center cursor-pointer transition-all ${
+                  className={`border-2 rounded-none py-2.5 px-2 font-sans text-[11px] font-bold tracking-[0.06em] uppercase text-center cursor-pointer transition-all ${
                     queriedMethods[currentItem]?.has(i)
-                      ? 'border-primary/40 text-foreground/60 bg-primary/[0.06]'
-                      : 'border-foreground/[0.08] text-muted-foreground hover:border-primary hover:text-foreground hover:bg-primary/10'
+                      ? 'border-primary bg-primary-light-bg text-primary shadow-[2px_2px_0_hsl(var(--primary))]'
+                      : 'border-border bg-background text-muted-foreground hover:border-primary hover:text-foreground hover:shadow-[2px_2px_0_hsl(var(--primary))]'
                   } disabled:opacity-50`}
                 >
                   {method}
@@ -144,14 +147,14 @@ const ItemLookupScreen = ({ soundOn, onCheckout }: ItemLookupScreenProps) => {
 
           <div className="flex-1 flex flex-col gap-2.5 min-h-[200px]">
             {currentResults.length === 0 && !loading && (
-              <div className="text-xs text-muted-foreground/70 italic py-2">
+              <div className="text-xs text-muted-foreground italic py-2 font-mono">
                 Select a lookup method to query the system…
               </div>
             )}
 
             {currentResults.map(card => (
-              <div key={card.id} className="bg-foreground/[0.03] border border-foreground/[0.06] rounded-lg px-4.5 py-3.5 flex flex-col gap-1.5 animate-fade-in-up">
-                <div className={`text-[9px] font-bold tracking-[0.18em] uppercase ${typeColor(card.type)}`}>
+              <div key={card.id} className="bg-card border-2 border-border rounded-none px-4 py-3 flex flex-col gap-1.5 animate-fade-in-up shadow-[2px_2px_0_hsl(var(--border))]">
+                <div className={`text-[9px] font-bold tracking-[0.18em] uppercase font-mono ${typeColor(card.type)}`}>
                   {card.sys}
                 </div>
                 <div className={`text-[13px] font-normal leading-relaxed whitespace-pre-line ${textStyle(card.type)}`}>
@@ -161,7 +164,7 @@ const ItemLookupScreen = ({ soundOn, onCheckout }: ItemLookupScreenProps) => {
             ))}
 
             {loading && (
-              <div className="flex items-center gap-2.5 px-4.5 py-4 bg-foreground/[0.02] border border-foreground/[0.04] rounded-lg">
+              <div className="flex items-center gap-2.5 px-4 py-3.5 bg-card border-2 border-dashed border-primary/30 rounded-none">
                 {[0, 1, 2].map(i => (
                   <div
                     key={i}
@@ -169,7 +172,7 @@ const ItemLookupScreen = ({ soundOn, onCheckout }: ItemLookupScreenProps) => {
                     style={{ animation: `pulse-dot 0.8s ease infinite ${i * 0.15}s` }}
                   />
                 ))}
-                <div className="text-[11px] text-muted font-mono tracking-wide">{loadingMsg}</div>
+                <div className="text-[11px] text-muted-foreground font-mono tracking-wide">{loadingMsg}</div>
               </div>
             )}
           </div>
@@ -177,25 +180,25 @@ const ItemLookupScreen = ({ soundOn, onCheckout }: ItemLookupScreenProps) => {
       </div>
 
       {/* Footer */}
-      <div className="px-9 py-4 border-t border-foreground/[0.05] flex items-center justify-between bg-background/40">
+      <div className="px-8 py-4 border-t-2 border-border flex items-center justify-between bg-card">
         <div className="flex gap-2 items-center">
           {[0, 1, 2].map(i => (
             <div
               key={i}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                i < count ? 'bg-primary' : i === count ? 'bg-foreground' : 'bg-foreground/10'
+              className={`w-3 h-3 rounded-none transition-colors border ${
+                i < count ? 'bg-primary border-primary' : i === count ? 'bg-foreground border-foreground' : 'bg-border border-border'
               }`}
             />
           ))}
-          <span className="text-[11px] text-muted tracking-[0.06em] ml-1">
+          <span className="text-[11px] text-muted-foreground tracking-[0.06em] ml-1 font-mono">
             {count} of 3 items queried
           </span>
         </div>
         <button
           onClick={onCheckout}
           disabled={count < 2}
-          className={`bg-primary text-primary-foreground border-none rounded px-8 py-3 font-sans text-xs font-bold tracking-[0.1em] uppercase cursor-pointer transition-all active:scale-[0.97] ${
-            count >= 2 ? 'opacity-100 hover:bg-primary-light' : 'opacity-30 pointer-events-none'
+          className={`bg-primary text-primary-foreground border-none rounded-none px-8 py-3 font-sans text-xs font-bold tracking-[0.1em] uppercase cursor-pointer transition-all active:scale-[0.97] ${
+            count >= 2 ? 'opacity-100 hover:bg-primary-light shadow-[3px_3px_0_hsl(var(--foreground))]' : 'opacity-30 pointer-events-none'
           }`}
         >
           Proceed to checkout
