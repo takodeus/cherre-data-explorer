@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import cherreLogo from '@/assets/cherre-logo.jpeg';
 
 interface WelcomeScreenProps {
   onStart: () => void;
