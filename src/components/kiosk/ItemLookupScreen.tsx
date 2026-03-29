@@ -49,6 +49,7 @@ const ItemLookupScreen = ({
   onCheckout,
 }: ItemLookupScreenProps) => {
   const [loadingCards, setLoadingCards] = useState<Record<string, boolean>>({});
+  const [scanningCard, setScanningCard] = useState<string | null>(null);
   const [loadingMsgs, setLoadingMsgs] = useState<string[][]>(
     ITEMS.map(() => LOOKUP_METHODS.map(() => ''))
   );
