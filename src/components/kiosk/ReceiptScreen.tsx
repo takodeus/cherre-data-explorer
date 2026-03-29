@@ -22,7 +22,7 @@ const ReceiptScreen = ({ onRestart, onBackToCherre }: ReceiptScreenProps) => {
         </div>
         <hr className="border-none border-t border-dashed border-foreground/15 my-2.5" />
 
-        {['Ontolo-Tea', 'Alpha Bytes', 'Cherries'].map(item => (
+        {['Ontolo-Tea', 'Alpha Bytes', 'Cherries', 'Parcel'].map(item => (
           <div key={item} className="flex justify-between items-start text-xs py-1.5 border-b border-dotted border-foreground/10 gap-2">
             <span className="text-foreground/70 font-normal">{item}</span>
             <span className="text-success font-bold">Resolved</span>

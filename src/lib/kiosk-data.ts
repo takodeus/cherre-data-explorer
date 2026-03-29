@@ -47,6 +47,17 @@ export const ITEMS: Item[] = [
       { sys: 'System D — By Vendor Code', type: 'err', text: '"Software. Enterprise License.\nAnnual Subscription."\n$120,000/yr. Renews automatically.' },
     ],
   },
+  {
+    name: 'Parcel',
+    icon: '📦',
+    category: 'Shipping & Receiving',
+    lookups: [
+      { sys: 'System A — By Name', type: 'ok', text: '"Package, Corrugated, Brown"\nDimensions: Unknown.\nContents: Unknown.' },
+      { sys: 'System B — By Category', type: 'warn', text: '"Real Property > Land > Tax Lot"\nZoned: Mixed-Use Commercial.\nOwner of record: 3 LLCs and a trust.\nAssessed value: It depends.' },
+      { sys: 'System C — By SKU', type: 'err', text: 'AMBIGUOUS IDENTIFIER.\nMatched 847,000 records.\nAll called "Parcel."\nNone agree on the address.' },
+      { sys: 'System D — By Vendor Code', type: 'warn', text: '"Herb, Fresh, Flat-Leaf."\nSee also: Parsley.\nSee also: Parcel (land).\nSee also: Parcel (shipping).\nSystem D regrets the confusion.' },
+    ],
+  },
 ];
 
 export const LOOKUP_METHODS = ['By Name', 'By Category', 'By SKU', 'By Vendor'];
@@ -62,4 +73,5 @@ export const TOTAL_VALUES = [
   ['$94.17', 'Or $47.83.'],
   ['$112.50', 'Or $38.99.'],
   ['$83.40', 'Or $61.22.'],
+  ['$1,200,000.00', 'Or $4.99.'],
 ];

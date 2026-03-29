@@ -16,7 +16,7 @@ interface ItemLookupScreenProps {
 
 const ItemLookupScreen = ({ soundOn, onCheckout }: ItemLookupScreenProps) => {
   const [currentItem, setCurrentItem] = useState(0);
-  const [queriedMethods, setQueriedMethods] = useState<Set<number>[]>([new Set(), new Set(), new Set()]);
+  const [queriedMethods, setQueriedMethods] = useState<Set<number>[]>(ITEMS.map(() => new Set()));
   const [itemsWithQuery, setItemsWithQuery] = useState<Set<number>>(new Set());
   const [results, setResults] = useState<Record<number, ResultCard[]>>({});
   const [loading, setLoading] = useState(false);
@@ -182,7 +182,7 @@ const ItemLookupScreen = ({ soundOn, onCheckout }: ItemLookupScreenProps) => {
       {/* Footer */}
       <div className="px-8 py-4 border-t-2 border-border flex items-center justify-between bg-card">
         <div className="flex gap-2 items-center">
-          {[0, 1, 2].map(i => (
+          {ITEMS.map((_, i) => (
             <div
               key={i}
               className={`w-3 h-3 rounded-none transition-colors border ${
@@ -191,7 +191,7 @@ const ItemLookupScreen = ({ soundOn, onCheckout }: ItemLookupScreenProps) => {
             />
           ))}
           <span className="text-[11px] text-muted-foreground tracking-[0.06em] ml-1 font-mono">
-            {count} of 3 items queried
+            {count} of {ITEMS.length} items queried
           </span>
         </div>
         <button
