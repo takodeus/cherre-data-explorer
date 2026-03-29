@@ -11,13 +11,22 @@ interface ResultCard {
 
 interface ItemLookupScreenProps {
   soundOn: boolean;
+  itemsWithQuery: Set<number>;
+  setItemsWithQuery: (s: Set<number>) => void;
+  queriedMethods: Set<number>[];
+  setQueriedMethods: (m: Set<number>[]) => void;
   onCheckout: () => void;
 }
 
-const ItemLookupScreen = ({ soundOn, onCheckout }: ItemLookupScreenProps) => {
+const ItemLookupScreen = ({
+  soundOn,
+  itemsWithQuery,
+  setItemsWithQuery,
+  queriedMethods,
+  setQueriedMethods,
+  onCheckout,
+}: ItemLookupScreenProps) => {
   const [currentItem, setCurrentItem] = useState(0);
-  const [queriedMethods, setQueriedMethods] = useState<Set<number>[]>(ITEMS.map(() => new Set()));
-  const [itemsWithQuery, setItemsWithQuery] = useState<Set<number>>(new Set());
   const [results, setResults] = useState<Record<number, ResultCard[]>>({});
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('');
@@ -61,7 +70,7 @@ const ItemLookupScreen = ({ soundOn, onCheckout }: ItemLookupScreenProps) => {
         if (resultsRef.current) resultsRef.current.scrollTop = resultsRef.current.scrollHeight;
       }, 50);
     }, delay);
-  }, [currentItem, queriedMethods, itemsWithQuery, soundOn]);
+  }, [currentItem, queriedMethods, itemsWithQuery, soundOn, setQueriedMethods, setItemsWithQuery]);
 
   const count = itemsWithQuery.size;
   const currentResults = results[currentItem] || [];

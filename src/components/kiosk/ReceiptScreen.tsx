@@ -1,9 +1,15 @@
+import { ITEMS } from '@/lib/kiosk-data';
+
 interface ReceiptScreenProps {
   onRestart: () => void;
   onBackToCherre: () => void;
+  itemsWithQuery: Set<number>;
+  queriedMethods: Set<number>[];
 }
 
-const ReceiptScreen = ({ onRestart, onBackToCherre }: ReceiptScreenProps) => {
+const ReceiptScreen = ({ onRestart, onBackToCherre, itemsWithQuery, queriedMethods }: ReceiptScreenProps) => {
+  const totalMethods = queriedMethods.reduce((sum, s) => sum + s.size, 0);
+
   return (
     <div className="flex flex-col justify-center items-center p-8 bg-card retro-dot-grid" style={{ position: 'absolute', inset: 0 }}>
       <div className="retro-stripe-top absolute top-0 left-0 right-0" />
@@ -22,12 +28,26 @@ const ReceiptScreen = ({ onRestart, onBackToCherre }: ReceiptScreenProps) => {
         </div>
         <hr className="border-none border-t border-dashed border-foreground/15 my-2.5" />
 
-        {['Ontolo-Tea', 'Alpha Bytes', 'Cherries', 'Parcel'].map(item => (
-          <div key={item} className="flex justify-between items-start text-xs py-1.5 border-b border-dotted border-foreground/10 gap-2">
-            <span className="text-foreground/70 font-normal">{item}</span>
-            <span className="text-success font-bold">Resolved</span>
-          </div>
-        ))}
+        {ITEMS.map((item, i) => {
+          const wasQueried = itemsWithQuery.has(i);
+          const methodCount = queriedMethods[i]?.size ?? 0;
+          return (
+            <div key={item.name} className="flex justify-between items-start text-xs py-1.5 border-b border-dotted border-foreground/10 gap-2">
+              <span className={`font-normal flex items-center gap-1.5 ${wasQueried ? 'text-foreground/70' : 'text-muted-foreground/40'}`}>
+                <span>{item.icon}</span>
+                <span>{item.name}</span>
+              </span>
+              {wasQueried ? (
+                <div className="text-right">
+                  <div className="text-success font-bold">Resolved</div>
+                  <div className="text-[9px] text-muted-foreground/50 mt-0.5">{methodCount} system{methodCount !== 1 ? 's' : ''} queried</div>
+                </div>
+              ) : (
+                <span className="text-muted-foreground/30 italic text-[10px]">Not checked</span>
+              )}
+            </div>
+          );
+        })}
 
         <div className="flex justify-between items-start text-xs py-1.5 gap-2">
           <span className="text-muted-foreground/50 font-normal">Mystery Item</span>
@@ -43,7 +63,9 @@ const ReceiptScreen = ({ onRestart, onBackToCherre }: ReceiptScreenProps) => {
           <span className="font-bold tracking-[0.08em]">TOTAL</span>
           <span className="text-primary font-bold text-base">TRUSTED</span>
         </div>
-        <div className="text-[9px] text-muted-foreground/40 text-right mt-0.5">No reconciliation needed.</div>
+        <div className="text-[9px] text-muted-foreground/40 text-right mt-0.5">
+          {totalMethods} lookup{totalMethods !== 1 ? 's' : ''} run. No reconciliation needed.
+        </div>
 
         <div className="text-[10px] text-foreground/20 text-center tracking-wide mt-5 select-none">========================</div>
 

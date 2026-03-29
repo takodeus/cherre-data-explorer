@@ -4,11 +4,14 @@ import ItemLookupScreen from '@/components/kiosk/ItemLookupScreen';
 import ReconciliationScreen from '@/components/kiosk/ReconciliationScreen';
 import ResolutionScreen from '@/components/kiosk/ResolutionScreen';
 import ReceiptScreen from '@/components/kiosk/ReceiptScreen';
+import { ITEMS } from '@/lib/kiosk-data';
 import { clickBeep, errorTone, successChime, scanBeep, initAudio } from '@/lib/kiosk-audio';
 
 const Index = () => {
   const [currentScreen, setCurrentScreen] = useState(1);
   const [soundOn, setSoundOn] = useState(false);
+  const [itemsWithQuery, setItemsWithQuery] = useState<Set<number>>(new Set());
+  const [queriedMethods, setQueriedMethods] = useState<Set<number>[]>(ITEMS.map(() => new Set()));
 
   const goTo = useCallback((n: number) => {
     if (soundOn) clickBeep();
@@ -34,6 +37,8 @@ const Index = () => {
   }, []);
 
   const restart = useCallback(() => {
+    setItemsWithQuery(new Set());
+    setQueriedMethods(ITEMS.map(() => new Set()));
     goTo(1);
   }, [goTo]);
 
@@ -66,7 +71,14 @@ const Index = () => {
         <WelcomeScreen onStart={() => goTo(2)} />
       </div>
       <div className={`screen ${currentScreen === 2 ? 'active' : ''}`}>
-        <ItemLookupScreen soundOn={soundOn} onCheckout={() => goTo(3)} />
+        <ItemLookupScreen
+          soundOn={soundOn}
+          itemsWithQuery={itemsWithQuery}
+          setItemsWithQuery={setItemsWithQuery}
+          queriedMethods={queriedMethods}
+          setQueriedMethods={setQueriedMethods}
+          onCheckout={() => goTo(3)}
+        />
       </div>
       <div className={`screen ${currentScreen === 3 ? 'active' : ''}`}>
         <ReconciliationScreen onBetterWay={() => goTo(4)} active={currentScreen === 3} />
@@ -75,7 +87,12 @@ const Index = () => {
         <ResolutionScreen onTalk={() => goTo(5)} />
       </div>
       <div className={`screen ${currentScreen === 5 ? 'active' : ''}`}>
-        <ReceiptScreen onRestart={restart} onBackToCherre={() => goTo(4)} />
+        <ReceiptScreen
+          onRestart={restart}
+          onBackToCherre={() => goTo(4)}
+          itemsWithQuery={itemsWithQuery}
+          queriedMethods={queriedMethods}
+        />
       </div>
     </div>
   );
