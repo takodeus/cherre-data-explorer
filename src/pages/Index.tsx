@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import WelcomeScreen from '@/components/kiosk/WelcomeScreen';
 import ItemLookupScreen from '@/components/kiosk/ItemLookupScreen';
 import ReconciliationScreen from '@/components/kiosk/ReconciliationScreen';
@@ -7,21 +7,41 @@ import ReceiptScreen from '@/components/kiosk/ReceiptScreen';
 import { ITEMS } from '@/lib/kiosk-data';
 import { clickBeep, errorTone, successChime, scanBeep, initAudio } from '@/lib/kiosk-audio';
 
+const TRANSITION_MS = 340;
+
 const Index = () => {
   const [currentScreen, setCurrentScreen] = useState(1);
+  const [direction, setDirection] = useState<'forward' | 'back'>('forward');
   const [soundOn, setSoundOn] = useState(false);
   const [itemsWithQuery, setItemsWithQuery] = useState<Set<number>>(new Set());
   const [queriedMethods, setQueriedMethods] = useState<Set<number>[]>(ITEMS.map(() => new Set()));
+  const prevScreenRef = useRef(1);
+  const transitioning = useRef(false);
 
   const goTo = useCallback((n: number) => {
+    if (transitioning.current) return;
     if (soundOn) clickBeep();
 
-    const flash = document.getElementById('transition-flash');
-    if (flash) {
-      flash.style.opacity = '0.12';
-      setTimeout(() => { flash.style.opacity = '0'; }, 150);
+    const dir = n > prevScreenRef.current ? 'forward' : 'back';
+    setDirection(dir);
+
+    // Mark the outgoing screen as exiting so CSS can animate it out
+    const outgoingEl = document.querySelector(`[data-screen="${prevScreenRef.current}"]`);
+    if (outgoingEl) {
+      outgoingEl.classList.add('exiting');
+      outgoingEl.setAttribute('data-exit-dir', dir);
     }
 
+    transitioning.current = true;
+    setTimeout(() => {
+      if (outgoingEl) {
+        outgoingEl.classList.remove('exiting');
+        outgoingEl.removeAttribute('data-exit-dir');
+      }
+      transitioning.current = false;
+    }, TRANSITION_MS);
+
+    prevScreenRef.current = n;
     setCurrentScreen(n);
 
     if (n === 3 && soundOn) errorTone();
@@ -59,18 +79,11 @@ const Index = () => {
         {soundOn ? 'SOUND ON' : 'SOUND OFF'}
       </button>
 
-      {/* Transition flash */}
-      <div
-        id="transition-flash"
-        className="fixed inset-0 bg-foreground pointer-events-none z-[200] transition-opacity duration-150"
-        style={{ opacity: 0 }}
-      />
-
       {/* Screens */}
-      <div className={`screen ${currentScreen === 1 ? 'active' : ''}`}>
+      <div data-screen="1" className={`screen ${currentScreen === 1 ? `active enter-${direction}` : ''}`}>
         <WelcomeScreen onStart={() => goTo(2)} />
       </div>
-      <div className={`screen ${currentScreen === 2 ? 'active' : ''}`}>
+      <div data-screen="2" className={`screen ${currentScreen === 2 ? `active enter-${direction}` : ''}`}>
         <ItemLookupScreen
           soundOn={soundOn}
           itemsWithQuery={itemsWithQuery}
@@ -80,13 +93,13 @@ const Index = () => {
           onCheckout={() => goTo(3)}
         />
       </div>
-      <div className={`screen ${currentScreen === 3 ? 'active' : ''}`}>
+      <div data-screen="3" className={`screen ${currentScreen === 3 ? `active enter-${direction}` : ''}`}>
         <ReconciliationScreen onBetterWay={() => goTo(4)} active={currentScreen === 3} />
       </div>
-      <div className={`screen ${currentScreen === 4 ? 'active' : ''}`}>
+      <div data-screen="4" className={`screen ${currentScreen === 4 ? `active enter-${direction}` : ''}`}>
         <ResolutionScreen onTalk={() => goTo(5)} />
       </div>
-      <div className={`screen ${currentScreen === 5 ? 'active' : ''}`}>
+      <div data-screen="5" className={`screen ${currentScreen === 5 ? `active enter-${direction}` : ''}`}>
         <ReceiptScreen
           onRestart={restart}
           onBackToCherre={() => goTo(4)}

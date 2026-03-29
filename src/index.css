@@ -86,6 +86,23 @@
 }
 
 /* ── SCREEN TRANSITIONS ── */
+@keyframes enter-forward {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes enter-back {
+  from { opacity: 0; transform: translateY(-18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes exit-forward {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-14px); }
+}
+@keyframes exit-back {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(14px); }
+}
+
 .screen {
   position: absolute;
   inset: 0;
@@ -93,11 +110,26 @@
   flex-direction: column;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.4s ease;
 }
-.screen.active {
+.screen.active.enter-forward {
   opacity: 1;
   pointer-events: all;
+  animation: enter-forward 0.34s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.screen.active.enter-back {
+  opacity: 1;
+  pointer-events: all;
+  animation: enter-back 0.34s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.screen.exiting[data-exit-dir="forward"] {
+  opacity: 1;
+  pointer-events: none;
+  animation: exit-forward 0.28s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+.screen.exiting[data-exit-dir="back"] {
+  opacity: 1;
+  pointer-events: none;
+  animation: exit-back 0.28s cubic-bezier(0.4, 0, 1, 1) forwards;
 }
 
 /* ── Animations ── */
