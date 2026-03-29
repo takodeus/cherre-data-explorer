@@ -4,6 +4,7 @@ import ItemLookupScreen from '@/components/kiosk/ItemLookupScreen';
 import ReconciliationScreen from '@/components/kiosk/ReconciliationScreen';
 import ResolutionScreen from '@/components/kiosk/ResolutionScreen';
 import ReceiptScreen from '@/components/kiosk/ReceiptScreen';
+import StepperBar from '@/components/kiosk/StepperBar';
 import { ITEMS } from '@/lib/kiosk-data';
 import { clickBeep, errorTone, successChime, scanBeep, initAudio } from '@/lib/kiosk-audio';
 
@@ -25,7 +26,6 @@ const Index = () => {
     const dir = n > prevScreenRef.current ? 'forward' : 'back';
     setDirection(dir);
 
-    // Mark the outgoing screen as exiting so CSS can animate it out
     const outgoingEl = document.querySelector(`[data-screen="${prevScreenRef.current}"]`);
     if (outgoingEl) {
       outgoingEl.classList.add('exiting');
@@ -63,14 +63,14 @@ const Index = () => {
   }, [goTo]);
 
   return (
-    <div className="w-full h-full flex flex-col bg-background relative overflow-hidden">
-      {/* Aisle sign - retro stripe */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-primary z-10" />
+    <div className="w-full h-full flex flex-col bg-background overflow-hidden">
+      {/* Stepper — in normal flow, screens slot below it */}
+      <StepperBar currentScreen={currentScreen} />
 
-      {/* Sound toggle */}
+      {/* Sound toggle — absolute within the stepper's visual space */}
       <button
         onClick={toggleSound}
-        className={`absolute top-5 right-6 z-[100] rounded-none px-3.5 py-1.5 font-mono text-[10px] font-bold tracking-[0.08em] cursor-pointer transition-all border-2 ${
+        className={`absolute top-[9px] right-6 z-[100] rounded-none px-3.5 py-1.5 font-mono text-[10px] font-bold tracking-[0.08em] cursor-pointer transition-all border-2 ${
           soundOn
             ? 'text-primary border-primary bg-primary-light-bg shadow-[2px_2px_0_hsl(var(--primary))]'
             : 'text-muted-foreground border-border bg-background hover:text-foreground hover:border-primary shadow-[2px_2px_0_hsl(var(--border))]'
@@ -79,33 +79,35 @@ const Index = () => {
         {soundOn ? 'SOUND ON' : 'SOUND OFF'}
       </button>
 
-      {/* Screens */}
-      <div data-screen="1" className={`screen ${currentScreen === 1 ? `active enter-${direction}` : ''}`}>
-        <WelcomeScreen onStart={() => goTo(2)} />
-      </div>
-      <div data-screen="2" className={`screen ${currentScreen === 2 ? `active enter-${direction}` : ''}`}>
-        <ItemLookupScreen
-          soundOn={soundOn}
-          itemsWithQuery={itemsWithQuery}
-          setItemsWithQuery={setItemsWithQuery}
-          queriedMethods={queriedMethods}
-          setQueriedMethods={setQueriedMethods}
-          onCheckout={() => goTo(3)}
-        />
-      </div>
-      <div data-screen="3" className={`screen ${currentScreen === 3 ? `active enter-${direction}` : ''}`}>
-        <ReconciliationScreen onBetterWay={() => goTo(4)} active={currentScreen === 3} />
-      </div>
-      <div data-screen="4" className={`screen ${currentScreen === 4 ? `active enter-${direction}` : ''}`}>
-        <ResolutionScreen onTalk={() => goTo(5)} />
-      </div>
-      <div data-screen="5" className={`screen ${currentScreen === 5 ? `active enter-${direction}` : ''}`}>
-        <ReceiptScreen
-          onRestart={restart}
-          onBackToCherre={() => goTo(4)}
-          itemsWithQuery={itemsWithQuery}
-          queriedMethods={queriedMethods}
-        />
+      {/* Screen stage — flex-1, position: relative so screens' inset:0 is relative to this */}
+      <div className="flex-1 relative overflow-hidden">
+        <div data-screen="1" className={`screen ${currentScreen === 1 ? `active enter-${direction}` : ''}`}>
+          <WelcomeScreen onStart={() => goTo(2)} />
+        </div>
+        <div data-screen="2" className={`screen ${currentScreen === 2 ? `active enter-${direction}` : ''}`}>
+          <ItemLookupScreen
+            soundOn={soundOn}
+            itemsWithQuery={itemsWithQuery}
+            setItemsWithQuery={setItemsWithQuery}
+            queriedMethods={queriedMethods}
+            setQueriedMethods={setQueriedMethods}
+            onCheckout={() => goTo(3)}
+          />
+        </div>
+        <div data-screen="3" className={`screen ${currentScreen === 3 ? `active enter-${direction}` : ''}`}>
+          <ReconciliationScreen onBetterWay={() => goTo(4)} active={currentScreen === 3} />
+        </div>
+        <div data-screen="4" className={`screen ${currentScreen === 4 ? `active enter-${direction}` : ''}`}>
+          <ResolutionScreen onTalk={() => goTo(5)} />
+        </div>
+        <div data-screen="5" className={`screen ${currentScreen === 5 ? `active enter-${direction}` : ''}`}>
+          <ReceiptScreen
+            onRestart={restart}
+            onBackToCherre={() => goTo(4)}
+            itemsWithQuery={itemsWithQuery}
+            queriedMethods={queriedMethods}
+          />
+        </div>
       </div>
     </div>
   );
