@@ -65,7 +65,7 @@ const WelcomeScreen = ({ onStart, active }: WelcomeScreenProps) => {
     >
       <div className="retro-stripe-top absolute top-0 left-0 right-0" />
 
-      <img src={cherreLogo} alt="Cherre" className="h-14 mb-6 object-contain" />
+      <img src={cherreLogo} alt="Cherre" className="h-14 mb-6 object-contain" style={{ mixBlendMode: "multiply" }} />
 
       <div className="price-tag text-[10px] font-bold tracking-[0.22em] uppercase mb-8">
         Price Check on Aisle F
