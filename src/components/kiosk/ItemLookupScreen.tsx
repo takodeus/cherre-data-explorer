@@ -1,13 +1,8 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { ITEMS, LOOKUP_METHODS, LOADING_MESSAGES, type LookupType } from '@/lib/kiosk-data';
 import { scanBeep } from '@/lib/kiosk-audio';
 
-interface ResultCard {
-  sys: string;
-  type: LookupType;
-  text: string;
-  id: number;
-}
+type CardState = 'idle' | 'loading' | 'done';
 
 interface ItemLookupScreenProps {
   soundOn: boolean;
@@ -18,6 +13,30 @@ interface ItemLookupScreenProps {
   onCheckout: () => void;
 }
 
+// Derive a teaser: first line, capped at 48 chars, with trailing ellipsis
+const teaser = (text: string): string => {
+  const first = text.split('\n')[0].replace(/^"/, '').replace(/"$/, '');
+  return first.length > 48 ? first.slice(0, 46) + '…' : first;
+};
+
+const statusLabel = (type: LookupType) => {
+  if (type === 'ok') return '✓ Match found';
+  if (type === 'err') return '✕ Error';
+  return '⚠ Warning';
+};
+
+const statusBadgeClass = (type: LookupType) => {
+  if (type === 'ok') return 'text-primary border-primary bg-primary-light-bg';
+  if (type === 'err') return 'text-destructive border-destructive/40 bg-destructive/5';
+  return 'text-warning-foreground border-warning/40 bg-warning/10';
+};
+
+const bodyClass = (type: LookupType) => {
+  if (type === 'ok') return 'text-foreground';
+  if (type === 'err') return 'text-destructive font-mono text-[12px]';
+  return 'text-warning-foreground';
+};
+
 const ItemLookupScreen = ({
   soundOn,
   itemsWithQuery,
@@ -27,65 +46,64 @@ const ItemLookupScreen = ({
   onCheckout,
 }: ItemLookupScreenProps) => {
   const [currentItem, setCurrentItem] = useState(0);
-  const [results, setResults] = useState<Record<number, ResultCard[]>>({});
-  const [loading, setLoading] = useState(false);
-  const [loadingMsg, setLoadingMsg] = useState('');
-  const resultsRef = useRef<HTMLDivElement>(null);
-  const cardIdRef = useRef(0);
+  // cardStates[itemIdx][methodIdx] = 'idle' | 'loading' | 'done'
+  const [cardStates, setCardStates] = useState<CardState[][]>(
+    ITEMS.map(() => LOOKUP_METHODS.map(() => 'idle' as CardState))
+  );
+  // loadingMsg per card: [itemIdx][methodIdx]
+  const [loadingMsgs, setLoadingMsgs] = useState<string[][]>(
+    ITEMS.map(() => LOOKUP_METHODS.map(() => ''))
+  );
 
-  const selectItem = useCallback((idx: number) => {
-    setCurrentItem(idx);
+  const setCardState = useCallback((itemIdx: number, methodIdx: number, state: CardState) => {
+    setCardStates(prev => {
+      const next = prev.map(row => [...row]);
+      next[itemIdx][methodIdx] = state;
+      return next;
+    });
+  }, []);
+
+  const setCardMsg = useCallback((itemIdx: number, methodIdx: number, msg: string) => {
+    setLoadingMsgs(prev => {
+      const next = prev.map(row => [...row]);
+      next[itemIdx][methodIdx] = msg;
+      return next;
+    });
   }, []);
 
   const runLookup = useCallback((methodIdx: number) => {
+    const itemIdx = currentItem;
+    // Already queried or loading — no-op
+    if (cardStates[itemIdx][methodIdx] !== 'idle') return;
+
     if (soundOn) scanBeep();
-    setLoading(true);
-    setLoadingMsg('Querying legacy system…');
 
-    const newQueried = [...queriedMethods];
-    newQueried[currentItem] = new Set(newQueried[currentItem]).add(methodIdx);
+    setCardState(itemIdx, methodIdx, 'loading');
+    setCardMsg(itemIdx, methodIdx, 'Connecting to system…');
+
+    // Update queried tracking immediately
+    const newQueried = queriedMethods.map(s => new Set(s));
+    newQueried[itemIdx].add(methodIdx);
     setQueriedMethods(newQueried);
-
-    const newItemsWithQuery = new Set(itemsWithQuery).add(currentItem);
-    setItemsWithQuery(newItemsWithQuery);
+    setItemsWithQuery(new Set(itemsWithQuery).add(itemIdx));
 
     let mi = 0;
     const msgInterval = setInterval(() => {
+      mi++;
       if (mi < LOADING_MESSAGES.length) {
-        setLoadingMsg(LOADING_MESSAGES[mi++]);
+        setCardMsg(itemIdx, methodIdx, LOADING_MESSAGES[mi]);
       }
     }, 280);
 
     const delay = 900 + Math.random() * 700;
     setTimeout(() => {
       clearInterval(msgInterval);
-      setLoading(false);
-      const lookup = ITEMS[currentItem].lookups[methodIdx];
-      const newCard: ResultCard = { ...lookup, id: cardIdRef.current++ };
-      setResults(prev => ({
-        ...prev,
-        [currentItem]: [...(prev[currentItem] || []), newCard],
-      }));
-      setTimeout(() => {
-        if (resultsRef.current) resultsRef.current.scrollTop = resultsRef.current.scrollHeight;
-      }, 50);
+      setCardState(itemIdx, methodIdx, 'done');
     }, delay);
-  }, [currentItem, queriedMethods, itemsWithQuery, soundOn, setQueriedMethods, setItemsWithQuery]);
+  }, [currentItem, cardStates, soundOn, queriedMethods, itemsWithQuery, setQueriedMethods, setItemsWithQuery, setCardState, setCardMsg]);
 
   const count = itemsWithQuery.size;
-  const currentResults = results[currentItem] || [];
-
-  const typeColor = (type: LookupType) => {
-    if (type === 'ok') return 'text-primary';
-    if (type === 'err') return 'text-destructive';
-    return 'text-warning';
-  };
-
-  const textStyle = (type: LookupType) => {
-    if (type === 'ok') return 'text-foreground';
-    if (type === 'err') return 'text-destructive font-mono text-xs';
-    return 'text-warning-foreground';
-  };
+  const item = ITEMS[currentItem];
 
   return (
     <div className="flex flex-col bg-background" style={{ position: 'absolute', inset: 0 }}>
@@ -98,8 +116,8 @@ const ItemLookupScreen = ({
           <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-primary-foreground/70 mb-1 font-mono">
             Self-checkout — Item Lookup
           </div>
-          <div className="text-primary-foreground font-extrabold tracking-tight" style={{ fontSize: 'clamp(22px, 4vw, 32px)' }}>
-            Select an item. Try all four systems.
+          <div className="text-primary-foreground font-extrabold tracking-tight" style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}>
+            Each system has an answer. They don't agree.
           </div>
         </div>
         <div className="price-tag text-[10px] font-bold tracking-[0.08em]">
@@ -109,82 +127,147 @@ const ItemLookupScreen = ({
 
       {/* Body */}
       <div className="flex-1 flex overflow-hidden">
+
         {/* Items column */}
         <div className="w-[220px] flex-shrink-0 border-r-2 border-border bg-card py-4 flex flex-col gap-1 px-2">
-          {ITEMS.map((item, i) => (
-            <button
-              key={i}
-              onClick={() => selectItem(i)}
-              className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer border-2 text-left w-full transition-all rounded-none ${
-                i === currentItem
-                  ? 'bg-primary-light-bg border-primary shadow-[3px_3px_0_hsl(var(--primary))]'
-                  : 'bg-background border-border hover:border-primary/40 hover:bg-primary-light-bg/50'
-              }`}
-            >
-              <div className="w-10 h-10 rounded-none border-2 border-primary/30 bg-background flex items-center justify-center text-lg flex-shrink-0">
-                {item.icon}
-              </div>
-              <div>
-                <div className="text-[13px] font-bold text-foreground">{item.name}</div>
-                <div className="text-[10px] text-muted-foreground font-normal mt-px font-mono">{item.category}</div>
-              </div>
-            </button>
-          ))}
+          {ITEMS.map((it, i) => {
+            const doneCount = cardStates[i].filter(s => s === 'done').length;
+            return (
+              <button
+                key={i}
+                onClick={() => setCurrentItem(i)}
+                className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer border-2 text-left w-full transition-all rounded-none ${
+                  i === currentItem
+                    ? 'bg-primary-light-bg border-primary shadow-[3px_3px_0_hsl(var(--primary))]'
+                    : 'bg-background border-border hover:border-primary/40 hover:bg-primary-light-bg/50'
+                }`}
+              >
+                <div className="w-10 h-10 rounded-none border-2 border-primary/30 bg-background flex items-center justify-center text-lg flex-shrink-0">
+                  {it.icon}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-[13px] font-bold text-foreground">{it.name}</div>
+                  <div className="text-[10px] text-muted-foreground font-normal mt-px font-mono">{it.category}</div>
+                  {doneCount > 0 && (
+                    <div className="text-[9px] font-mono text-primary mt-1">
+                      {doneCount}/{LOOKUP_METHODS.length} queried
+                    </div>
+                  )}
+                </div>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Main area */}
-        <div className="flex-1 px-8 py-6 overflow-y-auto flex flex-col gap-5 retro-dot-grid" ref={resultsRef}>
-          <div>
-            <div className="text-[10px] font-bold tracking-[0.14em] uppercase text-muted-foreground mb-3 font-mono">Lookup method</div>
-            <div className="grid grid-cols-4 gap-2 mb-5">
-              {LOOKUP_METHODS.map((method, i) => (
-                <button
-                  key={i}
-                  onClick={() => runLookup(i)}
-                  disabled={loading}
-                  className={`border-2 rounded-none py-2.5 px-2 font-sans text-[11px] font-bold tracking-[0.06em] uppercase text-center cursor-pointer transition-all ${
-                    queriedMethods[currentItem]?.has(i)
-                      ? 'border-primary bg-primary-light-bg text-primary shadow-[2px_2px_0_hsl(var(--primary))]'
-                      : 'border-border bg-background text-muted-foreground hover:border-primary hover:text-foreground hover:shadow-[2px_2px_0_hsl(var(--primary))]'
-                  } disabled:opacity-50`}
-                >
-                  {method}
-                </button>
-              ))}
+        {/* Cards area */}
+        <div className="flex-1 px-6 py-5 overflow-y-auto flex flex-col gap-3 retro-dot-grid">
+
+          {/* Item label */}
+          <div className="flex items-center gap-3 mb-1">
+            <span className="text-2xl">{item.icon}</span>
+            <div>
+              <div className="text-[11px] font-mono font-bold tracking-[0.12em] uppercase text-muted-foreground">Looking up</div>
+              <div className="text-[15px] font-extrabold text-foreground tracking-tight">{item.name}</div>
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col gap-2.5 min-h-[200px]">
-            {currentResults.length === 0 && !loading && (
-              <div className="text-xs text-muted-foreground italic py-2 font-mono">
-                Select a lookup method to query the system…
-              </div>
-            )}
+          {/* One card per lookup method */}
+          {LOOKUP_METHODS.map((method, methodIdx) => {
+            const state = cardStates[currentItem][methodIdx];
+            const lookup = item.lookups[methodIdx];
+            const msg = loadingMsgs[currentItem][methodIdx];
+            const isDone = state === 'done';
+            const isLoading = state === 'loading';
+            const isIdle = state === 'idle';
 
-            {currentResults.map(card => (
-              <div key={card.id} className="bg-card border-2 border-border rounded-none px-4 py-3 flex flex-col gap-1.5 animate-fade-in-up shadow-[2px_2px_0_hsl(var(--border))]">
-                <div className={`text-[9px] font-bold tracking-[0.18em] uppercase font-mono ${typeColor(card.type)}`}>
-                  {card.sys}
-                </div>
-                <div className={`text-[13px] font-normal leading-relaxed whitespace-pre-line ${textStyle(card.type)}`}>
-                  {card.text}
-                </div>
-              </div>
-            ))}
+            return (
+              <div
+                key={methodIdx}
+                className={`rounded-none border-2 transition-all duration-300 overflow-hidden ${
+                  isDone
+                    ? lookup.type === 'ok'
+                      ? 'border-primary shadow-[3px_3px_0_hsl(var(--primary)/0.25)]'
+                      : lookup.type === 'err'
+                      ? 'border-destructive/50 shadow-[3px_3px_0_hsl(var(--destructive)/0.15)]'
+                      : 'border-warning/50 shadow-[3px_3px_0_hsl(var(--warning)/0.15)]'
+                    : isLoading
+                    ? 'border-primary/40 border-dashed'
+                    : 'border-border hover:border-primary/40'
+                } bg-card`}
+              >
+                {/* Card header row — always visible */}
+                <div className="flex items-center justify-between px-4 py-3 gap-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    {/* Status dot */}
+                    <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                      isDone
+                        ? lookup.type === 'ok' ? 'bg-primary' : lookup.type === 'err' ? 'bg-destructive' : 'bg-warning'
+                        : isLoading ? 'bg-primary animate-pulse' : 'bg-border'
+                    }`} />
+                    <div>
+                      <div className="text-[9px] font-bold tracking-[0.16em] uppercase font-mono text-muted-foreground">
+                        System {String.fromCharCode(65 + methodIdx)}
+                      </div>
+                      <div className="text-[12px] font-bold text-foreground">{method}</div>
+                    </div>
+                  </div>
 
-            {loading && (
-              <div className="flex items-center gap-2.5 px-4 py-3.5 bg-card border-2 border-dashed border-primary/30 rounded-none">
-                {[0, 1, 2].map(i => (
-                  <div
-                    key={i}
-                    className="w-1.5 h-1.5 rounded-full bg-primary"
-                    style={{ animation: `pulse-dot 0.8s ease infinite ${i * 0.15}s` }}
-                  />
-                ))}
-                <div className="text-[11px] text-muted-foreground font-mono tracking-wide">{loadingMsg}</div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {isDone && (
+                      <span className={`text-[9px] font-bold tracking-[0.1em] uppercase font-mono border px-2 py-0.5 ${statusBadgeClass(lookup.type)}`}>
+                        {statusLabel(lookup.type)}
+                      </span>
+                    )}
+                    {isIdle && (
+                      <button
+                        onClick={() => runLookup(methodIdx)}
+                        className="bg-background border-2 border-border text-muted-foreground rounded-none px-3 py-1 font-mono text-[10px] font-bold tracking-[0.08em] uppercase cursor-pointer transition-all hover:border-primary hover:text-foreground shadow-[2px_2px_0_hsl(var(--border))] hover:shadow-[2px_2px_0_hsl(var(--primary))]"
+                      >
+                        Query →
+                      </button>
+                    )}
+                    {isLoading && (
+                      <div className="flex gap-1 items-center">
+                        {[0, 1, 2].map(i => (
+                          <div
+                            key={i}
+                            className="w-1.5 h-1.5 rounded-full bg-primary"
+                            style={{ animation: `pulse-dot 0.8s ease infinite ${i * 0.15}s` }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Teaser — visible when idle, replaced by result when done */}
+                {isIdle && (
+                  <div className="px-4 pb-3 border-t border-dashed border-border/60 pt-2.5">
+                    <div className="text-[11px] font-mono text-muted-foreground/50 truncate select-none blur-[2px] pointer-events-none">
+                      {teaser(lookup.text)}
+                    </div>
+                    <div className="text-[9px] text-muted-foreground/30 font-mono mt-0.5 tracking-wide">
+                      — Query to reveal
+                    </div>
+                  </div>
+                )}
+
+                {isLoading && (
+                  <div className="px-4 pb-3 border-t border-dashed border-primary/20 pt-2.5">
+                    <div className="text-[11px] font-mono text-primary/60 tracking-wide">{msg}</div>
+                  </div>
+                )}
+
+                {isDone && (
+                  <div className="px-4 pb-4 border-t border-border/40 pt-3 animate-fade-in-up">
+                    <div className={`text-[13px] font-normal leading-relaxed whitespace-pre-line ${bodyClass(lookup.type)}`}>
+                      {lookup.text}
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            );
+          })}
         </div>
       </div>
 
