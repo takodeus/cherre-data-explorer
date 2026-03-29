@@ -84,11 +84,13 @@ const ItemLookupScreen = ({
     setCardState(itemIdx, methodIdx, 'loading');
     setCardMsg(itemIdx, methodIdx, 'Connecting to system…');
 
-    // Update queried tracking immediately
-    const newQueried = queriedMethods.map(s => new Set(s));
-    newQueried[itemIdx].add(methodIdx);
-    setQueriedMethods(newQueried);
-    setItemsWithQuery(new Set(itemsWithQuery).add(itemIdx));
+    // Use functional updaters so concurrent calls never overwrite each other
+    setQueriedMethods(prev => {
+      const next = prev.map(s => new Set(s));
+      next[itemIdx].add(methodIdx);
+      return next;
+    });
+    setItemsWithQuery(prev => new Set(prev).add(itemIdx));
 
     let mi = 0;
     const msgInterval = setInterval(() => {
@@ -103,7 +105,7 @@ const ItemLookupScreen = ({
       clearInterval(msgInterval);
       setCardState(itemIdx, methodIdx, 'done');
     }, delay);
-  }, [currentItem, cardStates, soundOn, queriedMethods, itemsWithQuery, setQueriedMethods, setItemsWithQuery, setCardState, setCardMsg]);
+  }, [currentItem, cardStates, soundOn, setQueriedMethods, setItemsWithQuery, setCardState, setCardMsg]);
 
   const count = itemsWithQuery.size;
   const item = ITEMS[currentItem];
