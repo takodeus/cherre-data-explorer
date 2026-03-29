@@ -1,4 +1,5 @@
-import { useState, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import WelcomeScreen from '@/components/kiosk/WelcomeScreen';
 import ItemLookupScreen from '@/components/kiosk/ItemLookupScreen';
 import ReconciliationScreen from '@/components/kiosk/ReconciliationScreen';
@@ -9,16 +10,79 @@ import { ITEMS } from '@/lib/kiosk-data';
 import { clickBeep, errorTone, successChime, scanBeep, initAudio } from '@/lib/kiosk-audio';
 
 const TRANSITION_MS = 340;
+const SCREEN_MIN = 1;
+const SCREEN_MAX = 5;
+
+function clampScreen(v: string | null): number {
+  const n = parseInt(v ?? '', 10);
+  return Number.isFinite(n) && n >= SCREEN_MIN && n <= SCREEN_MAX ? n : 1;
+}
+
+function clampItem(v: string | null): number {
+  const n = parseInt(v ?? '', 10);
+  return Number.isFinite(n) && n >= 0 && n < ITEMS.length ? n : 0;
+}
 
 const Index = () => {
-  const [currentScreen, setCurrentScreen] = useState(1);
-  const [direction, setDirection] = useState<'forward' | 'back'>('forward');
-  const [soundOn, setSoundOn] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Initialise from URL on first render; URL is the source of truth for these two
+  const [currentScreen, setCurrentScreen] = useState<number>(() => clampScreen(searchParams.get('screen')));
+  const [currentItem,   setCurrentItem]   = useState<number>(() => clampItem(searchParams.get('item')));
+
+  const [direction,      setDirection]      = useState<'forward' | 'back'>('forward');
+  const [soundOn,        setSoundOn]        = useState(false);
   const [itemsWithQuery, setItemsWithQuery] = useState<Set<number>>(new Set());
   const [queriedMethods, setQueriedMethods] = useState<Set<number>[]>(ITEMS.map(() => new Set()));
-  const prevScreenRef = useRef(1);
-  const transitioning = useRef(false);
 
+  const prevScreenRef  = useRef(currentScreen);
+  const transitioning  = useRef(false);
+  // Distinguish URL-driven changes from our own pushes to avoid loops
+  const internalNavRef = useRef(false);
+
+  // ── Push state → URL ──────────────────────────────────────────────────────
+  const pushParams = useCallback((screen: number, item: number) => {
+    internalNavRef.current = true;
+    const next: Record<string, string> = { screen: String(screen) };
+    // Only include item param on the lookup screen; omit elsewhere to keep URLs clean
+    if (screen === 2) next.item = String(item);
+    setSearchParams(next, { replace: false });
+  }, [setSearchParams]);
+
+  // ── React to browser back/forward (URL → state) ───────────────────────────
+  useEffect(() => {
+    // Skip the first render (we already initialised from URL) and our own pushes
+    if (internalNavRef.current) {
+      internalNavRef.current = false;
+      return;
+    }
+
+    const newScreen = clampScreen(searchParams.get('screen'));
+    const newItem   = clampItem(searchParams.get('item'));
+
+    if (newScreen === currentScreen && newItem === currentItem) return;
+
+    // Determine direction for animation
+    const dir = newScreen > prevScreenRef.current ? 'forward' : 'back';
+    setDirection(dir);
+
+    // Animate out the current screen
+    const outgoingEl = document.querySelector(`[data-screen="${prevScreenRef.current}"]`);
+    if (outgoingEl) {
+      outgoingEl.classList.add('exiting');
+      outgoingEl.setAttribute('data-exit-dir', dir);
+      setTimeout(() => {
+        outgoingEl.classList.remove('exiting');
+        outgoingEl.removeAttribute('data-exit-dir');
+      }, TRANSITION_MS);
+    }
+
+    prevScreenRef.current = newScreen;
+    setCurrentScreen(newScreen);
+    setCurrentItem(newItem);
+  }, [searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── goTo: internal navigation ─────────────────────────────────────────────
   const goTo = useCallback((n: number) => {
     if (transitioning.current) return;
     if (soundOn) clickBeep();
@@ -43,12 +107,20 @@ const Index = () => {
 
     prevScreenRef.current = n;
     setCurrentScreen(n);
+    pushParams(n, currentItem);
 
     if (n === 3 && soundOn) errorTone();
     if (n === 4 && soundOn) successChime();
     if (n === 5 && soundOn) scanBeep();
-  }, [soundOn]);
+  }, [soundOn, currentItem, pushParams]);
 
+  // ── Item selection ────────────────────────────────────────────────────────
+  const selectItem = useCallback((idx: number) => {
+    setCurrentItem(idx);
+    pushParams(currentScreen, idx);
+  }, [currentScreen, pushParams]);
+
+  // ── Other handlers ────────────────────────────────────────────────────────
   const toggleSound = useCallback(() => {
     setSoundOn(prev => {
       if (!prev) initAudio();
@@ -59,15 +131,14 @@ const Index = () => {
   const restart = useCallback(() => {
     setItemsWithQuery(new Set());
     setQueriedMethods(ITEMS.map(() => new Set()));
+    setCurrentItem(0);
     goTo(1);
   }, [goTo]);
 
   return (
     <div className="w-full h-full flex flex-col bg-background overflow-hidden">
-      {/* Stepper — in normal flow, screens slot below it */}
       <StepperBar currentScreen={currentScreen} />
 
-      {/* Sound toggle — absolute within the stepper's visual space */}
       <button
         onClick={toggleSound}
         className={`absolute top-[9px] right-6 z-[100] rounded-none px-3.5 py-1.5 font-mono text-[10px] font-bold tracking-[0.08em] cursor-pointer transition-all border-2 ${
@@ -79,7 +150,6 @@ const Index = () => {
         {soundOn ? 'SOUND ON' : 'SOUND OFF'}
       </button>
 
-      {/* Screen stage — flex-1, position: relative so screens' inset:0 is relative to this */}
       <div className="flex-1 relative overflow-hidden">
         <div data-screen="1" className={`screen ${currentScreen === 1 ? `active enter-${direction}` : ''}`}>
           <WelcomeScreen onStart={() => goTo(2)} />
@@ -87,6 +157,8 @@ const Index = () => {
         <div data-screen="2" className={`screen ${currentScreen === 2 ? `active enter-${direction}` : ''}`}>
           <ItemLookupScreen
             soundOn={soundOn}
+            currentItem={currentItem}
+            onSelectItem={selectItem}
             itemsWithQuery={itemsWithQuery}
             setItemsWithQuery={setItemsWithQuery}
             queriedMethods={queriedMethods}

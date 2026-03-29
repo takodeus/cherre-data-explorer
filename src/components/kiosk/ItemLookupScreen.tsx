@@ -6,6 +6,8 @@ type CardState = 'idle' | 'loading' | 'done';
 
 interface ItemLookupScreenProps {
   soundOn: boolean;
+  currentItem: number;
+  onSelectItem: (idx: number) => void;
   itemsWithQuery: Set<number>;
   setItemsWithQuery: (s: Set<number>) => void;
   queriedMethods: Set<number>[];
@@ -39,13 +41,14 @@ const bodyClass = (type: LookupType) => {
 
 const ItemLookupScreen = ({
   soundOn,
+  currentItem,
+  onSelectItem,
   itemsWithQuery,
   setItemsWithQuery,
   queriedMethods,
   setQueriedMethods,
   onCheckout,
 }: ItemLookupScreenProps) => {
-  const [currentItem, setCurrentItem] = useState(0);
   // cardStates[itemIdx][methodIdx] = 'idle' | 'loading' | 'done'
   const [cardStates, setCardStates] = useState<CardState[][]>(
     ITEMS.map(() => LOOKUP_METHODS.map(() => 'idle' as CardState))
@@ -135,7 +138,7 @@ const ItemLookupScreen = ({
             return (
               <button
                 key={i}
-                onClick={() => setCurrentItem(i)}
+                onClick={() => onSelectItem(i)}
                 className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer border-2 text-left w-full transition-all rounded-none ${
                   i === currentItem
                     ? 'bg-primary-light-bg border-primary shadow-[3px_3px_0_hsl(var(--primary))]'
