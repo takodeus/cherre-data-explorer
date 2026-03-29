@@ -27,7 +27,11 @@ const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Initialise from URL on first render; URL is the source of truth for these two
-  const [currentScreen, setCurrentScreen] = useState<number>(() => clampScreen(searchParams.get('screen')));
+  // Screen 5 requires session state — redirect to 1 if accessed cold via deep-link
+  const [currentScreen, setCurrentScreen] = useState<number>(() => {
+    const s = clampScreen(searchParams.get('screen'));
+    return s === 5 ? 1 : s;
+  });
   const [currentItem,   setCurrentItem]   = useState<number>(() => clampItem(searchParams.get('item')));
 
   const [direction,      setDirection]      = useState<'forward' | 'back'>('forward');
@@ -37,12 +41,12 @@ const Index = () => {
 
   const prevScreenRef  = useRef(currentScreen);
   const transitioning  = useRef(false);
-  // Distinguish URL-driven changes from our own pushes to avoid loops
-  const internalNavRef = useRef(false);
+  // Counter instead of boolean — handles concurrent pushes correctly
+  const internalNavRef = useRef(0);
 
   // ── Push state → URL ──────────────────────────────────────────────────────
   const pushParams = useCallback((screen: number, item: number) => {
-    internalNavRef.current = true;
+    internalNavRef.current++;
     const next: Record<string, string> = { screen: String(screen) };
     // Only include item param on the lookup screen; omit elsewhere to keep URLs clean
     if (screen === 2) next.item = String(item);
@@ -52,8 +56,8 @@ const Index = () => {
   // ── React to browser back/forward (URL → state) ───────────────────────────
   useEffect(() => {
     // Skip the first render (we already initialised from URL) and our own pushes
-    if (internalNavRef.current) {
-      internalNavRef.current = false;
+    if (internalNavRef.current > 0) {
+      internalNavRef.current--;
       return;
     }
 
@@ -152,7 +156,7 @@ const Index = () => {
 
       <div className="flex-1 relative overflow-hidden">
         <div data-screen="1" className={`screen ${currentScreen === 1 ? `active enter-${direction}` : ''}`}>
-          <WelcomeScreen onStart={() => goTo(2)} />
+          <WelcomeScreen onStart={() => goTo(2)} active={currentScreen === 1} />
         </div>
         <div data-screen="2" className={`screen ${currentScreen === 2 ? `active enter-${direction}` : ''}`}>
           <ItemLookupScreen

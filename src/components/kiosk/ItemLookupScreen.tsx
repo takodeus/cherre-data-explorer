@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { ITEMS, LOOKUP_METHODS, LOADING_MESSAGES, type LookupType } from '@/lib/kiosk-data';
 import { scanBeep } from '@/lib/kiosk-audio';
 
+// 'loading' is still local — only 'done' is derived from persisted queriedMethods
 type CardState = 'idle' | 'loading' | 'done';
 
 interface ItemLookupScreenProps {
@@ -9,13 +10,12 @@ interface ItemLookupScreenProps {
   currentItem: number;
   onSelectItem: (idx: number) => void;
   itemsWithQuery: Set<number>;
-  setItemsWithQuery: (s: Set<number>) => void;
+  setItemsWithQuery: (updater: (prev: Set<number>) => Set<number>) => void;
   queriedMethods: Set<number>[];
-  setQueriedMethods: (m: Set<number>[]) => void;
+  setQueriedMethods: (updater: (prev: Set<number>[]) => Set<number>[]) => void;
   onCheckout: () => void;
 }
 
-// Derive a teaser: first line, capped at 48 chars, with trailing ellipsis
 const teaser = (text: string): string => {
   const first = text.split('\n')[0].replace(/^"/, '').replace(/"$/, '');
   return first.length > 48 ? first.slice(0, 46) + '…' : first;
@@ -49,19 +49,19 @@ const ItemLookupScreen = ({
   setQueriedMethods,
   onCheckout,
 }: ItemLookupScreenProps) => {
-  // cardStates[itemIdx][methodIdx] = 'idle' | 'loading' | 'done'
-  const [cardStates, setCardStates] = useState<CardState[][]>(
-    ITEMS.map(() => LOOKUP_METHODS.map(() => 'idle' as CardState))
-  );
-  // loadingMsg per card: [itemIdx][methodIdx]
+  // loadingCards tracks in-flight queries — local only, intentionally resets on nav
+  const [loadingCards, setLoadingCards] = useState<Record<string, boolean>>({});
   const [loadingMsgs, setLoadingMsgs] = useState<string[][]>(
     ITEMS.map(() => LOOKUP_METHODS.map(() => ''))
   );
 
-  const setCardState = useCallback((itemIdx: number, methodIdx: number, state: CardState) => {
-    setCardStates(prev => {
-      const next = prev.map(row => [...row]);
-      next[itemIdx][methodIdx] = state;
+  const cardKey = (itemIdx: number, methodIdx: number) => `${itemIdx}-${methodIdx}`;
+
+  const setCardLoading = useCallback((itemIdx: number, methodIdx: number, loading: boolean) => {
+    setLoadingCards(prev => {
+      const next = { ...prev };
+      if (loading) next[cardKey(itemIdx, methodIdx)] = true;
+      else delete next[cardKey(itemIdx, methodIdx)];
       return next;
     });
   }, []);
@@ -74,17 +74,20 @@ const ItemLookupScreen = ({
     });
   }, []);
 
+  const anyLoading = Object.keys(loadingCards).length > 0;
+
   const runLookup = useCallback((methodIdx: number) => {
     const itemIdx = currentItem;
-    // Already queried or loading — no-op
-    if (cardStates[itemIdx][methodIdx] !== 'idle') return;
+    // Already done (persisted) or currently loading — no-op
+    if (queriedMethods[itemIdx]?.has(methodIdx)) return;
+    if (loadingCards[cardKey(itemIdx, methodIdx)]) return;
 
     if (soundOn) scanBeep();
 
-    setCardState(itemIdx, methodIdx, 'loading');
+    setCardLoading(itemIdx, methodIdx, true);
     setCardMsg(itemIdx, methodIdx, 'Connecting to system…');
 
-    // Use functional updaters so concurrent calls never overwrite each other
+    // Persist immediately via functional updaters — immune to stale closures
     setQueriedMethods(prev => {
       const next = prev.map(s => new Set(s));
       next[itemIdx].add(methodIdx);
@@ -95,27 +98,23 @@ const ItemLookupScreen = ({
     let mi = 0;
     const msgInterval = setInterval(() => {
       mi++;
-      if (mi < LOADING_MESSAGES.length) {
-        setCardMsg(itemIdx, methodIdx, LOADING_MESSAGES[mi]);
-      }
+      if (mi < LOADING_MESSAGES.length) setCardMsg(itemIdx, methodIdx, LOADING_MESSAGES[mi]);
     }, 280);
 
     const delay = 900 + Math.random() * 700;
     setTimeout(() => {
       clearInterval(msgInterval);
-      setCardState(itemIdx, methodIdx, 'done');
+      setCardLoading(itemIdx, methodIdx, false);
     }, delay);
-  }, [currentItem, cardStates, soundOn, setQueriedMethods, setItemsWithQuery, setCardState, setCardMsg]);
+  }, [currentItem, queriedMethods, loadingCards, soundOn, setQueriedMethods, setItemsWithQuery, setCardLoading, setCardMsg]);
 
   const count = itemsWithQuery.size;
   const item = ITEMS[currentItem];
 
   return (
     <div className="flex flex-col bg-background" style={{ position: 'absolute', inset: 0 }}>
-      {/* Retro stripe */}
       <div className="retro-stripe-top" />
 
-      {/* Header */}
       <div className="bg-primary px-10 pt-6 pb-5 flex items-end justify-between retro-border-bottom">
         <div>
           <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-primary-foreground/70 mb-1 font-mono">
@@ -125,18 +124,14 @@ const ItemLookupScreen = ({
             Each system has an answer. They don't agree.
           </div>
         </div>
-        <div className="price-tag text-[10px] font-bold tracking-[0.08em]">
-          Step 2 of 5
-        </div>
+        <div className="price-tag text-[10px] font-bold tracking-[0.08em]">Step 2 of 5</div>
       </div>
 
-      {/* Body */}
       <div className="flex-1 flex overflow-hidden">
-
         {/* Items column */}
         <div className="w-[220px] flex-shrink-0 border-r-2 border-border bg-card py-4 flex flex-col gap-1 px-2">
           {ITEMS.map((it, i) => {
-            const doneCount = cardStates[i].filter(s => s === 'done').length;
+            const doneCount = queriedMethods[i]?.size ?? 0;
             return (
               <button
                 key={i}
@@ -166,8 +161,6 @@ const ItemLookupScreen = ({
 
         {/* Cards area */}
         <div className="flex-1 px-6 py-5 overflow-y-auto flex flex-col gap-3 retro-dot-grid">
-
-          {/* Item label */}
           <div className="flex items-center gap-3 mb-1">
             <span className="text-2xl">{item.icon}</span>
             <div>
@@ -176,14 +169,12 @@ const ItemLookupScreen = ({
             </div>
           </div>
 
-          {/* One card per lookup method */}
           {LOOKUP_METHODS.map((method, methodIdx) => {
-            const state = cardStates[currentItem][methodIdx];
-            const lookup = item.lookups[methodIdx];
-            const msg = loadingMsgs[currentItem][methodIdx];
-            const isDone = state === 'done';
-            const isLoading = state === 'loading';
-            const isIdle = state === 'idle';
+            const isDone    = queriedMethods[currentItem]?.has(methodIdx) && !loadingCards[cardKey(currentItem, methodIdx)];
+            const isLoading = !!loadingCards[cardKey(currentItem, methodIdx)];
+            const isIdle    = !isDone && !isLoading;
+            const lookup    = item.lookups[methodIdx];
+            const msg       = loadingMsgs[currentItem][methodIdx];
 
             return (
               <div
@@ -200,10 +191,9 @@ const ItemLookupScreen = ({
                     : 'border-border hover:border-primary/40'
                 } bg-card`}
               >
-                {/* Card header row — always visible */}
+                {/* Header row */}
                 <div className="flex items-center justify-between px-4 py-3 gap-3">
                   <div className="flex items-center gap-2.5 min-w-0">
-                    {/* Status dot */}
                     <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
                       isDone
                         ? lookup.type === 'ok' ? 'bg-primary' : lookup.type === 'err' ? 'bg-destructive' : 'bg-warning'
@@ -245,24 +235,20 @@ const ItemLookupScreen = ({
                   </div>
                 </div>
 
-                {/* Teaser — visible when idle, replaced by result when done */}
+                {/* Body */}
                 {isIdle && (
                   <div className="px-4 pb-3 border-t border-dashed border-border/60 pt-2.5">
                     <div className="text-[11px] font-mono text-muted-foreground/50 truncate select-none blur-[2px] pointer-events-none">
                       {teaser(lookup.text)}
                     </div>
-                    <div className="text-[9px] text-muted-foreground/30 font-mono mt-0.5 tracking-wide">
-                      — Query to reveal
-                    </div>
+                    <div className="text-[9px] text-muted-foreground/30 font-mono mt-0.5 tracking-wide">— Query to reveal</div>
                   </div>
                 )}
-
                 {isLoading && (
                   <div className="px-4 pb-3 border-t border-dashed border-primary/20 pt-2.5">
                     <div className="text-[11px] font-mono text-primary/60 tracking-wide">{msg}</div>
                   </div>
                 )}
-
                 {isDone && (
                   <div className="px-4 pb-4 border-t border-border/40 pt-3 animate-fade-in-up">
                     <div className={`text-[13px] font-normal leading-relaxed whitespace-pre-line ${bodyClass(lookup.type)}`}>
@@ -283,7 +269,7 @@ const ItemLookupScreen = ({
             <div
               key={i}
               className={`w-3 h-3 rounded-none transition-colors border ${
-                i < count ? 'bg-primary border-primary' : i === count ? 'bg-foreground border-foreground' : 'bg-border border-border'
+                itemsWithQuery.has(i) ? 'bg-primary border-primary' : i === count ? 'bg-foreground border-foreground' : 'bg-border border-border'
               }`}
             />
           ))}
@@ -293,12 +279,14 @@ const ItemLookupScreen = ({
         </div>
         <button
           onClick={onCheckout}
-          disabled={count < 2}
+          disabled={count < 2 || anyLoading}
           className={`bg-primary text-primary-foreground border-none rounded-none px-8 py-3 font-sans text-xs font-bold tracking-[0.1em] uppercase cursor-pointer transition-all active:scale-[0.97] ${
-            count >= 2 ? 'opacity-100 hover:bg-primary-light shadow-[3px_3px_0_hsl(var(--foreground))]' : 'opacity-30 pointer-events-none'
+            count >= 2 && !anyLoading
+              ? 'opacity-100 hover:bg-primary-light shadow-[3px_3px_0_hsl(var(--foreground))]'
+              : 'opacity-30 pointer-events-none'
           }`}
         >
-          Proceed to checkout
+          {anyLoading ? 'Querying…' : 'Proceed to checkout'}
         </button>
       </div>
     </div>

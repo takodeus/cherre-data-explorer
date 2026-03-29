@@ -7,8 +7,9 @@ interface ReconciliationScreenProps {
 }
 
 const ReconciliationScreen = ({ onBetterWay, active }: ReconciliationScreenProps) => {
-  const [mainTotal, setMainTotal] = useState('$94.17');
-  const [altTotal, setAltTotal] = useState('Or $47.83.');
+  // Start scrambled so there's no flash of fixed values on re-entry
+  const [mainTotal, setMainTotal] = useState(() => '$' + (Math.random() * 120 + 30).toFixed(2));
+  const [altTotal, setAltTotal]   = useState(() => 'Or $' + (Math.random() * 80 + 20).toFixed(2) + '.');
 
   useEffect(() => {
     if (!active) return;
