@@ -14,7 +14,6 @@ const WelcomeScreen = ({ onStart, active }: WelcomeScreenProps) => {
   const timerRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [idle, setIdle] = useState(false);
 
-  // Build barcode bars once
   useEffect(() => {
     const bc = barcodeRef.current;
     if (!bc || bc.childNodes.length > 0) return;
@@ -24,22 +23,20 @@ const WelcomeScreen = ({ onStart, active }: WelcomeScreenProps) => {
       span.style.display = 'block';
       span.style.background = 'hsl(var(--foreground))';
       span.style.width = '2px';
+      span.style.borderRadius = '1px';
       span.style.animationDelay = `${((i / BAR_HEIGHTS.length) * 1.6).toFixed(2)}s`;
       bc.appendChild(span);
     });
   }, []);
 
-  // Memoised so the same function reference is passed to addEventListener/removeEventListener
   const resetTimer = useCallback(() => {
     setIdle(false);
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => setIdle(true), IDLE_DELAY);
   }, []);
 
-  // Only run the idle timer when this screen is actually visible
   useEffect(() => {
     if (!active) {
-      // Screen went inactive — clear timer and idle state
       if (timerRef.current) clearTimeout(timerRef.current);
       setIdle(false);
       return;
@@ -60,14 +57,12 @@ const WelcomeScreen = ({ onStart, active }: WelcomeScreenProps) => {
 
   return (
     <div
-      className="flex flex-col justify-center items-center text-center retro-dot-grid"
+      className="flex flex-col justify-center items-center text-center"
       style={{ position: 'absolute', inset: 0, padding: '40px' }}
     >
-      <div className="retro-stripe-top absolute top-0 left-0 right-0" />
-
       <img src={cherreLogo} alt="Cherre" className="h-14 mb-6 object-contain" style={{ mixBlendMode: "multiply" }} />
 
-      <div className="price-tag text-[10px] font-bold tracking-[0.22em] uppercase mb-8">
+      <div className="pill-badge mb-8">
         Price Check on Aisle F
       </div>
 
@@ -79,19 +74,19 @@ const WelcomeScreen = ({ onStart, active }: WelcomeScreenProps) => {
         Scan, search, or look up your item to begin checkout.
       </div>
 
-      <div className="text-[12px] text-foreground/40 italic font-light max-w-[380px] leading-relaxed border-2 border-dashed border-border rounded-none px-6 py-4 mb-10 bg-card/60">
+      <div className="text-[13px] text-muted-foreground/60 italic font-light max-w-[380px] leading-relaxed border border-border rounded-xl px-6 py-4 mb-10 bg-card/60 backdrop-blur-sm">
         "This store has been running on four different inventory systems since 2003. Good luck."
       </div>
 
       <button
         onClick={handleStart}
-        className={`bg-primary text-primary-foreground border-none rounded-none px-14 py-5 font-sans text-sm font-bold tracking-[0.14em] uppercase cursor-pointer transition-colors hover:bg-primary-light active:scale-[0.98] shadow-[4px_4px_0_hsl(var(--foreground))] ${idle ? 'idle-btn' : ''}`}
+        className={`bg-primary text-primary-foreground border-none rounded-xl px-14 py-5 font-sans text-sm font-bold tracking-wide uppercase cursor-pointer transition-all hover:bg-primary-light hover:shadow-lg active:scale-[0.98] shadow-md ${idle ? 'idle-btn' : ''}`}
       >
         Start Lookup
       </button>
 
       <div
-        className="mt-3 font-mono text-[9px] tracking-[0.18em] uppercase text-primary/60 transition-opacity duration-700"
+        className="mt-3 text-[10px] tracking-wide text-primary/60 transition-opacity duration-700 font-medium"
         style={{ opacity: idle ? 1 : 0 }}
         aria-hidden="true"
       >
@@ -100,11 +95,9 @@ const WelcomeScreen = ({ onStart, active }: WelcomeScreenProps) => {
 
       <div
         ref={barcodeRef}
-        className={`mt-8 flex gap-0.5 justify-center items-end opacity-[0.15] ${idle ? 'idle-barcode' : ''}`}
+        className={`mt-8 flex gap-0.5 justify-center items-end opacity-[0.12] ${idle ? 'idle-barcode' : ''}`}
         aria-hidden="true"
       />
-
-      <div className="retro-stripe-top absolute bottom-0 left-0 right-0" />
     </div>
   );
 };

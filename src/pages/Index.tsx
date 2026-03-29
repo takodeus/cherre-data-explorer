@@ -145,10 +145,10 @@ const Index = () => {
 
       <button
         onClick={toggleSound}
-        className={`absolute top-[9px] right-6 z-[100] rounded-none px-3.5 py-1.5 font-mono text-[10px] font-bold tracking-[0.08em] cursor-pointer transition-all border-2 ${
+        className={`absolute top-[9px] right-6 z-[100] rounded-full px-3.5 py-1.5 text-[10px] font-bold tracking-wide cursor-pointer transition-all border ${
           soundOn
-            ? 'text-primary border-primary bg-primary-light-bg shadow-[2px_2px_0_hsl(var(--primary))]'
-            : 'text-muted-foreground border-border bg-background hover:text-foreground hover:border-primary shadow-[2px_2px_0_hsl(var(--border))]'
+            ? 'text-primary border-primary/30 bg-primary-light-bg'
+            : 'text-muted-foreground border-border bg-background hover:text-foreground hover:border-primary/30'
         }`}
       >
         {soundOn ? 'SOUND ON' : 'SOUND OFF'}

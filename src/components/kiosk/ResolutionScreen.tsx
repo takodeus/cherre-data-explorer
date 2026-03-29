@@ -5,13 +5,8 @@ interface ResolutionScreenProps {
 const ResolutionScreen = ({ onTalk }: ResolutionScreenProps) => {
   return (
     <div className="flex flex-col justify-center items-center" style={{ position: 'absolute', inset: 0, background: 'hsl(var(--primary))', padding: '48px 40px' }}>
-      {/* Retro stripe top */}
-      <div className="absolute top-0 left-0 right-0 h-[6px]" style={{
-        background: 'repeating-linear-gradient(90deg, hsl(var(--primary-foreground)) 0px, hsl(var(--primary-foreground)) 20px, hsl(var(--primary)) 20px, hsl(var(--primary)) 24px)'
-      }} />
-
       <div className="max-w-[600px] w-full flex flex-col items-start">
-        <div className="text-[10px] font-bold tracking-[0.22em] uppercase text-primary-foreground/60 mb-5 font-mono">
+        <div className="text-[11px] font-semibold tracking-wide uppercase text-primary-foreground/60 mb-5">
           cherre.com — unified real estate data
         </div>
 
@@ -24,17 +19,17 @@ const ResolutionScreen = ({ onTalk }: ResolutionScreenProps) => {
         </div>
 
         {/* Stats */}
-        <div className="flex border-2 border-primary-foreground/30 rounded-none overflow-hidden w-full max-w-[480px] mb-12">
+        <div className="flex rounded-2xl overflow-hidden w-full max-w-[480px] mb-12 bg-primary-foreground/10 backdrop-blur-sm">
           {[
             { num: '4B+', label: 'Legal entities resolved' },
             { num: '160M', label: 'Parcels mapped' },
             { num: '120+', label: 'Data vendors connected' },
           ].map((stat, i) => (
-            <div key={i} className={`flex-1 px-6 py-5 ${i < 2 ? 'border-r-2 border-primary-foreground/20' : ''}`}>
+            <div key={i} className={`flex-1 px-6 py-5 ${i < 2 ? 'border-r border-primary-foreground/10' : ''}`}>
               <div className="text-primary-foreground font-black leading-none tracking-tight mb-1" style={{ fontSize: 'clamp(22px, 3.5vw, 36px)' }}>
                 {stat.num}
               </div>
-              <div className="text-[10px] font-bold tracking-[0.1em] uppercase text-primary-foreground/50 font-mono">
+              <div className="text-[10px] font-semibold tracking-wide uppercase text-primary-foreground/50">
                 {stat.label}
               </div>
             </div>
@@ -45,25 +40,25 @@ const ResolutionScreen = ({ onTalk }: ResolutionScreenProps) => {
         <div className="flex items-center gap-8 w-full max-w-[480px]">
           <button
             onClick={onTalk}
-            className="bg-primary-foreground text-primary border-none rounded-none px-10 py-4 font-sans text-[13px] font-extrabold tracking-[0.1em] uppercase cursor-pointer transition-all hover:bg-primary-light-bg active:scale-[0.97] flex-shrink-0 shadow-[4px_4px_0_hsl(var(--primary-deep))]"
+            className="bg-primary-foreground text-primary border-none rounded-xl px-10 py-4 font-sans text-[13px] font-extrabold tracking-wide uppercase cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02] active:scale-[0.97] flex-shrink-0 shadow-md"
           >
             Talk to the team
           </button>
 
           <div className="flex items-center gap-3.5">
-            <div className="w-16 h-16 bg-primary-foreground rounded-none p-1.5 flex-shrink-0 border-2 border-primary-foreground">
+            <div className="w-16 h-16 bg-primary-foreground rounded-xl p-1.5 flex-shrink-0 shadow-sm">
               <svg className="w-full h-full" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
-                <rect width="52" height="52" fill="white" />
+                <rect width="52" height="52" fill="white" rx="4" />
                 <g fill="hsl(var(--primary))">
-                  <rect x="2" y="2" width="18" height="18" rx="1" />
-                  <rect x="4" y="4" width="14" height="14" fill="white" />
-                  <rect x="6" y="6" width="10" height="10" fill="hsl(var(--primary))" />
-                  <rect x="32" y="2" width="18" height="18" rx="1" />
-                  <rect x="34" y="4" width="14" height="14" fill="white" />
-                  <rect x="36" y="6" width="10" height="10" fill="hsl(var(--primary))" />
-                  <rect x="2" y="32" width="18" height="18" rx="1" />
-                  <rect x="4" y="34" width="14" height="14" fill="white" />
-                  <rect x="6" y="36" width="10" height="10" fill="hsl(var(--primary))" />
+                  <rect x="2" y="2" width="18" height="18" rx="2" />
+                  <rect x="4" y="4" width="14" height="14" fill="white" rx="1" />
+                  <rect x="6" y="6" width="10" height="10" fill="hsl(var(--primary))" rx="1" />
+                  <rect x="32" y="2" width="18" height="18" rx="2" />
+                  <rect x="34" y="4" width="14" height="14" fill="white" rx="1" />
+                  <rect x="36" y="6" width="10" height="10" fill="hsl(var(--primary))" rx="1" />
+                  <rect x="2" y="32" width="18" height="18" rx="2" />
+                  <rect x="4" y="34" width="14" height="14" fill="white" rx="1" />
+                  <rect x="6" y="36" width="10" height="10" fill="hsl(var(--primary))" rx="1" />
                   <rect x="22" y="2" width="8" height="4" />
                   <rect x="22" y="8" width="4" height="4" />
                   <rect x="28" y="8" width="4" height="4" />
@@ -95,16 +90,11 @@ const ResolutionScreen = ({ onTalk }: ResolutionScreenProps) => {
               <div className="text-[11px] text-primary-foreground/60 leading-snug font-normal">
                 Scan to connect<br />with the Cherre team
               </div>
-              <div className="text-xs font-bold text-primary-foreground/90 mt-0.5 font-mono">cherre.com</div>
+              <div className="text-xs font-bold text-primary-foreground/90 mt-0.5">cherre.com</div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Retro stripe bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-[6px]" style={{
-        background: 'repeating-linear-gradient(90deg, hsl(var(--primary-foreground)) 0px, hsl(var(--primary-foreground)) 20px, hsl(var(--primary)) 20px, hsl(var(--primary)) 24px)'
-      }} />
     </div>
   );
 };
