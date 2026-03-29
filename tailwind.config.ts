@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Montserrat', 'sans-serif'],
-        mono: ['Courier New', 'Courier', 'monospace'],
+        mono: ['Space Mono', 'Courier New', 'Courier', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",
