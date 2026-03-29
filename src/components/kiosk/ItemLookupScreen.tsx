@@ -254,7 +254,7 @@ const ItemLookupScreen = ({
                   </div>
                 )}
                 {isDone && (
-                  <div className="px-4 pb-4 border-t border-border/30 pt-3 animate-fade-in-up">
+                  <div className="px-4 pb-5 border-t border-border/30 pt-3 animate-fade-in-up">
                     <div className={`text-[13px] font-normal leading-relaxed whitespace-pre-line ${bodyClass(lookup.type)}`}>
                       {lookup.text}
                     </div>
