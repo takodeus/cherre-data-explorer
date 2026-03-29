@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import cherreLogo from '@/assets/cherre-logo.jpeg';
 
 interface WelcomeScreenProps {
   onStart: () => void;
@@ -23,13 +24,7 @@ const WelcomeScreen = ({ onStart }: WelcomeScreenProps) => {
 
   return (
     <div className="flex flex-col justify-center items-center text-center p-10" style={{ position: 'absolute', inset: 0 }}>
-      {/* Logo Mark */}
-      <svg className="w-14 h-14 mb-5" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="28" cy="28" r="27" stroke="hsl(var(--primary))" strokeWidth="1.5" fill="none" />
-        <circle cx="20" cy="22" r="7" fill="hsl(var(--primary))" />
-        <circle cx="36" cy="22" r="7" fill="hsl(var(--primary-light))" />
-        <ellipse cx="28" cy="36" rx="10" ry="7" fill="hsl(var(--primary))" opacity="0.6" />
-      </svg>
+      <img src={cherreLogo} alt="Cherre" className="h-12 mb-5 object-contain" />
 
       <div className="text-[11px] font-semibold tracking-[0.22em] text-primary uppercase mb-7">
         Price Check on Aisle F
