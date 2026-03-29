@@ -1,5 +1,9 @@
+import { useEffect, useRef } from 'react';
+import { ITEMS } from '@/lib/kiosk-data';
+
 interface StepperBarProps {
   currentScreen: number;
+  itemsWithQuery: Set<number>;
 }
 
 const STEPS = [
@@ -10,13 +14,28 @@ const STEPS = [
   { n: 5, label: 'Receipt' },
 ];
 
-const StepperBar = ({ currentScreen }: StepperBarProps) => {
+const StepperBar = ({ currentScreen, itemsWithQuery }: StepperBarProps) => {
+  const cartCount = itemsWithQuery.size;
+  const badgeRef = useRef<HTMLSpanElement>(null);
+  const prevCount = useRef(cartCount);
+
+  // Pulse the badge when count increases
+  useEffect(() => {
+    if (cartCount > prevCount.current && badgeRef.current) {
+      badgeRef.current.classList.remove('cart-badge-pop');
+      void badgeRef.current.offsetWidth; // force reflow
+      badgeRef.current.classList.add('cart-badge-pop');
+    }
+    prevCount.current = cartCount;
+  }, [cartCount]);
+
   return (
     <div className="flex-shrink-0 relative z-50">
       <div className="modern-accent-top w-full" />
 
-      <div className="bg-background border-b border-border flex items-center justify-center px-6 h-[42px]">
-        <div className="flex items-center gap-1">
+      <div className="bg-background border-b border-border flex items-center px-6 h-[42px]">
+        {/* Stepper — centred */}
+        <div className="flex-1 flex items-center justify-center gap-1">
           {STEPS.map((step, i) => {
             const isPast    = currentScreen > step.n;
             const isCurrent = currentScreen === step.n;
@@ -52,6 +71,37 @@ const StepperBar = ({ currentScreen }: StepperBarProps) => {
               </div>
             );
           })}
+        </div>
+
+        {/* Cart indicator — right side, visible on screens 2–3 while items exist */}
+        <div
+          className={`flex items-center gap-2 transition-all duration-300 ${
+            cartCount > 0 && currentScreen <= 3 ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
+          aria-label={`${cartCount} item${cartCount !== 1 ? 's' : ''} in cart`}
+        >
+          {/* Mini item icons */}
+          <div className="flex items-center gap-0.5">
+            {ITEMS.map((item, i) => (
+              <span
+                key={i}
+                className={`text-[13px] leading-none transition-all duration-200 ${
+                  itemsWithQuery.has(i) ? 'opacity-100' : 'opacity-0 w-0 overflow-hidden'
+                }`}
+                style={{ display: 'inline-block' }}
+              >
+                {item.icon}
+              </span>
+            ))}
+          </div>
+
+          {/* Count badge */}
+          <span
+            ref={badgeRef}
+            className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold leading-none flex-shrink-0"
+          >
+            {cartCount}
+          </span>
         </div>
       </div>
     </div>

@@ -10,6 +10,8 @@ export interface Item {
   name: string;
   icon: string;
   category: string;
+  price: string;        // canonical price (System A/B agree)
+  conflictPrice: string; // absurd price from the worst lookup
   lookups: Lookup[];
 }
 
@@ -18,6 +20,8 @@ export const ITEMS: Item[] = [
     name: 'Ontolo-Tea',
     icon: '🍵',
     category: 'Beverage (can)',
+    price: '$4.99',
+    conflictPrice: 'or $12.50?',
     lookups: [
       { sys: 'System A — By Name', type: 'ok', text: '"Beverage, Hot, Loose Leaf"\nCategory: Hot Beverages > Infusions' },
       { sys: 'System B — By Category', type: 'ok', text: '"Dry Goods > Specialty"\nAisle 7. Or possibly Aisle 12.' },
@@ -29,6 +33,8 @@ export const ITEMS: Item[] = [
     name: 'Alpha Bytes',
     icon: '🍳',
     category: 'Cereal box',
+    price: '$5.49',
+    conflictPrice: 'or $3.99?',
     lookups: [
       { sys: 'System A — By Name', type: 'ok', text: '"Breakfast, Grain-Based, Fortified"\nServing size: 1 cup (32g)' },
       { sys: 'System B — By Category', type: 'ok', text: '"Cereal > Kids"\nShelf life: 18 months' },
@@ -40,6 +46,8 @@ export const ITEMS: Item[] = [
     name: 'Cherries',
     icon: '🍒',
     category: 'Produce',
+    price: '$6.99',
+    conflictPrice: 'or $120,000/yr',
     lookups: [
       { sys: 'System A — By Name', type: 'ok', text: '"Fruit, Stone, Fresh"\nOrigin: Pacific Northwest' },
       { sys: 'System B — By Category', type: 'ok', text: '"Produce"\nSeasonal. Price fluctuates.' },
@@ -51,6 +59,8 @@ export const ITEMS: Item[] = [
     name: 'Parcel',
     icon: '📦',
     category: 'Shipping & Receiving',
+    price: '$3.49',
+    conflictPrice: 'or assessed value?',
     lookups: [
       { sys: 'System A — By Name', type: 'ok', text: '"Package, Corrugated, Brown"\nDimensions: Unknown.\nContents: Unknown.' },
       { sys: 'System B — By Category', type: 'warn', text: '"Real Property > Land > Tax Lot"\nZoned: Mixed-Use Commercial.\nOwner of record: 3 LLCs and a trust.\nAssessed value: It depends.' },
