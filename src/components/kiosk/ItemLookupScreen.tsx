@@ -82,8 +82,11 @@ const ItemLookupScreen = ({
 
     if (soundOn) scanBeep();
 
+    const ck = cardKey(itemIdx, methodIdx);
+    setScanningCard(ck);
+    setTimeout(() => setScanningCard(null), 800);
+
     setCardLoading(itemIdx, methodIdx, true);
-    setCardMsg(itemIdx, methodIdx, 'Connecting to system…');
 
     setQueriedMethods(prev => {
       const next = prev.map(s => new Set(s));
