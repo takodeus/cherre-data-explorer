@@ -49,6 +49,7 @@ const ItemLookupScreen = ({
   onCheckout,
 }: ItemLookupScreenProps) => {
   const [loadingCards, setLoadingCards] = useState<Record<string, boolean>>({});
+  const [scanningCard, setScanningCard] = useState<string | null>(null);
   const [loadingMsgs, setLoadingMsgs] = useState<string[][]>(
     ITEMS.map(() => LOOKUP_METHODS.map(() => ''))
   );
@@ -80,6 +81,10 @@ const ItemLookupScreen = ({
     if (loadingCards[cardKey(itemIdx, methodIdx)]) return;
 
     if (soundOn) scanBeep();
+
+    const ck = cardKey(itemIdx, methodIdx);
+    setScanningCard(ck);
+    setTimeout(() => setScanningCard(null), 800);
 
     setCardLoading(itemIdx, methodIdx, true);
     setCardMsg(itemIdx, methodIdx, 'Connecting to system…');
@@ -174,7 +179,7 @@ const ItemLookupScreen = ({
             return (
               <div
                 key={methodIdx}
-                className={`rounded-xl border transition-all duration-300 overflow-hidden ${
+                className={`relative rounded-xl border transition-all duration-300 overflow-hidden ${
                   isDone
                     ? lookup.type === 'ok'
                       ? 'border-primary/30 shadow-sm bg-primary-light-bg/30'
@@ -186,6 +191,10 @@ const ItemLookupScreen = ({
                     : 'border-border hover:border-primary/20 hover:shadow-sm'
                 } bg-card`}
               >
+                {/* Scan laser */}
+                {scanningCard === cardKey(currentItem, methodIdx) && (
+                  <div className="scan-laser" />
+                )}
                 {/* Header row */}
                 <div className="flex items-center justify-between px-4 py-3 gap-3">
                   <div className="flex items-center gap-2.5 min-w-0">
