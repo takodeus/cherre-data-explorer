@@ -150,6 +150,24 @@
   animation: fadeInUp 0.3s ease forwards;
 }
 
+/* ── Idle state animations ── */
+@keyframes idle-btn-breathe {
+  0%, 100% { transform: scale(1);    box-shadow: 4px 4px 0 hsl(var(--foreground)); }
+  50%       { transform: scale(1.03); box-shadow: 6px 6px 0 hsl(var(--foreground)); }
+}
+@keyframes idle-bar-sweep {
+  0%, 100% { opacity: 0.15; }
+  50%      { opacity: 0.7;  }
+}
+
+.idle-btn {
+  animation: idle-btn-breathe 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+/* animation-delay is set inline per span; this fires when parent has .idle-barcode */
+.idle-barcode span {
+  animation: idle-bar-sweep 1.6s ease-in-out infinite;
+}
+
 /* ── Retro decorative elements ── */
 .retro-stripe-top {
   background: repeating-linear-gradient(
