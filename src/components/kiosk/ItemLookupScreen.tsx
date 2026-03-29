@@ -2,7 +2,6 @@ import { useState, useCallback } from 'react';
 import { ITEMS, LOOKUP_METHODS, LOADING_MESSAGES, type LookupType } from '@/lib/kiosk-data';
 import { scanBeep } from '@/lib/kiosk-audio';
 
-// 'loading' is still local — only 'done' is derived from persisted queriedMethods
 type CardState = 'idle' | 'loading' | 'done';
 
 interface ItemLookupScreenProps {
@@ -28,9 +27,9 @@ const statusLabel = (type: LookupType) => {
 };
 
 const statusBadgeClass = (type: LookupType) => {
-  if (type === 'ok') return 'text-primary border-primary bg-primary-light-bg';
-  if (type === 'err') return 'text-destructive border-destructive/40 bg-destructive/5';
-  return 'text-warning-foreground border-warning/40 bg-warning/10';
+  if (type === 'ok') return 'text-primary border-primary/20 bg-primary-light-bg';
+  if (type === 'err') return 'text-destructive border-destructive/20 bg-destructive/5';
+  return 'text-warning-foreground border-warning/20 bg-warning/10';
 };
 
 const bodyClass = (type: LookupType) => {
@@ -49,7 +48,6 @@ const ItemLookupScreen = ({
   setQueriedMethods,
   onCheckout,
 }: ItemLookupScreenProps) => {
-  // loadingCards tracks in-flight queries — local only, intentionally resets on nav
   const [loadingCards, setLoadingCards] = useState<Record<string, boolean>>({});
   const [loadingMsgs, setLoadingMsgs] = useState<string[][]>(
     ITEMS.map(() => LOOKUP_METHODS.map(() => ''))
@@ -78,7 +76,6 @@ const ItemLookupScreen = ({
 
   const runLookup = useCallback((methodIdx: number) => {
     const itemIdx = currentItem;
-    // Already done (persisted) or currently loading — no-op
     if (queriedMethods[itemIdx]?.has(methodIdx)) return;
     if (loadingCards[cardKey(itemIdx, methodIdx)]) return;
 
@@ -87,7 +84,6 @@ const ItemLookupScreen = ({
     setCardLoading(itemIdx, methodIdx, true);
     setCardMsg(itemIdx, methodIdx, 'Connecting to system…');
 
-    // Persist immediately via functional updaters — immune to stale closures
     setQueriedMethods(prev => {
       const next = prev.map(s => new Set(s));
       next[itemIdx].add(methodIdx);
@@ -113,43 +109,42 @@ const ItemLookupScreen = ({
 
   return (
     <div className="flex flex-col bg-background" style={{ position: 'absolute', inset: 0 }}>
-      <div className="retro-stripe-top" />
-
-      <div className="bg-primary px-10 pt-6 pb-5 flex items-end justify-between retro-border-bottom">
+      {/* Header */}
+      <div className="bg-primary px-10 pt-6 pb-5 flex items-end justify-between">
         <div>
-          <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-primary-foreground/70 mb-1 font-mono">
+          <div className="text-[11px] font-semibold tracking-wide uppercase text-primary-foreground/70 mb-1">
             Self-checkout — Item Lookup
           </div>
           <div className="text-primary-foreground font-extrabold tracking-tight" style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}>
             Each system has an answer. They don't agree.
           </div>
         </div>
-        <div className="price-tag text-[10px] font-bold tracking-[0.08em]">Step 2 of 5</div>
+        <div className="pill-badge text-[10px]" style={{ background: 'hsl(var(--primary-deep))' }}>Step 2 of 5</div>
       </div>
 
       <div className="flex-1 flex overflow-hidden">
         {/* Items column */}
-        <div className="w-[220px] flex-shrink-0 border-r-2 border-border bg-card py-4 flex flex-col gap-1 px-2">
+        <div className="w-[220px] flex-shrink-0 border-r border-border bg-card py-4 flex flex-col gap-1.5 px-2">
           {ITEMS.map((it, i) => {
             const doneCount = queriedMethods[i]?.size ?? 0;
             return (
               <button
                 key={i}
                 onClick={() => onSelectItem(i)}
-                className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer border-2 text-left w-full transition-all rounded-none ${
+                className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer border text-left w-full transition-all rounded-lg ${
                   i === currentItem
-                    ? 'bg-primary-light-bg border-primary shadow-[3px_3px_0_hsl(var(--primary))]'
-                    : 'bg-background border-border hover:border-primary/40 hover:bg-primary-light-bg/50'
+                    ? 'bg-primary-light-bg border-primary/30 shadow-sm'
+                    : 'bg-background border-transparent hover:border-border hover:bg-card'
                 }`}
               >
-                <div className="w-10 h-10 rounded-none border-2 border-primary/30 bg-background flex items-center justify-center text-lg flex-shrink-0">
+                <div className="w-10 h-10 rounded-lg border border-border bg-background flex items-center justify-center text-lg flex-shrink-0">
                   {it.icon}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-[13px] font-bold text-foreground">{it.name}</div>
-                  <div className="text-[10px] text-muted-foreground font-normal mt-px font-mono">{it.category}</div>
+                  <div className="text-[10px] text-muted-foreground font-medium mt-px">{it.category}</div>
                   {doneCount > 0 && (
-                    <div className="text-[9px] font-mono text-primary mt-1">
+                    <div className="text-[9px] font-medium text-primary mt-1">
                       {doneCount}/{LOOKUP_METHODS.length} queried
                     </div>
                   )}
@@ -160,11 +155,11 @@ const ItemLookupScreen = ({
         </div>
 
         {/* Cards area */}
-        <div className="flex-1 px-6 py-5 overflow-y-auto flex flex-col gap-3 retro-dot-grid">
+        <div className="flex-1 px-6 py-5 overflow-y-auto flex flex-col gap-3">
           <div className="flex items-center gap-3 mb-1">
             <span className="text-2xl">{item.icon}</span>
             <div>
-              <div className="text-[11px] font-mono font-bold tracking-[0.12em] uppercase text-muted-foreground">Looking up</div>
+              <div className="text-[11px] font-semibold tracking-wide uppercase text-muted-foreground">Looking up</div>
               <div className="text-[15px] font-extrabold text-foreground tracking-tight">{item.name}</div>
             </div>
           </div>
@@ -179,16 +174,16 @@ const ItemLookupScreen = ({
             return (
               <div
                 key={methodIdx}
-                className={`rounded-none border-2 transition-all duration-300 overflow-hidden ${
+                className={`rounded-xl border transition-all duration-300 overflow-hidden ${
                   isDone
                     ? lookup.type === 'ok'
-                      ? 'border-primary shadow-[3px_3px_0_hsl(var(--primary)/0.25)]'
+                      ? 'border-primary/30 shadow-sm bg-primary-light-bg/30'
                       : lookup.type === 'err'
-                      ? 'border-destructive/50 shadow-[3px_3px_0_hsl(var(--destructive)/0.15)]'
-                      : 'border-warning/50 shadow-[3px_3px_0_hsl(var(--warning)/0.15)]'
+                      ? 'border-destructive/20 shadow-sm bg-destructive/[0.02]'
+                      : 'border-warning/20 shadow-sm bg-warning/[0.03]'
                     : isLoading
-                    ? 'border-primary/40 border-dashed'
-                    : 'border-border hover:border-primary/40'
+                    ? 'border-primary/30 bg-primary-light-bg/20'
+                    : 'border-border hover:border-primary/20 hover:shadow-sm'
                 } bg-card`}
               >
                 {/* Header row */}
@@ -200,7 +195,7 @@ const ItemLookupScreen = ({
                         : isLoading ? 'bg-primary animate-pulse' : 'bg-border'
                     }`} />
                     <div>
-                      <div className="text-[9px] font-bold tracking-[0.16em] uppercase font-mono text-muted-foreground">
+                      <div className="text-[9px] font-semibold tracking-wide uppercase text-muted-foreground">
                         System {String.fromCharCode(65 + methodIdx)}
                       </div>
                       <div className="text-[12px] font-bold text-foreground">{method}</div>
@@ -209,14 +204,14 @@ const ItemLookupScreen = ({
 
                   <div className="flex items-center gap-2 flex-shrink-0">
                     {isDone && (
-                      <span className={`text-[9px] font-bold tracking-[0.1em] uppercase font-mono border px-2 py-0.5 ${statusBadgeClass(lookup.type)}`}>
+                      <span className={`text-[9px] font-bold tracking-wide uppercase rounded-full border px-2.5 py-0.5 ${statusBadgeClass(lookup.type)}`}>
                         {statusLabel(lookup.type)}
                       </span>
                     )}
                     {isIdle && (
                       <button
                         onClick={() => runLookup(methodIdx)}
-                        className="bg-background border-2 border-border text-muted-foreground rounded-none px-3 py-1 font-mono text-[10px] font-bold tracking-[0.08em] uppercase cursor-pointer transition-all hover:border-primary hover:text-foreground shadow-[2px_2px_0_hsl(var(--border))] hover:shadow-[2px_2px_0_hsl(var(--primary))]"
+                        className="bg-background border border-border text-muted-foreground rounded-lg px-3.5 py-1.5 text-[10px] font-bold tracking-wide uppercase cursor-pointer transition-all hover:border-primary hover:text-primary hover:shadow-sm"
                       >
                         Query →
                       </button>
@@ -237,20 +232,20 @@ const ItemLookupScreen = ({
 
                 {/* Body */}
                 {isIdle && (
-                  <div className="px-4 pb-3 border-t border-dashed border-border/60 pt-2.5">
-                    <div className="text-[11px] font-mono text-muted-foreground/50 truncate select-none blur-[2px] pointer-events-none">
+                  <div className="px-4 pb-3 border-t border-border/50 pt-2.5">
+                    <div className="text-[11px] text-muted-foreground/40 truncate select-none blur-[2px] pointer-events-none">
                       {teaser(lookup.text)}
                     </div>
-                    <div className="text-[9px] text-muted-foreground/30 font-mono mt-0.5 tracking-wide">— Query to reveal</div>
+                    <div className="text-[9px] text-muted-foreground/30 mt-0.5 tracking-wide">— Query to reveal</div>
                   </div>
                 )}
                 {isLoading && (
-                  <div className="px-4 pb-3 border-t border-dashed border-primary/20 pt-2.5">
+                  <div className="px-4 pb-3 border-t border-primary/10 pt-2.5">
                     <div className="text-[11px] font-mono text-primary/60 tracking-wide">{msg}</div>
                   </div>
                 )}
                 {isDone && (
-                  <div className="px-4 pb-4 border-t border-border/40 pt-3 animate-fade-in-up">
+                  <div className="px-4 pb-4 border-t border-border/30 pt-3 animate-fade-in-up">
                     <div className={`text-[13px] font-normal leading-relaxed whitespace-pre-line ${bodyClass(lookup.type)}`}>
                       {lookup.text}
                     </div>
@@ -263,26 +258,26 @@ const ItemLookupScreen = ({
       </div>
 
       {/* Footer */}
-      <div className="px-8 py-4 border-t-2 border-border flex items-center justify-between bg-card">
+      <div className="px-8 py-4 border-t border-border flex items-center justify-between bg-card">
         <div className="flex gap-2 items-center">
           {ITEMS.map((_, i) => (
             <div
               key={i}
-              className={`w-3 h-3 rounded-none transition-colors border ${
-                itemsWithQuery.has(i) ? 'bg-primary border-primary' : i === count ? 'bg-foreground border-foreground' : 'bg-border border-border'
+              className={`w-2.5 h-2.5 rounded-full transition-colors ${
+                itemsWithQuery.has(i) ? 'bg-primary' : i === count ? 'bg-foreground' : 'bg-border'
               }`}
             />
           ))}
-          <span className="text-[11px] text-muted-foreground tracking-[0.06em] ml-1 font-mono">
+          <span className="text-[11px] text-muted-foreground tracking-wide ml-1 font-medium">
             {count} of {ITEMS.length} items queried
           </span>
         </div>
         <button
           onClick={onCheckout}
           disabled={count < 2 || anyLoading}
-          className={`bg-primary text-primary-foreground border-none rounded-none px-8 py-3 font-sans text-xs font-bold tracking-[0.1em] uppercase cursor-pointer transition-all active:scale-[0.97] ${
+          className={`bg-primary text-primary-foreground border-none rounded-xl px-8 py-3 font-sans text-xs font-bold tracking-wide uppercase cursor-pointer transition-all active:scale-[0.97] ${
             count >= 2 && !anyLoading
-              ? 'opacity-100 hover:bg-primary-light shadow-[3px_3px_0_hsl(var(--foreground))]'
+              ? 'opacity-100 hover:bg-primary-light shadow-md hover:shadow-lg'
               : 'opacity-30 pointer-events-none'
           }`}
         >
