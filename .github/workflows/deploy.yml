@@ -1,11 +1,12 @@
 name: Deploy to GitHub Pages
 
+# Only fires on main — Lovable works on the 'lovable' branch.
+# Merge lovable → main to trigger a deploy.
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
-# Prevent the deploy commit from re-triggering this workflow
 concurrency:
   group: pages-deploy
   cancel-in-progress: true
@@ -15,7 +16,6 @@ permissions:
 
 jobs:
   deploy:
-    # Skip if this is the Actions bot's own deploy commit
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     steps:
