@@ -25,8 +25,8 @@ export const ITEMS: Item[] = [
     price: '$4.99',
     conflictPrice: 'or $12.50?',
     lookups: [
-      { sys: 'System A — By Name', type: 'ok', text: '"Beverage, Hot, Loose Leaf"\nCategory: Hot Beverages > Infusions' },
-      { sys: 'System B — By Category', type: 'ok', text: '"Dry Goods > Specialty"\nAisle 7. Or possibly Aisle 12.' },
+      { sys: 'System A — By Name', type: 'ok', text: '"Beverage, Cold, Canned"\nCategory: RTD > Tea > Functional' },
+      { sys: 'System B — By Category', type: 'ok', text: '"Beverages > Canned > Ambient"\nRefrigerated or shelf-stable?\nSystem B is not sure.' },
       { sys: 'System C — By SKU', type: 'err', text: 'ITEM NOT FOUND.\nDid you mean: "Onto-Tea"?\nOr: "Onto-T" (apparel, size S)?' },
       { sys: 'System D — By Vendor Code', type: 'warn', text: '"Classified as Produce."\nLocation: Aisle F, next to the apples.' },
     ],
