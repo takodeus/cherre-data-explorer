@@ -9,7 +9,7 @@ export interface Lookup {
 export interface Item {
   name: string;
   icon: string;
-  image?: string;       // optional product image path (from src/assets/)
+  images?: string[];    // optional product images — first is thumbnail, rest shown in gallery
   category: string;
   price: string;        // canonical price (System A/B agree)
   conflictPrice: string; // absurd price from the worst lookup
@@ -19,7 +19,8 @@ export interface Item {
 export const ITEMS: Item[] = [
   {
     name: 'Ontolo-Tea',
-    icon: '🍵',
+    icon: '🫙',
+    images: ['ontolo with a8185e.png', '1can back mockup NBG.png', '2 cans mockup NBG.png'],
     category: 'Beverage (can)',
     price: '$4.99',
     conflictPrice: 'or $12.50?',
@@ -33,7 +34,7 @@ export const ITEMS: Item[] = [
   {
     name: "Cherre O's",
     icon: '🥣',
-    image: 'Cherre-Os.png',
+    images: ['Cherre-Os.png'],
     category: 'Cereal box',
     price: '$5.49',
     conflictPrice: 'or $3.99?',
