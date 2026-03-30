@@ -2,11 +2,17 @@ import { useState, useCallback } from 'react';
 import { ITEMS, LOOKUP_METHODS, LOADING_MESSAGES, type LookupType } from '@/lib/kiosk-data';
 import { scanBeep } from '@/lib/kiosk-audio';
 import cherreOsImg from '@/assets/Cherre-Os.png';
+import ontoloPrimaryImg from '@/assets/ontolo with a8185e.png';
+import ontoloCan1Img from '@/assets/1can back mockup NBG.png';
+import ontoloCans2Img from '@/assets/2 cans mockup NBG.png';
 
 // Map image filenames (as stored in kiosk-data) to their imported URLs.
-// Add a new entry here whenever a new item image is added to src/assets/.
+// Add a new entry here whenever a new image is added to src/assets/.
 const ITEM_IMAGES: Record<string, string> = {
   'Cherre-Os.png': cherreOsImg,
+  'ontolo with a8185e.png': ontoloPrimaryImg,
+  '1can back mockup NBG.png': ontoloCan1Img,
+  '2 cans mockup NBG.png': ontoloCans2Img,
 };
 
 type CardState = 'idle' | 'loading' | 'done';
@@ -56,7 +62,7 @@ const ItemLookupScreen = ({
   onCheckout,
 }: ItemLookupScreenProps) => {
   const [loadingCards, setLoadingCards] = useState<Record<string, boolean>>({});
-  const [lightbox, setLightbox] = useState<{ src: string; name: string } | null>(null);
+  const [lightbox, setLightbox] = useState<{ srcs: string[]; name: string; idx: number } | null>(null);
   const [scanningCard, setScanningCard] = useState<string | null>(null);
   const [loadingMsgs, setLoadingMsgs] = useState<string[][]>(
     ITEMS.map(() => LOOKUP_METHODS.map(() => ''))
@@ -151,9 +157,9 @@ const ItemLookupScreen = ({
                     : 'bg-background border-transparent hover:border-border hover:bg-card'
                 }`}
               >
-                <div className="w-10 h-10 rounded-lg border border-border bg-background flex items-center justify-center text-lg flex-shrink-0 overflow-hidden">
-                  {it.image && ITEM_IMAGES[it.image]
-                    ? <img src={ITEM_IMAGES[it.image]} alt={it.name} className="w-full h-full object-cover" />
+                <div className="w-14 h-10 rounded-lg border border-border bg-background flex items-center justify-center text-lg flex-shrink-0 overflow-hidden">
+                  {it.images?.[0] && ITEM_IMAGES[it.images[0]]
+                    ? <img src={ITEM_IMAGES[it.images[0]]} alt={it.name} className="w-full h-full object-contain p-0.5" />
                     : it.icon}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -173,17 +179,21 @@ const ItemLookupScreen = ({
         {/* Cards area */}
         <div className="flex-1 px-6 py-5 overflow-y-auto flex flex-col gap-3 min-h-0">
           <div className="flex items-center gap-3 mb-1">
-            {item.image && ITEM_IMAGES[item.image] ? (
+            {item.images?.[0] && ITEM_IMAGES[item.images[0]] ? (
               <button
-                onClick={() => setLightbox({ src: ITEM_IMAGES[item.image!]!, name: item.name })}
-                className="w-16 h-16 rounded-lg border border-border bg-card flex-shrink-0 overflow-hidden cursor-zoom-in hover:border-primary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40"
-                title="Click to enlarge"
+                onClick={() => setLightbox({
+                  srcs: (item.images ?? []).map(f => ITEM_IMAGES[f]).filter(Boolean),
+                  name: item.name,
+                  idx: 0,
+                })}
+                className="w-20 h-14 rounded-lg border border-border bg-card flex-shrink-0 overflow-hidden cursor-zoom-in hover:border-primary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40"
+                title={`Click to enlarge${(item.images?.length ?? 0) > 1 ? ` · ${item.images!.length} photos` : ''}`}
                 aria-label={`View full image of ${item.name}`}
               >
                 <img
-                  src={ITEM_IMAGES[item.image]}
+                  src={ITEM_IMAGES[item.images[0]]}
                   alt={item.name}
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-contain p-0.5"
                 />
               </button>
             ) : (
@@ -328,20 +338,61 @@ const ItemLookupScreen = ({
         style={{ background: 'rgba(0,0,0,0.72)' }}
         role="dialog"
         aria-modal="true"
-        aria-label={`Full image of ${lightbox.name}`}
+        aria-label={`${lightbox.name} — image ${lightbox.idx + 1} of ${lightbox.srcs.length}`}
       >
         <div
-          className="relative flex flex-col items-center gap-3 p-4"
+          className="relative flex flex-col items-center gap-4 p-4"
           onClick={e => e.stopPropagation()}
         >
+          {/* Main image */}
           <img
-            src={lightbox.src}
-            alt={lightbox.name}
-            className="max-w-[320px] max-h-[320px] object-contain rounded-xl shadow-2xl"
+            src={lightbox.srcs[lightbox.idx]}
+            alt={`${lightbox.name} ${lightbox.idx + 1}`}
+            className="max-w-[340px] max-h-[340px] object-contain rounded-xl shadow-2xl"
           />
-          <span className="text-white/80 font-mono text-[11px] tracking-[0.12em] uppercase">
-            {lightbox.name}
-          </span>
+
+          {/* Prev / next arrows — only when multiple images */}
+          {lightbox.srcs.length > 1 && (
+            <>
+              <button
+                onClick={() => setLightbox(lb => lb && { ...lb, idx: (lb.idx - 1 + lb.srcs.length) % lb.srcs.length })}
+                className="absolute left-[-44px] top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-colors focus:outline-none"
+                aria-label="Previous image"
+              >
+                ‹
+              </button>
+              <button
+                onClick={() => setLightbox(lb => lb && { ...lb, idx: (lb.idx + 1) % lb.srcs.length })}
+                className="absolute right-[-44px] top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-colors focus:outline-none"
+                aria-label="Next image"
+              >
+                ›
+              </button>
+            </>
+          )}
+
+          {/* Label + dots */}
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-white/80 font-mono text-[11px] tracking-[0.12em] uppercase">
+              {lightbox.name}
+            </span>
+            {lightbox.srcs.length > 1 && (
+              <div className="flex gap-1.5">
+                {lightbox.srcs.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setLightbox(lb => lb && { ...lb, idx: i })}
+                    className={`w-1.5 h-1.5 rounded-full transition-colors focus:outline-none ${
+                      i === lightbox.idx ? 'bg-white' : 'bg-white/30 hover:bg-white/50'
+                    }`}
+                    aria-label={`Go to image ${i + 1}`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Close button */}
           <button
             onClick={() => setLightbox(null)}
             className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-white/20 hover:bg-white/35 text-white text-sm flex items-center justify-center transition-colors focus:outline-none"
