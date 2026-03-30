@@ -113,7 +113,7 @@ const ItemLookupScreen = ({
   const item = ITEMS[currentItem];
 
   return (
-    <div className="flex flex-col bg-background" style={{ position: 'absolute', inset: 0 }}>
+    <div className="flex flex-col bg-background h-full" style={{ position: 'absolute', inset: 0, minHeight: 0 }}>
       {/* Header */}
       <div className="bg-primary px-10 pt-6 pb-5 flex items-end justify-between">
         <div>
@@ -127,7 +127,7 @@ const ItemLookupScreen = ({
         <div className="pill-badge text-[10px]" style={{ background: 'hsl(var(--primary-deep))' }}>Step 2 of 5</div>
       </div>
 
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden min-h-0">
         {/* Items column */}
         <div className="w-[220px] flex-shrink-0 border-r border-border bg-card py-4 flex flex-col gap-1.5 px-2">
           {ITEMS.map((it, i) => {
@@ -160,7 +160,7 @@ const ItemLookupScreen = ({
         </div>
 
         {/* Cards area */}
-        <div className="flex-1 px-6 py-5 overflow-y-auto flex flex-col gap-3">
+        <div className="flex-1 px-6 py-5 overflow-y-auto flex flex-col gap-3 min-h-0">
           <div className="flex items-center gap-3 mb-1">
             <span className="text-2xl">{item.icon}</span>
             <div>
