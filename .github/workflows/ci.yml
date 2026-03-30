@@ -1,8 +1,8 @@
-name: CI — Lovable branch check
+name: CI
 
 on:
   push:
-    branches: [lovable]
+    branches: [claude]
   pull_request:
     branches: [main]
 

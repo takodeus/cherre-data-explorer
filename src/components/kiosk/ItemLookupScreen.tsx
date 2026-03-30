@@ -1,6 +1,13 @@
 import { useState, useCallback } from 'react';
 import { ITEMS, LOOKUP_METHODS, LOADING_MESSAGES, type LookupType } from '@/lib/kiosk-data';
 import { scanBeep } from '@/lib/kiosk-audio';
+import cherreOsImg from '@/assets/Cherre-Os.png';
+
+// Map image filenames (as stored in kiosk-data) to their imported URLs.
+// Add a new entry here whenever a new item image is added to src/assets/.
+const ITEM_IMAGES: Record<string, string> = {
+  'Cherre-Os.png': cherreOsImg,
+};
 
 type CardState = 'idle' | 'loading' | 'done';
 
@@ -49,6 +56,7 @@ const ItemLookupScreen = ({
   onCheckout,
 }: ItemLookupScreenProps) => {
   const [loadingCards, setLoadingCards] = useState<Record<string, boolean>>({});
+  const [lightbox, setLightbox] = useState<{ src: string; name: string } | null>(null);
   const [scanningCard, setScanningCard] = useState<string | null>(null);
   const [loadingMsgs, setLoadingMsgs] = useState<string[][]>(
     ITEMS.map(() => LOOKUP_METHODS.map(() => ''))
@@ -113,6 +121,7 @@ const ItemLookupScreen = ({
   const item = ITEMS[currentItem];
 
   return (
+    <>
     <div className="flex flex-col bg-background h-full" style={{ position: 'absolute', inset: 0, minHeight: 0 }}>
       {/* Header */}
       <div className="bg-primary px-10 pt-6 pb-5 flex items-end justify-between">
@@ -142,8 +151,10 @@ const ItemLookupScreen = ({
                     : 'bg-background border-transparent hover:border-border hover:bg-card'
                 }`}
               >
-                <div className="w-10 h-10 rounded-lg border border-border bg-background flex items-center justify-center text-lg flex-shrink-0">
-                  {it.icon}
+                <div className="w-10 h-10 rounded-lg border border-border bg-background flex items-center justify-center text-lg flex-shrink-0 overflow-hidden">
+                  {it.image && ITEM_IMAGES[it.image]
+                    ? <img src={ITEM_IMAGES[it.image]} alt={it.name} className="w-full h-full object-cover" />
+                    : it.icon}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-[13px] font-bold text-foreground">{it.name}</div>
@@ -162,7 +173,22 @@ const ItemLookupScreen = ({
         {/* Cards area */}
         <div className="flex-1 px-6 py-5 overflow-y-auto flex flex-col gap-3 min-h-0">
           <div className="flex items-center gap-3 mb-1">
-            <span className="text-2xl">{item.icon}</span>
+            {item.image && ITEM_IMAGES[item.image] ? (
+              <button
+                onClick={() => setLightbox({ src: ITEM_IMAGES[item.image!]!, name: item.name })}
+                className="w-16 h-16 rounded-lg border border-border bg-card flex-shrink-0 overflow-hidden cursor-zoom-in hover:border-primary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40"
+                title="Click to enlarge"
+                aria-label={`View full image of ${item.name}`}
+              >
+                <img
+                  src={ITEM_IMAGES[item.image]}
+                  alt={item.name}
+                  className="w-full h-full object-contain"
+                />
+              </button>
+            ) : (
+              <span className="text-2xl">{item.icon}</span>
+            )}
             <div>
               <div className="text-[11px] font-semibold tracking-wide uppercase text-muted-foreground">Looking up</div>
               <div className="text-[15px] font-extrabold text-foreground tracking-tight">{item.name}</div>
@@ -294,6 +320,42 @@ const ItemLookupScreen = ({
         </button>
       </div>
     </div>
+
+    {lightbox && (
+      <div
+        className="fixed inset-0 z-[300] flex items-center justify-center"
+        onClick={() => setLightbox(null)}
+        style={{ background: 'rgba(0,0,0,0.72)' }}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Full image of ${lightbox.name}`}
+      >
+        <div
+          className="relative flex flex-col items-center gap-3 p-4"
+          onClick={e => e.stopPropagation()}
+        >
+          <img
+            src={lightbox.src}
+            alt={lightbox.name}
+            className="max-w-[320px] max-h-[320px] object-contain rounded-xl shadow-2xl"
+          />
+          <span className="text-white/80 font-mono text-[11px] tracking-[0.12em] uppercase">
+            {lightbox.name}
+          </span>
+          <button
+            onClick={() => setLightbox(null)}
+            className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-white/20 hover:bg-white/35 text-white text-sm flex items-center justify-center transition-colors focus:outline-none"
+            aria-label="Close"
+          >
+            ✕
+          </button>
+        </div>
+        <p className="absolute bottom-6 text-white/30 text-[10px] font-mono tracking-wide">
+          click anywhere to close
+        </p>
+      </div>
+    )}
+    </>
   );
 };
 
