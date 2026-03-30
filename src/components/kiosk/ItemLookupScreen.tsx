@@ -179,7 +179,7 @@ const ItemLookupScreen = ({
             return (
               <div
                 key={methodIdx}
-                className={`relative rounded-xl border transition-all duration-300 overflow-hidden ${
+                className={`relative rounded-xl border transition-all duration-300 ${
                   isDone
                     ? lookup.type === 'ok'
                       ? 'border-primary/30 shadow-sm bg-primary-light-bg/30'
