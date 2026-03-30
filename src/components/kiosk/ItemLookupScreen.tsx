@@ -242,8 +242,8 @@ const ItemLookupScreen = ({
                 {/* Body */}
                 {isIdle && (
                   <div className="px-4 pb-3 border-t border-border/50 pt-2.5">
-                    <div className="text-[11px] text-muted-foreground/40 select-none blur-[2px] pointer-events-none">
-                      {teaser(lookup.text)}
+                    <div className="text-[11px] text-muted-foreground/40 select-none blur-[2px] pointer-events-none whitespace-pre-line leading-relaxed">
+                      {lookup.text}
                     </div>
                     <div className="text-[9px] text-muted-foreground/30 mt-0.5 tracking-wide">— Query to reveal</div>
                   </div>
