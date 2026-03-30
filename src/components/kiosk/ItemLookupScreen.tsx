@@ -113,7 +113,7 @@ const ItemLookupScreen = ({
   const item = ITEMS[currentItem];
 
   return (
-    <div className="flex flex-col bg-background" style={{ position: 'absolute', inset: 0 }}>
+    <div className="flex flex-col bg-background h-full" style={{ position: 'absolute', inset: 0, minHeight: 0 }}>
       {/* Header */}
       <div className="bg-primary px-10 pt-6 pb-5 flex items-end justify-between">
         <div>
