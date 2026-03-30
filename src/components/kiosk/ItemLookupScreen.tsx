@@ -62,7 +62,7 @@ const ItemLookupScreen = ({
   onCheckout,
 }: ItemLookupScreenProps) => {
   const [loadingCards, setLoadingCards] = useState<Record<string, boolean>>({});
-  const [lightbox, setLightbox] = useState<{ srcs: string[]; name: string; idx: number } | null>(null);
+  const [lightbox, setLightbox] = useState<{ srcs: string[]; name: string; idx: number; zoom: number } | null>(null);
   const [scanningCard, setScanningCard] = useState<string | null>(null);
   const [loadingMsgs, setLoadingMsgs] = useState<string[][]>(
     ITEMS.map(() => LOOKUP_METHODS.map(() => ''))
@@ -185,6 +185,7 @@ const ItemLookupScreen = ({
                   srcs: (item.images ?? []).map(f => ITEM_IMAGES[f]).filter(Boolean),
                   name: item.name,
                   idx: 0,
+                  zoom: 1,
                 })}
                 className="w-20 h-14 rounded-lg border border-border bg-card flex-shrink-0 overflow-hidden cursor-zoom-in hover:border-primary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40"
                 title={`Click to enlarge${(item.images?.length ?? 0) > 1 ? ` · ${item.images!.length} photos` : ''}`}
@@ -344,25 +345,59 @@ const ItemLookupScreen = ({
           className="relative flex flex-col items-center gap-4 p-4"
           onClick={e => e.stopPropagation()}
         >
-          {/* Main image */}
-          <img
-            src={lightbox.srcs[lightbox.idx]}
-            alt={`${lightbox.name} ${lightbox.idx + 1}`}
-            className="max-w-[340px] max-h-[340px] object-contain rounded-xl shadow-2xl"
-          />
+          {/* Main image — scrollable container when zoomed */}
+          <div
+            className="relative rounded-xl shadow-2xl overflow-auto"
+            style={{ width: 340, height: 340, cursor: lightbox.zoom > 1 ? 'grab' : 'default' }}
+          >
+            <img
+              src={lightbox.srcs[lightbox.idx]}
+              alt={`${lightbox.name} ${lightbox.idx + 1}`}
+              style={{
+                width:  340 * lightbox.zoom,
+                height: 340 * lightbox.zoom,
+                objectFit: 'contain',
+                display: 'block',
+                transition: 'width 0.2s ease, height 0.2s ease',
+              }}
+            />
+          </div>
+
+          {/* Zoom controls */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setLightbox(lb => lb && { ...lb, zoom: Math.max(1, lb.zoom - 1) })}
+              disabled={lightbox.zoom <= 1}
+              className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/30 disabled:opacity-30 disabled:cursor-not-allowed text-white text-lg flex items-center justify-center transition-colors focus:outline-none"
+              aria-label="Zoom out"
+            >
+              −
+            </button>
+            <span className="text-white/50 font-mono text-[10px] w-8 text-center">
+              {lightbox.zoom}×
+            </span>
+            <button
+              onClick={() => setLightbox(lb => lb && { ...lb, zoom: Math.min(4, lb.zoom + 1) })}
+              disabled={lightbox.zoom >= 4}
+              className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/30 disabled:opacity-30 disabled:cursor-not-allowed text-white text-lg flex items-center justify-center transition-colors focus:outline-none"
+              aria-label="Zoom in"
+            >
+              +
+            </button>
+          </div>
 
           {/* Prev / next arrows — only when multiple images */}
           {lightbox.srcs.length > 1 && (
             <>
               <button
-                onClick={() => setLightbox(lb => lb && { ...lb, idx: (lb.idx - 1 + lb.srcs.length) % lb.srcs.length })}
+                onClick={() => setLightbox(lb => lb && { ...lb, idx: (lb.idx - 1 + lb.srcs.length) % lb.srcs.length, zoom: 1 })}
                 className="absolute left-[-44px] top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-colors focus:outline-none"
                 aria-label="Previous image"
               >
                 ‹
               </button>
               <button
-                onClick={() => setLightbox(lb => lb && { ...lb, idx: (lb.idx + 1) % lb.srcs.length })}
+                onClick={() => setLightbox(lb => lb && { ...lb, idx: (lb.idx + 1) % lb.srcs.length, zoom: 1 })}
                 className="absolute right-[-44px] top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-colors focus:outline-none"
                 aria-label="Next image"
               >
@@ -381,7 +416,7 @@ const ItemLookupScreen = ({
                 {lightbox.srcs.map((_, i) => (
                   <button
                     key={i}
-                    onClick={() => setLightbox(lb => lb && { ...lb, idx: i })}
+                    onClick={() => setLightbox(lb => lb && { ...lb, idx: i, zoom: 1 })}
                     className={`w-1.5 h-1.5 rounded-full transition-colors focus:outline-none ${
                       i === lightbox.idx ? 'bg-white' : 'bg-white/30 hover:bg-white/50'
                     }`}
