@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { ITEMS, LOOKUP_METHODS, LOADING_MESSAGES, type LookupType } from '@/lib/kiosk-data';
 import { scanBeep } from '@/lib/kiosk-audio';
 import cherreOsImg from '@/assets/Cherre-Os.png';
@@ -63,6 +63,8 @@ const ItemLookupScreen = ({
 }: ItemLookupScreenProps) => {
   const [loadingCards, setLoadingCards] = useState<Record<string, boolean>>({});
   const [lightbox, setLightbox] = useState<{ srcs: string[]; name: string; idx: number; zoom: number } | null>(null);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const dragRef = useRef<{ startX: number; startY: number; panX: number; panY: number } | null>(null);
   const [scanningCard, setScanningCard] = useState<string | null>(null);
   const [loadingMsgs, setLoadingMsgs] = useState<string[][]>(
     ITEMS.map(() => LOOKUP_METHODS.map(() => ''))
@@ -345,20 +347,42 @@ const ItemLookupScreen = ({
           className="relative flex flex-col items-center gap-4 p-4"
           onClick={e => e.stopPropagation()}
         >
-          {/* Main image — scrollable container when zoomed */}
+          {/* Main image — transform-scale zoom with drag-to-pan */}
           <div
-            className="relative rounded-xl shadow-2xl overflow-auto"
+            className="rounded-xl shadow-2xl overflow-hidden"
             style={{ width: 340, height: 340, cursor: lightbox.zoom > 1 ? 'grab' : 'default' }}
+            onPointerDown={e => {
+              if (lightbox.zoom <= 1) return;
+              e.currentTarget.setPointerCapture(e.pointerId);
+              dragRef.current = { startX: e.clientX, startY: e.clientY, panX: pan.x, panY: pan.y };
+            }}
+            onPointerMove={e => {
+              if (!dragRef.current) return;
+              const dx = e.clientX - dragRef.current.startX;
+              const dy = e.clientY - dragRef.current.startY;
+              // Clamp pan so image edges can't go past the container edge
+              const maxPan = (340 * (lightbox.zoom - 1)) / 2;
+              setPan({
+                x: Math.max(-maxPan, Math.min(maxPan, dragRef.current.panX + dx)),
+                y: Math.max(-maxPan, Math.min(maxPan, dragRef.current.panY + dy)),
+              });
+            }}
+            onPointerUp={() => { dragRef.current = null; }}
+            onPointerLeave={() => { dragRef.current = null; }}
           >
             <img
               src={lightbox.srcs[lightbox.idx]}
               alt={`${lightbox.name} ${lightbox.idx + 1}`}
+              draggable={false}
               style={{
-                width:  340 * lightbox.zoom,
-                height: 340 * lightbox.zoom,
+                width: 340,
+                height: 340,
                 objectFit: 'contain',
                 display: 'block',
-                transition: 'width 0.2s ease, height 0.2s ease',
+                transform: `scale(${lightbox.zoom}) translate(${pan.x / lightbox.zoom}px, ${pan.y / lightbox.zoom}px)`,
+                transformOrigin: 'center',
+                transition: dragRef.current ? 'none' : 'transform 0.15s ease',
+                userSelect: 'none',
               }}
             />
           </div>
@@ -366,7 +390,7 @@ const ItemLookupScreen = ({
           {/* Zoom controls */}
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setLightbox(lb => lb && { ...lb, zoom: Math.max(1, lb.zoom - 1) })}
+              onClick={() => { setLightbox(lb => lb && { ...lb, zoom: Math.max(1, lb.zoom - 1) }); setPan({ x: 0, y: 0 }); }}
               disabled={lightbox.zoom <= 1}
               className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/30 disabled:opacity-30 disabled:cursor-not-allowed text-white text-lg flex items-center justify-center transition-colors focus:outline-none"
               aria-label="Zoom out"
@@ -377,7 +401,7 @@ const ItemLookupScreen = ({
               {lightbox.zoom}×
             </span>
             <button
-              onClick={() => setLightbox(lb => lb && { ...lb, zoom: Math.min(4, lb.zoom + 1) })}
+              onClick={() => { setLightbox(lb => lb && { ...lb, zoom: Math.min(4, lb.zoom + 1) }); setPan({ x: 0, y: 0 }); }}
               disabled={lightbox.zoom >= 4}
               className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/30 disabled:opacity-30 disabled:cursor-not-allowed text-white text-lg flex items-center justify-center transition-colors focus:outline-none"
               aria-label="Zoom in"
@@ -390,14 +414,14 @@ const ItemLookupScreen = ({
           {lightbox.srcs.length > 1 && (
             <>
               <button
-                onClick={() => setLightbox(lb => lb && { ...lb, idx: (lb.idx - 1 + lb.srcs.length) % lb.srcs.length, zoom: 1 })}
+                onClick={() => { setLightbox(lb => lb && { ...lb, idx: (lb.idx - 1 + lb.srcs.length) % lb.srcs.length, zoom: 1 }); setPan({ x: 0, y: 0 }); }}
                 className="absolute left-[-44px] top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-colors focus:outline-none"
                 aria-label="Previous image"
               >
                 ‹
               </button>
               <button
-                onClick={() => setLightbox(lb => lb && { ...lb, idx: (lb.idx + 1) % lb.srcs.length, zoom: 1 })}
+                onClick={() => { setLightbox(lb => lb && { ...lb, idx: (lb.idx + 1) % lb.srcs.length, zoom: 1 }); setPan({ x: 0, y: 0 }); }}
                 className="absolute right-[-44px] top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-colors focus:outline-none"
                 aria-label="Next image"
               >
@@ -416,7 +440,7 @@ const ItemLookupScreen = ({
                 {lightbox.srcs.map((_, i) => (
                   <button
                     key={i}
-                    onClick={() => setLightbox(lb => lb && { ...lb, idx: i, zoom: 1 })}
+                    onClick={() => { setLightbox(lb => lb && { ...lb, idx: i, zoom: 1 }); setPan({ x: 0, y: 0 }); }}
                     className={`w-1.5 h-1.5 rounded-full transition-colors focus:outline-none ${
                       i === lightbox.idx ? 'bg-white' : 'bg-white/30 hover:bg-white/50'
                     }`}
