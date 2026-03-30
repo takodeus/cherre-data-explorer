@@ -1,10 +1,12 @@
 import { ReactNode } from 'react';
 
-interface DeviceBzelProps {
+interface DeviceBezelProps {
   children: ReactNode;
+  soundOn?: boolean;
+  onToggleSound?: () => void;
 }
 
-const DeviceBezel = ({ children }: DeviceBzelProps) => {
+const DeviceBezel = ({ children, soundOn, onToggleSound }: DeviceBezelProps) => {
   return (
     <div className="w-full h-full flex items-center justify-center bg-muted/30 p-4 md:p-8">
       {/* Outer bezel shell */}
@@ -20,6 +22,14 @@ const DeviceBezel = ({ children }: DeviceBzelProps) => {
               </span>
             </div>
             <div className="flex items-center gap-3">
+              {onToggleSound && (
+                <button
+                  onClick={onToggleSound}
+                  className="text-[9px] font-mono text-primary-foreground/50 hover:text-primary-foreground/80 transition-colors cursor-pointer"
+                >
+                  {soundOn ? '🔊' : '🔇'}
+                </button>
+              )}
               <span className="text-[9px] text-primary-foreground/40 font-mono tabular-nums">
                 KIOSK-F-042
               </span>

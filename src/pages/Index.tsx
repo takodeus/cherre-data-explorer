@@ -130,20 +130,9 @@ const Index = () => {
   }, [goTo]);
 
   return (
-    <DeviceBezel>
+    <DeviceBezel soundOn={soundOn} onToggleSound={toggleSound}>
       <div className="w-full h-full flex flex-col bg-background overflow-hidden">
         <StepperBar currentScreen={currentScreen} itemsWithQuery={itemsWithQuery} />
-
-        <button
-          onClick={toggleSound}
-          className={`absolute top-[32px] right-6 z-[100] rounded-full px-3.5 py-1.5 text-[10px] font-bold tracking-wide cursor-pointer transition-all border ${
-            soundOn
-              ? 'text-primary border-primary/30 bg-primary-light-bg'
-              : 'text-muted-foreground border-border bg-background hover:text-foreground hover:border-primary/30'
-          }`}
-        >
-          {soundOn ? '🔊' : '🔇'}
-        </button>
 
         <div className="flex-1 flex overflow-hidden">
           <div className="flex-1 relative overflow-hidden">
