@@ -127,7 +127,7 @@ const ItemLookupScreen = ({
         <div className="pill-badge text-[10px]" style={{ background: 'hsl(var(--primary-deep))' }}>Step 2 of 5</div>
       </div>
 
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden min-h-0">
         {/* Items column */}
         <div className="w-[220px] flex-shrink-0 border-r border-border bg-card py-4 flex flex-col gap-1.5 px-2">
           {ITEMS.map((it, i) => {
