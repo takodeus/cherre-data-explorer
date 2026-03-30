@@ -160,7 +160,7 @@ const ItemLookupScreen = ({
         </div>
 
         {/* Cards area */}
-        <div className="flex-1 px-6 py-5 overflow-y-auto flex flex-col gap-3">
+        <div className="flex-1 px-6 py-5 overflow-y-auto flex flex-col gap-3 min-h-0">
           <div className="flex items-center gap-3 mb-1">
             <span className="text-2xl">{item.icon}</span>
             <div>
