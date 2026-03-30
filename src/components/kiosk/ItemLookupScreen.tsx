@@ -56,6 +56,7 @@ const ItemLookupScreen = ({
   onCheckout,
 }: ItemLookupScreenProps) => {
   const [loadingCards, setLoadingCards] = useState<Record<string, boolean>>({});
+  const [lightbox, setLightbox] = useState<{ src: string; name: string } | null>(null);
   const [scanningCard, setScanningCard] = useState<string | null>(null);
   const [loadingMsgs, setLoadingMsgs] = useState<string[][]>(
     ITEMS.map(() => LOOKUP_METHODS.map(() => ''))
@@ -120,6 +121,7 @@ const ItemLookupScreen = ({
   const item = ITEMS[currentItem];
 
   return (
+    <>
     <div className="flex flex-col bg-background h-full" style={{ position: 'absolute', inset: 0, minHeight: 0 }}>
       {/* Header */}
       <div className="bg-primary px-10 pt-6 pb-5 flex items-end justify-between">
@@ -172,11 +174,18 @@ const ItemLookupScreen = ({
         <div className="flex-1 px-6 py-5 overflow-y-auto flex flex-col gap-3 min-h-0">
           <div className="flex items-center gap-3 mb-1">
             {item.image && ITEM_IMAGES[item.image] ? (
-              <img
-                src={ITEM_IMAGES[item.image]}
-                alt={item.name}
-                className="w-16 h-16 object-contain rounded-lg border border-border bg-card flex-shrink-0"
-              />
+              <button
+                onClick={() => setLightbox({ src: ITEM_IMAGES[item.image!]!, name: item.name })}
+                className="w-16 h-16 rounded-lg border border-border bg-card flex-shrink-0 overflow-hidden cursor-zoom-in hover:border-primary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40"
+                title="Click to enlarge"
+                aria-label={`View full image of ${item.name}`}
+              >
+                <img
+                  src={ITEM_IMAGES[item.image]}
+                  alt={item.name}
+                  className="w-full h-full object-contain"
+                />
+              </button>
             ) : (
               <span className="text-2xl">{item.icon}</span>
             )}
@@ -311,6 +320,42 @@ const ItemLookupScreen = ({
         </button>
       </div>
     </div>
+
+    {lightbox && (
+      <div
+        className="fixed inset-0 z-[300] flex items-center justify-center"
+        onClick={() => setLightbox(null)}
+        style={{ background: 'rgba(0,0,0,0.72)' }}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Full image of ${lightbox.name}`}
+      >
+        <div
+          className="relative flex flex-col items-center gap-3 p-4"
+          onClick={e => e.stopPropagation()}
+        >
+          <img
+            src={lightbox.src}
+            alt={lightbox.name}
+            className="max-w-[320px] max-h-[320px] object-contain rounded-xl shadow-2xl"
+          />
+          <span className="text-white/80 font-mono text-[11px] tracking-[0.12em] uppercase">
+            {lightbox.name}
+          </span>
+          <button
+            onClick={() => setLightbox(null)}
+            className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-white/20 hover:bg-white/35 text-white text-sm flex items-center justify-center transition-colors focus:outline-none"
+            aria-label="Close"
+          >
+            ✕
+          </button>
+        </div>
+        <p className="absolute bottom-6 text-white/30 text-[10px] font-mono tracking-wide">
+          click anywhere to close
+        </p>
+      </div>
+    )}
+    </>
   );
 };
 
