@@ -2,12 +2,11 @@ import { ITEMS } from '@/lib/kiosk-data';
 
 interface ReceiptScreenProps {
   onRestart: () => void;
-  onBackToCherre: () => void;
   itemsWithQuery: Set<number>;
   queriedMethods: Set<number>[];
 }
 
-const ReceiptScreen = ({ onRestart, onBackToCherre, itemsWithQuery, queriedMethods }: ReceiptScreenProps) => {
+const ReceiptScreen = ({ onRestart, itemsWithQuery, queriedMethods }: ReceiptScreenProps) => {
   const totalMethods = queriedMethods.reduce((sum, s) => sum + s.size, 0);
 
   return (
@@ -80,12 +79,7 @@ const ReceiptScreen = ({ onRestart, onBackToCherre, itemsWithQuery, queriedMetho
         >
           Start over
         </button>
-        <button
-          onClick={onBackToCherre}
-          className="bg-primary text-primary-foreground border-none rounded-xl px-7 py-3 font-sans text-[11px] font-bold tracking-wide uppercase cursor-pointer transition-all hover:bg-primary-light shadow-md hover:shadow-lg"
-        >
-          ← Back to Cherre
-        </button>
+
       </div>
     </div>
   );
