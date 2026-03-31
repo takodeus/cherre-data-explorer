@@ -4,9 +4,10 @@ interface DeviceBezelProps {
   children: ReactNode;
   soundOn?: boolean;
   onToggleSound?: () => void;
+  onLock?: () => void;
 }
 
-const DeviceBezel = ({ children, soundOn, onToggleSound }: DeviceBezelProps) => {
+const DeviceBezel = ({ children, soundOn, onToggleSound, onLock }: DeviceBezelProps) => {
   return (
     <div className="w-full h-full flex items-center justify-center bg-muted/30 p-4 md:p-8">
       {/* Outer bezel shell */}
@@ -22,6 +23,16 @@ const DeviceBezel = ({ children, soundOn, onToggleSound }: DeviceBezelProps) => 
               </span>
             </div>
             <div className="flex items-center gap-3">
+              {onLock && (
+                <button
+                  onClick={onLock}
+                  className="text-[9px] font-mono text-primary-foreground/50 hover:text-primary-foreground/80 transition-colors cursor-pointer"
+                  title="Lock screen"
+                  aria-label="Lock screen"
+                >
+                  ⏻
+                </button>
+              )}
               {onToggleSound && (
                 <button
                   onClick={onToggleSound}
