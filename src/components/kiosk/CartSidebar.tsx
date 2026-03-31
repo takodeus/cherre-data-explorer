@@ -1,4 +1,15 @@
 import { ITEMS, LOOKUP_METHODS } from '@/lib/kiosk-data';
+import cherreOsImg from '@/assets/Cherre-Os.png';
+import ontoloPrimaryImg from '@/assets/ontolo with a8185e.png';
+import ontoloCan1Img from '@/assets/1can back mockup NBG.png';
+import ontoloCans2Img from '@/assets/2 cans mockup NBG.png';
+
+const ITEM_IMAGES: Record<string, string> = {
+  'Cherre-Os.png': cherreOsImg,
+  'ontolo with a8185e.png': ontoloPrimaryImg,
+  '1can back mockup NBG.png': ontoloCan1Img,
+  '2 cans mockup NBG.png': ontoloCans2Img,
+};
 
 interface CartSidebarProps {
   itemsWithQuery: Set<number>;
@@ -49,8 +60,10 @@ const CartSidebar = ({ itemsWithQuery, queriedMethods, currentScreen }: CartSide
                   key={item.name}
                   className="flex items-center gap-2.5 px-4 py-2.5 border-b border-border/40 animate-fade-in-up"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-background border border-border flex items-center justify-center text-sm flex-shrink-0">
-                    {item.icon}
+                  <div className="w-10 h-8 rounded-lg bg-background border border-border flex items-center justify-center text-sm flex-shrink-0 overflow-hidden">
+                    {item.images?.[0] && ITEM_IMAGES[item.images[0]]
+                      ? <img src={ITEM_IMAGES[item.images[0]]} alt={item.name} className="w-full h-full object-contain p-0.5" />
+                      : item.icon}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-[11px] font-bold text-foreground truncate">{item.name}</div>

@@ -135,7 +135,7 @@ const Index = () => {
   return (
     <DeviceBezel soundOn={soundOn} onToggleSound={toggleSound}>
       <div className="w-full h-full flex flex-col bg-background overflow-hidden">
-        <StepperBar currentScreen={currentScreen} itemsWithQuery={itemsWithQuery} maxReached={maxReached} onNavigate={goTo} />
+        <StepperBar currentScreen={currentScreen} maxReached={maxReached} onNavigate={goTo} onReset={restart} />
 
         <div className="flex-1 flex overflow-hidden">
           <div className="flex-1 relative overflow-hidden">

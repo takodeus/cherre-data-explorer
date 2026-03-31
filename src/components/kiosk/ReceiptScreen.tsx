@@ -11,8 +11,8 @@ const ReceiptScreen = ({ onRestart, onBackToCherre, itemsWithQuery, queriedMetho
   const totalMethods = queriedMethods.reduce((sum, s) => sum + s.size, 0);
 
   return (
-    <div className="flex flex-col justify-center items-center p-8 bg-card" style={{ position: 'absolute', inset: 0 }}>
-      <div className="receipt bg-background w-full max-w-[400px] rounded-2xl px-8 py-9 font-mono text-foreground relative border border-border shadow-lg">
+    <div className="flex flex-col justify-start items-center py-4 px-8 bg-card overflow-y-auto" style={{ position: 'absolute', inset: 0 }}>
+      <div className="receipt bg-background w-full max-w-[400px] rounded-2xl px-8 py-6 font-mono text-foreground relative border border-border shadow-lg mt-2">
         <div className="text-center mb-5">
           <div className="text-base font-bold tracking-wide mb-1 text-primary">CHERRE DATA MART</div>
           <div className="text-[9px] text-muted-foreground tracking-wide">Self-Checkout Terminal — Aisle F</div>
@@ -73,7 +73,7 @@ const ReceiptScreen = ({ onRestart, onBackToCherre, itemsWithQuery, queriedMetho
         </div>
       </div>
 
-      <div className="flex gap-3 mt-8 justify-center">
+      <div className="flex gap-3 mt-4 mb-4 justify-center">
         <button
           onClick={onRestart}
           className="bg-background border border-border text-muted-foreground rounded-xl px-7 py-3 font-sans text-[11px] font-semibold tracking-wide uppercase cursor-pointer transition-all hover:border-primary hover:text-foreground hover:shadow-sm"
