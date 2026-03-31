@@ -11,7 +11,8 @@ const STEPS = [
   { n: 2, label: 'Lookup' },
   { n: 3, label: 'Problem' },
   { n: 4, label: 'Solution' },
-  { n: 5, label: 'Receipt' },
+  { n: 5, label: 'Team' },
+  { n: 6, label: 'Receipt' },
 ];
 
 const StepperBar = ({ currentScreen, maxReached, onNavigate, onReset }: StepperBarProps) => {
