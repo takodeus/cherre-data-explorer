@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import cherreLogo from '@/assets/cherre-logo.jpeg';
+import backdropImg from '@/assets/backdrop.jpg';
 
 interface WelcomeScreenProps {
   onStart: () => void;
@@ -60,6 +61,29 @@ const WelcomeScreen = ({ onStart, active }: WelcomeScreenProps) => {
       className="flex flex-col justify-center items-center text-center"
       style={{ position: 'absolute', inset: 0, padding: '40px' }}
     >
+      {/* Backdrop image — faded, Ken Burns pan on idle */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: `url(${backdropImg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          opacity: 0.13,
+          transition: 'transform 12s ease-in-out',
+          transform: idle ? 'scale(1.08) translateX(-3%)' : 'scale(1) translateX(0%)',
+          pointerEvents: 'none',
+        }}
+      />
+      {/* Subtle gradient overlay so text stays readable */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute', inset: 0,
+          background: 'radial-gradient(ellipse at center, transparent 30%, hsl(var(--background)/0.7) 100%)',
+          pointerEvents: 'none',
+        }}
+      />
       <img src={cherreLogo} alt="Cherre" className="h-14 mb-6 object-contain" style={{ mixBlendMode: "multiply" }} />
 
       <div className="pill-badge mb-8">
