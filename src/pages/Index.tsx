@@ -5,6 +5,7 @@ import ItemLookupScreen from '@/components/kiosk/ItemLookupScreen';
 import ReconciliationScreen from '@/components/kiosk/ReconciliationScreen';
 import ResolutionScreen from '@/components/kiosk/ResolutionScreen';
 import ReceiptScreen from '@/components/kiosk/ReceiptScreen';
+import TeamScreen from '@/components/kiosk/TeamScreen';
 import StepperBar from '@/components/kiosk/StepperBar';
 import CartSidebar from '@/components/kiosk/CartSidebar';
 import DeviceBezel from '@/components/kiosk/DeviceBezel';
@@ -13,7 +14,7 @@ import { clickBeep, errorTone, successChime, scanBeep, initAudio } from '@/lib/k
 
 const TRANSITION_MS = 340;
 const SCREEN_MIN = 1;
-const SCREEN_MAX = 5;
+const SCREEN_MAX = 6;
 
 function clampScreen(v: string | null): number {
   const n = parseInt(v ?? '', 10);
@@ -135,7 +136,7 @@ const Index = () => {
   return (
     <DeviceBezel soundOn={soundOn} onToggleSound={toggleSound}>
       <div className="w-full h-full flex flex-col bg-background overflow-hidden">
-        <StepperBar currentScreen={currentScreen} itemsWithQuery={itemsWithQuery} maxReached={maxReached} onNavigate={goTo} />
+        <StepperBar currentScreen={currentScreen} maxReached={maxReached} onNavigate={goTo} onReset={restart} />
 
         <div className="flex-1 flex overflow-hidden">
           <div className="flex-1 relative overflow-hidden">
@@ -161,6 +162,9 @@ const Index = () => {
               <ResolutionScreen onTalk={() => goTo(5)} />
             </div>
             <div data-screen="5" className={`screen ${currentScreen === 5 ? `active enter-${direction}` : ''}`}>
+              <TeamScreen onContinue={() => goTo(6)} />
+            </div>
+            <div data-screen="6" className={`screen ${currentScreen === 6 ? `active enter-${direction}` : ''}`}>
               <ReceiptScreen
                 onRestart={restart}
                 onBackToCherre={() => goTo(4)}

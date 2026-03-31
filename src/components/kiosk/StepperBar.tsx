@@ -1,11 +1,9 @@
-import { useEffect, useRef } from 'react';
-import { ITEMS } from '@/lib/kiosk-data';
 
 interface StepperBarProps {
   currentScreen: number;
-  itemsWithQuery: Set<number>;
   maxReached: number;
   onNavigate: (screen: number) => void;
+  onReset: () => void;
 }
 
 const STEPS = [
@@ -13,24 +11,11 @@ const STEPS = [
   { n: 2, label: 'Lookup' },
   { n: 3, label: 'Problem' },
   { n: 4, label: 'Solution' },
-  { n: 5, label: 'Receipt' },
+  { n: 5, label: 'Team' },
+  { n: 6, label: 'Receipt' },
 ];
 
-const StepperBar = ({ currentScreen, itemsWithQuery, maxReached, onNavigate }: StepperBarProps) => {
-  const cartCount = itemsWithQuery.size;
-  const badgeRef = useRef<HTMLSpanElement>(null);
-  const prevCount = useRef(cartCount);
-
-  // Pulse the badge when count increases
-  useEffect(() => {
-    if (cartCount > prevCount.current && badgeRef.current) {
-      badgeRef.current.classList.remove('cart-badge-pop');
-      void badgeRef.current.offsetWidth; // force reflow
-      badgeRef.current.classList.add('cart-badge-pop');
-    }
-    prevCount.current = cartCount;
-  }, [cartCount]);
-
+const StepperBar = ({ currentScreen, maxReached, onNavigate, onReset }: StepperBarProps) => {
   return (
     <div className="flex-shrink-0 relative z-50">
       <div className="modern-accent-top w-full" />
@@ -84,36 +69,16 @@ const StepperBar = ({ currentScreen, itemsWithQuery, maxReached, onNavigate }: S
           })}
         </div>
 
-        {/* Cart indicator — right side, visible on screens 2–3 while items exist */}
-        <div
-          className={`flex items-center gap-2 transition-all duration-300 ${
-            cartCount > 0 && currentScreen <= 3 ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        {/* Reset button — right side, visible on screens 2–5 */}
+        <button
+          onClick={onReset}
+          className={`flex items-center gap-1 text-[10px] font-semibold tracking-wide text-muted-foreground/50 hover:text-primary transition-colors px-2 py-1 rounded-md hover:bg-primary/5 ${
+            currentScreen > 1 ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
-          aria-label={`${cartCount} item${cartCount !== 1 ? 's' : ''} in cart`}
+          aria-label="Reset demo"
         >
-          {/* Mini item icons */}
-          <div className="flex items-center gap-0.5">
-            {ITEMS.map((item, i) => (
-              <span
-                key={i}
-                className={`text-[13px] leading-none transition-all duration-200 ${
-                  itemsWithQuery.has(i) ? 'opacity-100' : 'opacity-0 w-0 overflow-hidden'
-                }`}
-                style={{ display: 'inline-block' }}
-              >
-                {item.icon}
-              </span>
-            ))}
-          </div>
-
-          {/* Count badge */}
-          <span
-            ref={badgeRef}
-            className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold leading-none flex-shrink-0"
-          >
-            {cartCount}
-          </span>
-        </div>
+          ↺ Reset
+        </button>
       </div>
     </div>
   );
