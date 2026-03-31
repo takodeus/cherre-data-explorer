@@ -1,8 +1,9 @@
 interface ResolutionScreenProps {
   onTalk: () => void;
+  onSkipToReceipt: () => void;
 }
 
-const ResolutionScreen = ({ onTalk }: ResolutionScreenProps) => {
+const ResolutionScreen = ({ onTalk, onSkipToReceipt }: ResolutionScreenProps) => {
   return (
     <div className="flex flex-col justify-center items-center" style={{ position: 'absolute', inset: 0, background: 'hsl(var(--primary))', padding: '24px 40px' }}>
       <div className="max-w-[600px] w-full flex flex-col items-start">
@@ -38,12 +39,20 @@ const ResolutionScreen = ({ onTalk }: ResolutionScreenProps) => {
 
         {/* CTA Row */}
         <div className="flex items-center gap-8 w-full max-w-[480px]">
-          <button
-            onClick={onTalk}
-            className="bg-primary-foreground text-primary border-none rounded-xl px-10 py-4 font-sans text-[13px] font-extrabold tracking-wide uppercase cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02] active:scale-[0.97] flex-shrink-0 shadow-md"
-          >
-            Talk to the team
-          </button>
+          <div className="flex items-center gap-4 flex-shrink-0">
+            <button
+              onClick={onTalk}
+              className="bg-primary-foreground text-primary border-none rounded-xl px-10 py-4 font-sans text-[13px] font-extrabold tracking-wide uppercase cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02] active:scale-[0.97] shadow-md"
+            >
+              Talk to the team
+            </button>
+            <button
+              onClick={onSkipToReceipt}
+              className="text-primary-foreground/60 hover:text-primary-foreground text-[11px] font-semibold tracking-wide uppercase cursor-pointer transition-colors border border-primary-foreground/20 hover:border-primary-foreground/50 rounded-xl px-6 py-4"
+            >
+              Complete checkout →
+            </button>
+          </div>
 
           <div className="flex items-center gap-3.5">
             <div className="w-16 h-16 bg-primary-foreground rounded-xl p-1.5 flex-shrink-0 shadow-sm">

@@ -159,7 +159,7 @@ const Index = () => {
               <ReconciliationScreen onBetterWay={() => goTo(4)} active={currentScreen === 3} itemsWithQuery={itemsWithQuery} queriedMethods={queriedMethods} />
             </div>
             <div data-screen="4" className={`screen ${currentScreen === 4 ? `active enter-${direction}` : ''}`}>
-              <ResolutionScreen onTalk={() => goTo(5)} />
+              <ResolutionScreen onTalk={() => goTo(5)} onSkipToReceipt={() => goTo(6)} />
             </div>
             <div data-screen="5" className={`screen ${currentScreen === 5 ? `active enter-${direction}` : ''}`}>
               <TeamScreen onContinue={() => goTo(6)} />
