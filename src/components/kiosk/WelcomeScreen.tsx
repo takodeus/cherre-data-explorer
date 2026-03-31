@@ -5,12 +5,14 @@ import backdropImg from '@/assets/backdrop.jpg';
 interface WelcomeScreenProps {
   onStart: () => void;
   active: boolean;
+  forceIdle?: boolean;
+  onIdleAcknowledged?: () => void;
 }
 
 const IDLE_DELAY = 8000;
 const BAR_HEIGHTS = [32, 20, 40, 28, 36, 18, 44, 24, 38, 22, 30, 42, 16, 34, 26, 40, 20, 36, 28, 44, 18, 32, 24, 38, 22];
 
-const WelcomeScreen = ({ onStart, active }: WelcomeScreenProps) => {
+const WelcomeScreen = ({ onStart, active, forceIdle, onIdleAcknowledged }: WelcomeScreenProps) => {
   const barcodeRef = useRef<HTMLDivElement>(null);
   const timerRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [idle, setIdle] = useState(false);
@@ -51,6 +53,14 @@ const WelcomeScreen = ({ onStart, active }: WelcomeScreenProps) => {
     };
   }, [active, resetTimer]);
 
+  // Respond to external lock trigger
+  useEffect(() => {
+    if (forceIdle) {
+      setIdle(true);
+      onIdleAcknowledged?.();
+    }
+  }, [forceIdle, onIdleAcknowledged]);
+
   const handleStart = () => {
     resetTimer();
     onStart();
@@ -68,7 +78,7 @@ const WelcomeScreen = ({ onStart, active }: WelcomeScreenProps) => {
           position: 'absolute', inset: 0,
           backgroundImage: `url(${backdropImg})`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundPosition: 'center bottom',
           opacity: 0.13,
           transition: 'transform 12s ease-in-out',
           transform: idle ? 'scale(1.08) translateX(-3%)' : 'scale(1) translateX(0%)',

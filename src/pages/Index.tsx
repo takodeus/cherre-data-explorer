@@ -40,6 +40,7 @@ const Index = () => {
   const [itemsWithQuery, setItemsWithQuery] = useState<Set<number>>(new Set());
   const [queriedMethods, setQueriedMethods] = useState<Set<number>[]>(ITEMS.map(() => new Set()));
   const [maxReached, setMaxReached] = useState<number>(1);
+  const [lockOnWelcome, setLockOnWelcome] = useState(false);
 
   const prevScreenRef = useRef(currentScreen);
   const transitioning = useRef(false);
@@ -125,6 +126,11 @@ const Index = () => {
     });
   }, []);
 
+  const lockScreen = useCallback(() => {
+    setLockOnWelcome(true);
+    goTo(1);
+  }, [goTo]);
+
   const restart = useCallback(() => {
     setItemsWithQuery(new Set());
     setQueriedMethods(ITEMS.map(() => new Set()));
@@ -134,14 +140,14 @@ const Index = () => {
   }, [goTo]);
 
   return (
-    <DeviceBezel soundOn={soundOn} onToggleSound={toggleSound}>
+    <DeviceBezel soundOn={soundOn} onToggleSound={toggleSound} onLock={lockScreen}>
       <div className="w-full h-full flex flex-col bg-background overflow-hidden">
         <StepperBar currentScreen={currentScreen} maxReached={maxReached} onNavigate={goTo} onReset={restart} />
 
         <div className="flex-1 flex overflow-hidden">
           <div className="flex-1 relative overflow-hidden">
             <div data-screen="1" className={`screen ${currentScreen === 1 ? `active enter-${direction}` : ''}`}>
-              <WelcomeScreen onStart={() => goTo(2)} active={currentScreen === 1} />
+              <WelcomeScreen onStart={() => goTo(2)} active={currentScreen === 1} forceIdle={lockOnWelcome} onIdleAcknowledged={() => setLockOnWelcome(false)} />
             </div>
             <div data-screen="2" className={`screen ${currentScreen === 2 ? `active enter-${direction}` : ''}`}>
               <ItemLookupScreen
