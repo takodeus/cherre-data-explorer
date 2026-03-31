@@ -63,6 +63,7 @@ const ItemLookupScreen = ({
 }: ItemLookupScreenProps) => {
   const [loadingCards, setLoadingCards] = useState<Record<string, boolean>>({});
   const [lightbox, setLightbox] = useState<{ srcs: string[]; name: string; idx: number; zoom: number } | null>(null);
+  const imgContainerSize = 520;
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const dragRef = useRef<{ startX: number; startY: number; panX: number; panY: number } | null>(null);
   const [scanningCard, setScanningCard] = useState<string | null>(null);
@@ -350,7 +351,7 @@ const ItemLookupScreen = ({
           {/* Main image — transform-scale zoom with drag-to-pan */}
           <div
             className="rounded-xl shadow-2xl overflow-hidden"
-            style={{ width: 340, height: 340, cursor: lightbox.zoom > 1 ? 'grab' : 'default' }}
+            style={{ width: imgContainerSize, height: imgContainerSize, cursor: lightbox.zoom > 1 ? 'grab' : 'default' }}
             onPointerDown={e => {
               if (lightbox.zoom <= 1) return;
               e.currentTarget.setPointerCapture(e.pointerId);
@@ -361,7 +362,7 @@ const ItemLookupScreen = ({
               const dx = e.clientX - dragRef.current.startX;
               const dy = e.clientY - dragRef.current.startY;
               // Clamp pan so image edges can't go past the container edge
-              const maxPan = (340 * (lightbox.zoom - 1)) / 2;
+              const maxPan = (imgContainerSize * (lightbox.zoom - 1)) / 2;
               setPan({
                 x: Math.max(-maxPan, Math.min(maxPan, dragRef.current.panX + dx)),
                 y: Math.max(-maxPan, Math.min(maxPan, dragRef.current.panY + dy)),
@@ -375,8 +376,8 @@ const ItemLookupScreen = ({
               alt={`${lightbox.name} ${lightbox.idx + 1}`}
               draggable={false}
               style={{
-                width: 340,
-                height: 340,
+                width: imgContainerSize,
+                height: imgContainerSize,
                 objectFit: 'contain',
                 display: 'block',
                 transform: `scale(${lightbox.zoom}) translate(${pan.x / lightbox.zoom}px, ${pan.y / lightbox.zoom}px)`,
@@ -387,27 +388,27 @@ const ItemLookupScreen = ({
             />
           </div>
 
-          {/* Zoom controls */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => { setLightbox(lb => lb && { ...lb, zoom: Math.max(1, lb.zoom - 1) }); setPan({ x: 0, y: 0 }); }}
-              disabled={lightbox.zoom <= 1}
-              className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/30 disabled:opacity-30 disabled:cursor-not-allowed text-white text-lg flex items-center justify-center transition-colors focus:outline-none"
-              aria-label="Zoom out"
-            >
-              −
-            </button>
-            <span className="text-white/50 font-mono text-[10px] w-8 text-center">
-              {lightbox.zoom}×
+          {/* Zoom slider */}
+          <div className="flex items-center gap-3" style={{ width: imgContainerSize }}>
+            <span className="text-white/40 font-mono text-[10px] flex-shrink-0">1×</span>
+            <input
+              type="range"
+              min={1}
+              max={4}
+              step={0.05}
+              value={lightbox.zoom}
+              onChange={e => {
+                const z = parseFloat(e.target.value);
+                setLightbox(lb => lb && { ...lb, zoom: z });
+                if (parseFloat(e.target.value) === 1) setPan({ x: 0, y: 0 });
+              }}
+              className="flex-1 h-1 appearance-none rounded-full cursor-pointer accent-white opacity-70 hover:opacity-100 transition-opacity"
+              aria-label="Zoom level"
+            />
+            <span className="text-white/40 font-mono text-[10px] flex-shrink-0">4×</span>
+            <span className="text-white/60 font-mono text-[10px] w-8 text-right flex-shrink-0">
+              {lightbox.zoom.toFixed(1)}×
             </span>
-            <button
-              onClick={() => { setLightbox(lb => lb && { ...lb, zoom: Math.min(4, lb.zoom + 1) }); setPan({ x: 0, y: 0 }); }}
-              disabled={lightbox.zoom >= 4}
-              className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/30 disabled:opacity-30 disabled:cursor-not-allowed text-white text-lg flex items-center justify-center transition-colors focus:outline-none"
-              aria-label="Zoom in"
-            >
-              +
-            </button>
           </div>
 
           {/* Prev / next arrows — only when multiple images */}
