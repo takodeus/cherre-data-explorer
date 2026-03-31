@@ -58,7 +58,7 @@ const WelcomeScreen = ({ onStart, active }: WelcomeScreenProps) => {
   return (
     <div
       className="flex flex-col justify-center items-center text-center"
-      style={{ position: 'absolute', inset: 0, padding: '40px' }}
+      style={{ position: 'absolute', inset: 0, padding: '40px', paddingTop: '60px' }}
     >
       <img src={cherreLogo} alt="Cherre" className="h-14 mb-6 object-contain" style={{ mixBlendMode: "multiply" }} />
 
@@ -70,11 +70,11 @@ const WelcomeScreen = ({ onStart, active }: WelcomeScreenProps) => {
         Cherre<br /><span className="text-primary">Data Mart</span>
       </div>
 
-      <div className="text-muted-foreground font-normal mb-8 tracking-wide max-w-[400px]" style={{ fontSize: 'clamp(14px, 2vw, 18px)' }}>
+      <div className="text-foreground/70 font-medium mb-8 tracking-wide max-w-[400px]" style={{ fontSize: 'clamp(14px, 2vw, 18px)' }}>
         Scan, search, or look up your item to begin checkout.
       </div>
 
-      <div className="text-[13px] text-muted-foreground/60 italic font-light max-w-[380px] leading-relaxed border border-border rounded-xl px-6 py-4 mb-10 bg-card/60 backdrop-blur-sm">
+      <div className="text-[13px] text-foreground/50 italic font-light max-w-[380px] leading-relaxed border border-border rounded-xl px-6 py-4 mb-10 bg-card/60 backdrop-blur-sm">
         "This store has been running on four different inventory systems since 2003. Good luck."
       </div>
 
@@ -84,20 +84,6 @@ const WelcomeScreen = ({ onStart, active }: WelcomeScreenProps) => {
       >
         Start Lookup
       </button>
-
-      <div
-        className="mt-3 text-[10px] tracking-wide text-primary/60 transition-opacity duration-700 font-medium"
-        style={{ opacity: idle ? 1 : 0 }}
-        aria-hidden="true"
-      >
-        Tap to begin ↑
-      </div>
-
-      <div
-        ref={barcodeRef}
-        className={`mt-8 flex gap-0.5 justify-center items-end opacity-[0.12] ${idle ? 'idle-barcode' : ''}`}
-        aria-hidden="true"
-      />
     </div>
   );
 };
