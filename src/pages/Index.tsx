@@ -38,6 +38,7 @@ const Index = () => {
   const [soundOn, setSoundOn] = useState(false);
   const [itemsWithQuery, setItemsWithQuery] = useState<Set<number>>(new Set());
   const [queriedMethods, setQueriedMethods] = useState<Set<number>[]>(ITEMS.map(() => new Set()));
+  const [maxReached, setMaxReached] = useState<number>(1);
 
   const prevScreenRef = useRef(currentScreen);
   const transitioning = useRef(false);
@@ -103,6 +104,7 @@ const Index = () => {
 
     prevScreenRef.current = n;
     setCurrentScreen(n);
+    setMaxReached(prev => Math.max(prev, n));
     pushParams(n, currentItem);
 
     if (n === 3 && soundOn) errorTone();
@@ -126,13 +128,14 @@ const Index = () => {
     setItemsWithQuery(new Set());
     setQueriedMethods(ITEMS.map(() => new Set()));
     setCurrentItem(0);
+    setMaxReached(1);
     goTo(1);
   }, [goTo]);
 
   return (
     <DeviceBezel soundOn={soundOn} onToggleSound={toggleSound}>
       <div className="w-full h-full flex flex-col bg-background overflow-hidden">
-        <StepperBar currentScreen={currentScreen} itemsWithQuery={itemsWithQuery} />
+        <StepperBar currentScreen={currentScreen} itemsWithQuery={itemsWithQuery} maxReached={maxReached} onNavigate={goTo} />
 
         <div className="flex-1 flex overflow-hidden">
           <div className="flex-1 relative overflow-hidden">

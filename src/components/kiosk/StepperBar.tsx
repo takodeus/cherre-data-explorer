@@ -4,6 +4,8 @@ import { ITEMS } from '@/lib/kiosk-data';
 interface StepperBarProps {
   currentScreen: number;
   itemsWithQuery: Set<number>;
+  maxReached: number;
+  onNavigate: (screen: number) => void;
 }
 
 const STEPS = [
@@ -14,7 +16,7 @@ const STEPS = [
   { n: 5, label: 'Receipt' },
 ];
 
-const StepperBar = ({ currentScreen, itemsWithQuery }: StepperBarProps) => {
+const StepperBar = ({ currentScreen, itemsWithQuery, maxReached, onNavigate }: StepperBarProps) => {
   const cartCount = itemsWithQuery.size;
   const badgeRef = useRef<HTMLSpanElement>(null);
   const prevCount = useRef(cartCount);
@@ -37,12 +39,21 @@ const StepperBar = ({ currentScreen, itemsWithQuery }: StepperBarProps) => {
         {/* Stepper — centred */}
         <div className="flex-1 flex items-center justify-center gap-1">
           {STEPS.map((step, i) => {
-            const isPast    = currentScreen > step.n;
-            const isCurrent = currentScreen === step.n;
+            const isPast      = currentScreen > step.n;
+            const isCurrent   = currentScreen === step.n;
+            const isNavigable = step.n <= maxReached && !isCurrent;
 
             return (
               <div key={step.n} className="flex items-center">
-                <div className="flex items-center gap-1.5 px-2">
+                <button
+                  onClick={() => isNavigable && onNavigate(step.n)}
+                  disabled={!isNavigable}
+                  className={`flex items-center gap-1.5 px-2 py-1 rounded-md transition-all duration-150 ${
+                    isNavigable
+                      ? 'cursor-pointer hover:bg-primary/8'
+                      : 'cursor-default'
+                  }`}
+                >
                   <div
                     className={`w-2 h-2 rounded-full flex-shrink-0 transition-all duration-300 ${
                       isCurrent
@@ -63,7 +74,7 @@ const StepperBar = ({ currentScreen, itemsWithQuery }: StepperBarProps) => {
                   >
                     {step.label}
                   </span>
-                </div>
+                </button>
 
                 {i < STEPS.length - 1 && (
                   <div className={`h-px w-8 transition-colors duration-500 ${isPast ? 'bg-primary/30' : 'bg-border'}`} />

@@ -4,29 +4,29 @@ interface ResolutionScreenProps {
 
 const ResolutionScreen = ({ onTalk }: ResolutionScreenProps) => {
   return (
-    <div className="flex flex-col justify-center items-center" style={{ position: 'absolute', inset: 0, background: 'hsl(var(--primary))', padding: '48px 40px' }}>
+    <div className="flex flex-col justify-center items-center" style={{ position: 'absolute', inset: 0, background: 'hsl(var(--primary))', padding: '24px 40px' }}>
       <div className="max-w-[600px] w-full flex flex-col items-start">
-        <div className="text-[11px] font-semibold tracking-wide uppercase text-primary-foreground/60 mb-5">
+        <div className="text-[11px] font-semibold tracking-wide uppercase text-primary-foreground/60 mb-3">
           cherre.com — unified real estate data
         </div>
 
-        <div className="text-primary-foreground font-black leading-none tracking-tight mb-7" style={{ fontSize: 'clamp(40px, 7vw, 80px)' }}>
+        <div className="text-primary-foreground font-black leading-none tracking-tight mb-4" style={{ fontSize: 'clamp(32px, 5.5vw, 64px)' }}>
           One item.<br />One definition.<br />One answer.
         </div>
 
-        <div className="text-primary-foreground/80 font-normal leading-relaxed max-w-[480px] mb-12" style={{ fontSize: 'clamp(14px, 2vw, 18px)' }}>
+        <div className="text-primary-foreground/80 font-normal leading-relaxed max-w-[480px] mb-6" style={{ fontSize: 'clamp(13px, 1.6vw, 16px)' }}>
           Cherre maps every data point to a unified ontology built for real estate. No reconciliation. No ambiguity. No 6-hour spreadsheet.
         </div>
 
         {/* Stats */}
-        <div className="flex rounded-2xl overflow-hidden w-full max-w-[480px] mb-12 bg-primary-foreground/10 backdrop-blur-sm">
+        <div className="flex rounded-2xl overflow-hidden w-full max-w-[480px] mb-6 bg-primary-foreground/10 backdrop-blur-sm">
           {[
             { num: '4B+', label: 'Legal entities resolved' },
             { num: '160M', label: 'Parcels mapped' },
             { num: '120+', label: 'Data vendors connected' },
           ].map((stat, i) => (
             <div key={i} className={`flex-1 px-6 py-5 ${i < 2 ? 'border-r border-primary-foreground/10' : ''}`}>
-              <div className="text-primary-foreground font-black leading-none tracking-tight mb-1" style={{ fontSize: 'clamp(22px, 3.5vw, 36px)' }}>
+              <div className="text-primary-foreground font-black leading-none tracking-tight mb-1" style={{ fontSize: 'clamp(20px, 2.8vw, 28px)' }}>
                 {stat.num}
               </div>
               <div className="text-[10px] font-semibold tracking-wide uppercase text-primary-foreground/50">
