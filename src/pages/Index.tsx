@@ -167,7 +167,6 @@ const Index = () => {
             <div data-screen="6" className={`screen ${currentScreen === 6 ? `active enter-${direction}` : ''}`}>
               <ReceiptScreen
                 onRestart={restart}
-                onBackToCherre={() => goTo(4)}
                 itemsWithQuery={itemsWithQuery}
                 queriedMethods={queriedMethods}
               />
