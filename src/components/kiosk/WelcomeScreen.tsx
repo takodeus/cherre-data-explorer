@@ -58,7 +58,7 @@ const WelcomeScreen = ({ onStart, active }: WelcomeScreenProps) => {
   return (
     <div
       className="flex flex-col justify-center items-center text-center"
-      style={{ position: 'absolute', inset: 0, padding: '40px', paddingTop: '60px' }}
+      style={{ position: 'absolute', inset: 0, padding: '40px' }}
     >
       <img src={cherreLogo} alt="Cherre" className="h-14 mb-6 object-contain" style={{ mixBlendMode: "multiply" }} />
 
