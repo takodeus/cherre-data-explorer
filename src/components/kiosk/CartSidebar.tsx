@@ -19,7 +19,7 @@ interface CartSidebarProps {
 
 const CartSidebar = ({ itemsWithQuery, queriedMethods, currentScreen }: CartSidebarProps) => {
   // Only show on screens 2-3
-  if (currentScreen < 2 || currentScreen > 4) return null;
+  if (currentScreen < 2 || currentScreen > 3) return null;
 
   const scannedItems = ITEMS.filter((_, i) => itemsWithQuery.has(i));
   const totalMethods = queriedMethods.reduce((sum, s) => sum + s.size, 0);
