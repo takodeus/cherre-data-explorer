@@ -58,7 +58,7 @@ const WelcomeScreen = ({ onStart, active }: WelcomeScreenProps) => {
   return (
     <div
       className="flex flex-col justify-center items-center text-center"
-      style={{ position: 'absolute', inset: 0, padding: '40px', paddingTop: '60px' }}
+      style={{ position: 'absolute', inset: 0, padding: '40px' }}
     >
       <img src={cherreLogo} alt="Cherre" className="h-14 mb-6 object-contain" style={{ mixBlendMode: "multiply" }} />
 
@@ -74,7 +74,7 @@ const WelcomeScreen = ({ onStart, active }: WelcomeScreenProps) => {
         Scan, search, or look up your item to begin checkout.
       </div>
 
-      <div className="text-[13px] text-foreground/50 italic font-light max-w-[380px] leading-relaxed border border-border rounded-xl px-6 py-4 mb-10 bg-card/60 backdrop-blur-sm">
+      <div className="text-[13px] text-foreground/70 italic font-light max-w-[380px] leading-relaxed border border-border rounded-xl px-6 py-4 mb-10 bg-card/60 backdrop-blur-sm">
         "This store has been running on four different inventory systems since 2003. Good luck."
       </div>
 
