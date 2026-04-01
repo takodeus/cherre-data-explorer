@@ -133,9 +133,19 @@ const Index = () => {
     goTo(1);
   }, [goTo]);
 
+  const handleChangeQuantity = useCallback((itemIdx: number, delta: number) => {
+    setQuantities(prev => ({ ...prev, [itemIdx]: Math.max(1, (prev[itemIdx] ?? 1) + delta) }));
+  }, []);
+
+  const handleRemoveItem = useCallback((itemIdx: number) => {
+    setItemsWithQuery(prev => { const next = new Set(prev); next.delete(itemIdx); return next; });
+    setQuantities(prev => { const next = { ...prev }; delete next[itemIdx]; return next; });
+  }, []);
+
   const restart = useCallback(() => {
     setItemsWithQuery(new Set());
     setQueriedMethods(ITEMS.map(() => new Set()));
+    setQuantities({});
     setCurrentItem(0);
     setMaxReached(1);
     goTo(1);
