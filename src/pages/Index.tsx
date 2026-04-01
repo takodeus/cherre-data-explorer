@@ -205,6 +205,9 @@ const Index = () => {
             itemsWithQuery={itemsWithQuery}
             queriedMethods={queriedMethods}
             currentScreen={currentScreen}
+            quantities={quantities}
+            onChangeQuantity={handleChangeQuantity}
+            onRemoveItem={handleRemoveItem}
           />
         </div>
       </div>
