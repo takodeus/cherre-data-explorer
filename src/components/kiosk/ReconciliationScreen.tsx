@@ -42,7 +42,7 @@ const ReconciliationScreen = ({ onBetterWay, active, itemsWithQuery, queriedMeth
 
   return (
     <div
-      className="flex flex-col justify-center items-center p-8 bg-background"
+      className="flex flex-col justify-center items-center p-8 pb-12 bg-background"
       style={{ position: 'absolute', inset: 0 }}
     >
       <div className="max-w-[520px] w-full flex flex-col items-center">
