@@ -40,6 +40,7 @@ const Index = () => {
   const [soundOn, setSoundOn] = useState(false);
   const [itemsWithQuery, setItemsWithQuery] = useState<Set<number>>(new Set());
   const [queriedMethods, setQueriedMethods] = useState<Set<number>[]>(ITEMS.map(() => new Set()));
+  const [quantities, setQuantities] = useState<Record<number, number>>({});
   const [maxReached, setMaxReached] = useState<number>(1);
   const [lockOnWelcome, setLockOnWelcome] = useState(false);
 
