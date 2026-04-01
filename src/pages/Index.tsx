@@ -148,8 +148,8 @@ const Index = () => {
           <img
             src={cherreLogo}
             alt="Cherre"
-            className="absolute bottom-3 left-3 h-6 object-contain opacity-40 z-[100] pointer-events-none"
-            style={{ mixBlendMode: 'multiply' }}
+            className="absolute bottom-3 right-3 h-6 object-contain z-[100] pointer-events-none"
+            style={{ mixBlendMode: 'multiply', opacity: currentScreen === 4 ? 0.8 : 0.4 }}
           />
         )}
         <StepperBar currentScreen={currentScreen} maxReached={maxReached} onNavigate={goTo} onReset={restart} />
