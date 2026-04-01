@@ -15,10 +15,12 @@ interface CartSidebarProps {
   itemsWithQuery: Set<number>;
   queriedMethods: Set<number>[];
   currentScreen: number;
+  quantities: Record<number, number>;
+  onChangeQuantity: (itemIdx: number, delta: number) => void;
+  onRemoveItem: (itemIdx: number) => void;
 }
 
-const CartSidebar = ({ itemsWithQuery, queriedMethods, currentScreen }: CartSidebarProps) => {
-  // Only show on screens 2-3
+const CartSidebar = ({ itemsWithQuery, queriedMethods, currentScreen, quantities, onChangeQuantity, onRemoveItem }: CartSidebarProps) => {
   if (currentScreen < 2 || currentScreen > 3) return null;
 
   const scannedItems = ITEMS.filter((_, i) => itemsWithQuery.has(i));
@@ -54,21 +56,51 @@ const CartSidebar = ({ itemsWithQuery, queriedMethods, currentScreen }: CartSide
           <div className="py-2">
             {scannedItems.map((item) => {
               const itemIdx = ITEMS.indexOf(item);
-              const methodCount = queriedMethods[itemIdx]?.size ?? 0;
+              const qty = quantities[itemIdx] ?? 1;
               return (
                 <div
                   key={item.name}
-                  className="flex items-center gap-2.5 px-4 py-2.5 border-b border-border/40 animate-fade-in-up"
+                  className="px-3 py-2.5 border-b border-border/40 animate-fade-in-up"
                 >
-                  <div className="w-10 h-8 rounded-lg bg-background border border-border flex items-center justify-center text-sm flex-shrink-0 overflow-hidden">
-                    {item.images?.[0] && ITEM_IMAGES[item.images[0]]
-                      ? <img src={ITEM_IMAGES[item.images[0]]} alt={item.name} className="w-full h-full object-contain p-0.5" />
-                      : item.icon}
+                  <div className="flex items-start gap-2">
+                    <div className="w-9 h-7 rounded-md bg-background border border-border flex items-center justify-center text-sm flex-shrink-0 overflow-hidden">
+                      {item.images?.[0] && ITEM_IMAGES[item.images[0]]
+                        ? <img src={ITEM_IMAGES[item.images[0]]} alt={item.name} className="w-full h-full object-contain p-0.5" />
+                        : item.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[11px] font-bold text-foreground truncate">{item.name}</div>
+                      <div className="text-[9px] text-muted-foreground">{item.price}</div>
+                    </div>
+                    {/* Delete button */}
+                    <button
+                      onClick={() => onRemoveItem(itemIdx)}
+                      className="text-[10px] text-muted-foreground/40 hover:text-primary transition-colors flex-shrink-0 mt-0.5"
+                      aria-label={`Remove ${item.name}`}
+                    >
+                      ✕
+                    </button>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-[11px] font-bold text-foreground truncate">{item.name}</div>
-                    <div className="text-[9px] text-muted-foreground">{item.price}</div>
-                    <div className="flex gap-0.5 mt-1">
+
+                  {/* Quantity controls */}
+                  <div className="flex items-center justify-between mt-1.5 ml-11">
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => onChangeQuantity(itemIdx, -1)}
+                        disabled={qty <= 1}
+                        className="w-5 h-5 rounded border border-border bg-background text-[10px] font-bold text-foreground flex items-center justify-center hover:bg-primary/10 hover:text-primary hover:border-primary/30 disabled:opacity-30 disabled:hover:bg-background disabled:hover:text-foreground disabled:hover:border-border transition-colors"
+                      >
+                        −
+                      </button>
+                      <span className="text-[11px] font-bold text-foreground w-5 text-center tabular-nums">{qty}</span>
+                      <button
+                        onClick={() => onChangeQuantity(itemIdx, 1)}
+                        className="w-5 h-5 rounded border border-border bg-background text-[10px] font-bold text-foreground flex items-center justify-center hover:bg-primary/10 hover:text-primary hover:border-primary/30 transition-colors"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <div className="flex gap-0.5">
                       {LOOKUP_METHODS.map((_, mi) => (
                         <div
                           key={mi}

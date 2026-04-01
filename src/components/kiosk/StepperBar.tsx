@@ -35,7 +35,7 @@ const StepperBar = ({ currentScreen, maxReached, onNavigate, onReset }: StepperB
                   disabled={!isNavigable}
                   className={`flex items-center gap-1.5 px-2 py-1 rounded-md transition-all duration-150 ${
                     isNavigable
-                      ? 'cursor-pointer hover:bg-primary/8'
+                      ? 'cursor-pointer hover:bg-primary/10 hover:text-primary'
                       : 'cursor-default'
                   }`}
                 >
@@ -72,7 +72,7 @@ const StepperBar = ({ currentScreen, maxReached, onNavigate, onReset }: StepperB
         {/* Reset button — right side, visible on screens 2–5 */}
         <button
           onClick={onReset}
-          className={`flex items-center gap-1 text-[10px] font-semibold tracking-wide text-muted-foreground/50 hover:text-destructive transition-colors px-2 py-1 rounded-md hover:bg-destructive/5 ${
+          className={`flex items-center gap-1 text-[10px] font-semibold tracking-wide text-muted-foreground/50 hover:text-primary transition-colors px-2 py-1 rounded-md hover:bg-primary/10 ${
             currentScreen > 1 ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
           aria-label="Reset demo"

@@ -40,6 +40,7 @@ const Index = () => {
   const [soundOn, setSoundOn] = useState(false);
   const [itemsWithQuery, setItemsWithQuery] = useState<Set<number>>(new Set());
   const [queriedMethods, setQueriedMethods] = useState<Set<number>[]>(ITEMS.map(() => new Set()));
+  const [quantities, setQuantities] = useState<Record<number, number>>({});
   const [maxReached, setMaxReached] = useState<number>(1);
   const [lockOnWelcome, setLockOnWelcome] = useState(false);
 
@@ -132,9 +133,19 @@ const Index = () => {
     goTo(1);
   }, [goTo]);
 
+  const handleChangeQuantity = useCallback((itemIdx: number, delta: number) => {
+    setQuantities(prev => ({ ...prev, [itemIdx]: Math.max(1, (prev[itemIdx] ?? 1) + delta) }));
+  }, []);
+
+  const handleRemoveItem = useCallback((itemIdx: number) => {
+    setItemsWithQuery(prev => { const next = new Set(prev); next.delete(itemIdx); return next; });
+    setQuantities(prev => { const next = { ...prev }; delete next[itemIdx]; return next; });
+  }, []);
+
   const restart = useCallback(() => {
     setItemsWithQuery(new Set());
     setQueriedMethods(ITEMS.map(() => new Set()));
+    setQuantities({});
     setCurrentItem(0);
     setMaxReached(1);
     goTo(1);
@@ -194,6 +205,9 @@ const Index = () => {
             itemsWithQuery={itemsWithQuery}
             queriedMethods={queriedMethods}
             currentScreen={currentScreen}
+            quantities={quantities}
+            onChangeQuantity={handleChangeQuantity}
+            onRemoveItem={handleRemoveItem}
           />
         </div>
       </div>
