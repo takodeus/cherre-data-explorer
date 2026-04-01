@@ -42,7 +42,7 @@ const ReconciliationScreen = ({ onBetterWay, active, itemsWithQuery, queriedMeth
 
   return (
     <div
-      className="flex flex-col justify-center items-center p-8 bg-background"
+      className="flex flex-col justify-center items-center p-8 pb-12 bg-background"
       style={{ position: 'absolute', inset: 0 }}
     >
       <div className="max-w-[520px] w-full flex flex-col items-center">
@@ -138,7 +138,7 @@ const ReconciliationScreen = ({ onBetterWay, active, itemsWithQuery, queriedMeth
 
         <button
           onClick={onBetterWay}
-          className="w-full bg-background border border-primary text-primary rounded-xl px-12 py-4 font-sans text-sm font-bold tracking-wide uppercase cursor-pointer transition-all hover:bg-primary hover:text-primary-foreground active:scale-[0.98] shadow-sm"
+          className="w-full bg-background border border-destructive text-destructive rounded-xl px-12 py-4 font-sans text-sm font-bold tracking-wide uppercase cursor-pointer transition-all hover:bg-destructive hover:text-destructive-foreground active:scale-[0.98] shadow-sm"
         >
           There is a better way →
         </button>
