@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import cherreLogo from '@/assets/cherre-logo.jpeg';
 import { useSearchParams } from 'react-router-dom';
 import WelcomeScreen from '@/components/kiosk/WelcomeScreen';
 import ItemLookupScreen from '@/components/kiosk/ItemLookupScreen';
