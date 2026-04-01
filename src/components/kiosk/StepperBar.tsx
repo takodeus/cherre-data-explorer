@@ -35,7 +35,7 @@ const StepperBar = ({ currentScreen, maxReached, onNavigate, onReset }: StepperB
                   disabled={!isNavigable}
                   className={`flex items-center gap-1.5 px-2 py-1 rounded-md transition-all duration-150 ${
                     isNavigable
-                      ? 'cursor-pointer hover:bg-primary/8'
+                      ? 'cursor-pointer hover:bg-primary/10 hover:text-primary'
                       : 'cursor-default'
                   }`}
                 >
