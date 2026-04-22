@@ -348,7 +348,7 @@ const ItemLookupScreen = ({
         >
           {/* Main image — transform-scale zoom with drag-to-pan */}
           <div
-            className="rounded-xl shadow-2xl overflow-hidden"
+            className="relative rounded-xl shadow-2xl overflow-hidden bg-black/20"
             style={{ width: imgContainerSize, height: imgContainerSize, cursor: lightbox.zoom > 1 ? 'grab' : 'default' }}
             onPointerDown={e => {
               if (lightbox.zoom <= 1) return;
@@ -384,6 +384,33 @@ const ItemLookupScreen = ({
                 userSelect: 'none',
               }}
             />
+            {/* Prev / next arrows — overlaid on the image so they're always visible */}
+            {lightbox.srcs.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPan({ x: 0, y: 0 });
+                    setLightbox(lb => lb && { ...lb, idx: (lb.idx - 1 + lb.srcs.length) % lb.srcs.length, zoom: 1 });
+                  }}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 text-white text-xl flex items-center justify-center transition-colors focus:outline-none z-10"
+                  aria-label="Previous image"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPan({ x: 0, y: 0 });
+                    setLightbox(lb => lb && { ...lb, idx: (lb.idx + 1) % lb.srcs.length, zoom: 1 });
+                  }}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 text-white text-xl flex items-center justify-center transition-colors focus:outline-none z-10"
+                  aria-label="Next image"
+                >
+                  ›
+                </button>
+              </>
+            )}
           </div>
 
           {/* Zoom slider */}
@@ -408,26 +435,6 @@ const ItemLookupScreen = ({
               {lightbox.zoom.toFixed(1)}×
             </span>
           </div>
-
-          {/* Prev / next arrows — only when multiple images */}
-          {lightbox.srcs.length > 1 && (
-            <>
-              <button
-                onClick={() => { setLightbox(lb => lb && { ...lb, idx: (lb.idx - 1 + lb.srcs.length) % lb.srcs.length, zoom: 1 }); setPan({ x: 0, y: 0 }); }}
-                className="absolute left-[-44px] top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-colors focus:outline-none"
-                aria-label="Previous image"
-              >
-                ‹
-              </button>
-              <button
-                onClick={() => { setLightbox(lb => lb && { ...lb, idx: (lb.idx + 1) % lb.srcs.length, zoom: 1 }); setPan({ x: 0, y: 0 }); }}
-                className="absolute right-[-44px] top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-colors focus:outline-none"
-                aria-label="Next image"
-              >
-                ›
-              </button>
-            </>
-          )}
 
           {/* Label + dots */}
           <div className="flex flex-col items-center gap-2">
