@@ -160,7 +160,7 @@ const ItemLookupScreen = ({
                     : 'bg-background border-transparent hover:border-border hover:bg-card'
                 }`}
               >
-                <div className="w-14 h-10 rounded-lg border border-border bg-background flex items-center justify-center text-lg flex-shrink-0 overflow-hidden">
+                <div className="w-12 h-12 rounded-lg border border-border bg-background flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
                   {it.images?.[0] && ITEM_IMAGES[it.images[0]]
                     ? <img src={ITEM_IMAGES[it.images[0]]} alt={it.name} className="w-full h-full object-contain p-0.5" />
                     : it.icon}
@@ -182,27 +182,25 @@ const ItemLookupScreen = ({
         {/* Cards area */}
         <div className="flex-1 px-6 py-5 overflow-y-auto flex flex-col gap-3 min-h-0">
           <div className="flex items-center gap-3 mb-1">
-            {item.images?.[0] && ITEM_IMAGES[item.images[0]] ? (
-              <button
-                onClick={() => setLightbox({
-                  srcs: (item.images ?? []).map(f => ITEM_IMAGES[f]).filter(Boolean),
-                  name: item.name,
-                  idx: 0,
-                  zoom: 1,
-                })}
-                className="w-20 h-14 rounded-lg border border-border bg-card flex-shrink-0 overflow-hidden cursor-zoom-in hover:border-primary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40"
-                title={`Click to enlarge${(item.images?.length ?? 0) > 1 ? ` · ${item.images!.length} photos` : ''}`}
-                aria-label={`View full image of ${item.name}`}
-              >
-                <img
-                  src={ITEM_IMAGES[item.images[0]]}
-                  alt={item.name}
-                  className="w-full h-full object-contain p-0.5"
-                />
-              </button>
-            ) : (
-              <span className="text-2xl">{item.icon}</span>
-            )}
+            {(() => {
+              const srcs = (item.images ?? []).map(f => ITEM_IMAGES[f]).filter(Boolean);
+              const hasImages = srcs.length > 0;
+              return (
+                <button
+                  onClick={() => hasImages && setLightbox({ srcs, name: item.name, idx: 0, zoom: 1 })}
+                  disabled={!hasImages}
+                  className={`w-16 h-16 rounded-lg border border-border bg-card flex-shrink-0 overflow-hidden flex items-center justify-center text-3xl transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 ${
+                    hasImages ? 'cursor-zoom-in hover:border-primary/50' : 'cursor-default'
+                  }`}
+                  title={hasImages ? `Click to enlarge${srcs.length > 1 ? ` · ${srcs.length} photos` : ''}` : item.name}
+                  aria-label={hasImages ? `View full image of ${item.name}` : item.name}
+                >
+                  {hasImages
+                    ? <img src={srcs[0]} alt={item.name} className="w-full h-full object-contain p-1" />
+                    : <span>{item.icon}</span>}
+                </button>
+              );
+            })()}
             <div>
               <div className="text-[11px] font-semibold tracking-wide uppercase text-muted-foreground">Looking up</div>
               <div className="text-[15px] font-extrabold text-foreground tracking-tight">{item.name}</div>
@@ -350,7 +348,7 @@ const ItemLookupScreen = ({
         >
           {/* Main image — transform-scale zoom with drag-to-pan */}
           <div
-            className="rounded-xl shadow-2xl overflow-hidden"
+            className="relative rounded-xl shadow-2xl overflow-hidden bg-black/20"
             style={{ width: imgContainerSize, height: imgContainerSize, cursor: lightbox.zoom > 1 ? 'grab' : 'default' }}
             onPointerDown={e => {
               if (lightbox.zoom <= 1) return;
@@ -386,6 +384,33 @@ const ItemLookupScreen = ({
                 userSelect: 'none',
               }}
             />
+            {/* Prev / next arrows — overlaid on the image so they're always visible */}
+            {lightbox.srcs.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPan({ x: 0, y: 0 });
+                    setLightbox(lb => lb && { ...lb, idx: (lb.idx - 1 + lb.srcs.length) % lb.srcs.length, zoom: 1 });
+                  }}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 text-white text-xl flex items-center justify-center transition-colors focus:outline-none z-10"
+                  aria-label="Previous image"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPan({ x: 0, y: 0 });
+                    setLightbox(lb => lb && { ...lb, idx: (lb.idx + 1) % lb.srcs.length, zoom: 1 });
+                  }}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 text-white text-xl flex items-center justify-center transition-colors focus:outline-none z-10"
+                  aria-label="Next image"
+                >
+                  ›
+                </button>
+              </>
+            )}
           </div>
 
           {/* Zoom slider */}
@@ -411,26 +436,6 @@ const ItemLookupScreen = ({
             </span>
           </div>
 
-          {/* Prev / next arrows — only when multiple images */}
-          {lightbox.srcs.length > 1 && (
-            <>
-              <button
-                onClick={() => { setLightbox(lb => lb && { ...lb, idx: (lb.idx - 1 + lb.srcs.length) % lb.srcs.length, zoom: 1 }); setPan({ x: 0, y: 0 }); }}
-                className="absolute left-[-44px] top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-colors focus:outline-none"
-                aria-label="Previous image"
-              >
-                ‹
-              </button>
-              <button
-                onClick={() => { setLightbox(lb => lb && { ...lb, idx: (lb.idx + 1) % lb.srcs.length, zoom: 1 }); setPan({ x: 0, y: 0 }); }}
-                className="absolute right-[-44px] top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-colors focus:outline-none"
-                aria-label="Next image"
-              >
-                ›
-              </button>
-            </>
-          )}
-
           {/* Label + dots */}
           <div className="flex flex-col items-center gap-2">
             <span className="text-white/80 font-mono text-[11px] tracking-[0.12em] uppercase">
@@ -441,7 +446,7 @@ const ItemLookupScreen = ({
                 {lightbox.srcs.map((_, i) => (
                   <button
                     key={i}
-                    onClick={() => { setLightbox(lb => lb && { ...lb, idx: i, zoom: 1 }); setPan({ x: 0, y: 0 }); }}
+                    onClick={() => { setPan({ x: 0, y: 0 }); setLightbox(lb => lb && { ...lb, idx: i, zoom: 1 }); }}
                     className={`w-1.5 h-1.5 rounded-full transition-colors focus:outline-none ${
                       i === lightbox.idx ? 'bg-white' : 'bg-white/30 hover:bg-white/50'
                     }`}
