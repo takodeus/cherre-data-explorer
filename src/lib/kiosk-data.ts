@@ -100,7 +100,7 @@ export const ITEMS: Item[] = [
     category: 'Canned Seafood',
     price: '$2.79',
     conflictPrice: 'or $14.00?',
-    description: 'Wild-caught Atlantic sardines packed in olive oil. 3.75 oz (106g) tin.\nIngredients: Sardines, olive oil, salt.\nNutrition (1 can drained / 75g): 190 cal · 11g fat (1.5g sat) · 380mg sodium · 22g protein · 27% DV calcium · 25% DV vitamin D · 1,400mg omega-3 (EPA+DHA).\nContains: fish. Product of Portugal.',
+    description: 'Tightly packed. Fully traceable.\n\nCONTENTS\n• Connected records\n• Preserved context\n• Continuous lineage\n\nPACKED IN\nStructured workflows and governed definitions\n\nBENEFIT\nEverything in its place. Nothing lost in transit.\n\nNo loose ends.\nNo hidden gaps.',
     lookups: [
       { sys: 'System A — By Name', type: 'ok', text: '"Fish, Small, Preserved in Oil"\nNet weight: 3.75 oz' },
       { sys: 'System B — By Category', type: 'warn', text: '"Pet Food > Cat > Wet"\nNOTE: Cats love it.\nHumans also eat it. Confusing.' },
