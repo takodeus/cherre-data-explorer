@@ -182,27 +182,25 @@ const ItemLookupScreen = ({
         {/* Cards area */}
         <div className="flex-1 px-6 py-5 overflow-y-auto flex flex-col gap-3 min-h-0">
           <div className="flex items-center gap-3 mb-1">
-            {item.images?.[0] && ITEM_IMAGES[item.images[0]] ? (
-              <button
-                onClick={() => setLightbox({
-                  srcs: (item.images ?? []).map(f => ITEM_IMAGES[f]).filter(Boolean),
-                  name: item.name,
-                  idx: 0,
-                  zoom: 1,
-                })}
-                className="w-20 h-14 rounded-lg border border-border bg-card flex-shrink-0 overflow-hidden cursor-zoom-in hover:border-primary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40"
-                title={`Click to enlarge${(item.images?.length ?? 0) > 1 ? ` · ${item.images!.length} photos` : ''}`}
-                aria-label={`View full image of ${item.name}`}
-              >
-                <img
-                  src={ITEM_IMAGES[item.images[0]]}
-                  alt={item.name}
-                  className="w-full h-full object-contain p-0.5"
-                />
-              </button>
-            ) : (
-              <span className="text-2xl">{item.icon}</span>
-            )}
+            {(() => {
+              const srcs = (item.images ?? []).map(f => ITEM_IMAGES[f]).filter(Boolean);
+              const hasImages = srcs.length > 0;
+              return (
+                <button
+                  onClick={() => hasImages && setLightbox({ srcs, name: item.name, idx: 0, zoom: 1 })}
+                  disabled={!hasImages}
+                  className={`w-16 h-16 rounded-lg border border-border bg-card flex-shrink-0 overflow-hidden flex items-center justify-center text-3xl transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 ${
+                    hasImages ? 'cursor-zoom-in hover:border-primary/50' : 'cursor-default'
+                  }`}
+                  title={hasImages ? `Click to enlarge${srcs.length > 1 ? ` · ${srcs.length} photos` : ''}` : item.name}
+                  aria-label={hasImages ? `View full image of ${item.name}` : item.name}
+                >
+                  {hasImages
+                    ? <img src={srcs[0]} alt={item.name} className="w-full h-full object-contain p-1" />
+                    : <span>{item.icon}</span>}
+                </button>
+              );
+            })()}
             <div>
               <div className="text-[11px] font-semibold tracking-wide uppercase text-muted-foreground">Looking up</div>
               <div className="text-[15px] font-extrabold text-foreground tracking-tight">{item.name}</div>
