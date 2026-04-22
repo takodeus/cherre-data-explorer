@@ -5,14 +5,36 @@ import cherreOsImg from '@/assets/Cherre-Os.png';
 import ontoloPrimaryImg from '@/assets/ontolo with a8185e.png';
 import ontoloCan1Img from '@/assets/1can back mockup NBG.png';
 import ontoloCans2Img from '@/assets/2 cans mockup NBG.png';
+import cherreOsBackImg from '@/assets/cherre-os-back.png';
+import cherriesFrontImg from '@/assets/cherries-front.png';
+import cherriesBackImg from '@/assets/cherries-back.png';
+import parcelFrontImg from '@/assets/parcel-front.png';
+import parcelBackImg from '@/assets/parcel-back.png';
+import flourFrontImg from '@/assets/flour-front.png';
+import flourBackImg from '@/assets/flour-back.png';
+import sardinesFrontImg from '@/assets/sardines-front.png';
+import sardinesBackImg from '@/assets/sardines-back.png';
+import cherreColaFrontImg from '@/assets/cherre-cola-front.png';
+import cherreColaBackImg from '@/assets/cherre-cola-back.png';
 
 // Map image filenames (as stored in kiosk-data) to their imported URLs.
 // Add a new entry here whenever a new image is added to src/assets/.
 const ITEM_IMAGES: Record<string, string> = {
   'Cherre-Os.png': cherreOsImg,
+  'cherre-os-back.png': cherreOsBackImg,
   'ontolo with a8185e.png': ontoloPrimaryImg,
   '1can back mockup NBG.png': ontoloCan1Img,
   '2 cans mockup NBG.png': ontoloCans2Img,
+  'cherries-front.png': cherriesFrontImg,
+  'cherries-back.png': cherriesBackImg,
+  'parcel-front.png': parcelFrontImg,
+  'parcel-back.png': parcelBackImg,
+  'flour-front.png': flourFrontImg,
+  'flour-back.png': flourBackImg,
+  'sardines-front.png': sardinesFrontImg,
+  'sardines-back.png': sardinesBackImg,
+  'cherre-cola-front.png': cherreColaFrontImg,
+  'cherre-cola-back.png': cherreColaBackImg,
 };
 
 type CardState = 'idle' | 'loading' | 'done';
