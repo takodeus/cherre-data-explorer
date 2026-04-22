@@ -214,7 +214,7 @@ const ItemLookupScreen = ({
             const isLoading = !!loadingCards[cardKey(currentItem, methodIdx)];
             const isIdle    = !isDone && !isLoading;
             const lookup    = item.lookups[methodIdx];
-            const msg       = loadingMsgs[currentItem][methodIdx];
+            const msg       = loadingMsgs[currentItem]?.[methodIdx] ?? '';
 
             return (
               <div
