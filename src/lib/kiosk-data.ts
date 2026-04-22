@@ -34,13 +34,13 @@ export const ITEMS: Item[] = [
     ],
   },
   {
-    name: "Cherre O's",
+    name: "Alpha Bytes Cereal",
     icon: '🥣',
     images: ['Cherre-Os.png', 'cherre-os-back.png'],
     category: 'Cereal box',
     price: '$5.49',
     conflictPrice: 'or $3.99?',
-    description: 'Crunchy whole-grain oat rings with a hint of cherry. 12 oz box.\nIngredients: Whole grain oats, sugar, corn starch, salt, dried cherry powder, vitamin E (mixed tocopherols).\nNutrition (1 cup / 32g): 120 cal · 24g carbs · 9g sugar · 3g fiber · 3g protein.',
+    description: 'Crunchy whole-grain alphabet-shaped cereal. 12 oz box.\nIngredients: Whole grain oats, corn flour, sugar, corn starch, salt, vitamin E (mixed tocopherols).\nNutrition (1 cup / 32g): 120 cal · 24g carbs · 9g sugar · 3g fiber · 3g protein.',
     lookups: [
       { sys: 'System A — By Name', type: 'ok', text: '"Breakfast, Grain-Based, Fortified"\nServing size: 1 cup (32g)' },
       { sys: 'System B — By Category', type: 'ok', text: '"Cereal > Kids"\nShelf life: 18 months' },
@@ -49,7 +49,7 @@ export const ITEMS: Item[] = [
     ],
   },
   {
-    name: 'Cherries',
+    name: 'Fresh Cherries',
     icon: '🍒',
     images: ['cherries-front.png', 'cherries-back.png'],
     category: 'Produce',
@@ -61,21 +61,6 @@ export const ITEMS: Item[] = [
       { sys: 'System B — By Category', type: 'ok', text: '"Produce"\nSeasonal. Price fluctuates.' },
       { sys: 'System C — By SKU', type: 'warn', text: 'Returns 3 results.\nAll vendors named "Cherre."\nAll different prices.\nAll listed as different items.' },
       { sys: 'System D — By Vendor Code', type: 'err', text: '"Software. Enterprise License.\nAnnual Subscription."\n$120,000/yr. Renews automatically.' },
-    ],
-  },
-  {
-    name: 'Parcel',
-    icon: '📦',
-    images: ['parcel-front.png', 'parcel-back.png'],
-    category: 'Shipping & Receiving',
-    price: '$3.49',
-    conflictPrice: 'or assessed value?',
-    description: 'Corrugated kraft shipping box. 8" × 8" × 8".\nMaterial: 32 ECT single-wall corrugated cardboard, 100% recyclable.\nMax load: 65 lb.\nIncludes pre-scored fold lines. Tape and label sold separately.\nFlat-packed for storage; assembles in seconds.',
-    lookups: [
-      { sys: 'System A — By Name', type: 'ok', text: '"Package, Corrugated, Brown"\nDimensions: Unknown.\nContents: Unknown.' },
-      { sys: 'System B — By Category', type: 'warn', text: '"Real Property > Land > Tax Lot"\nZoned: Mixed-Use Commercial.\nOwner of record: 3 LLCs and a trust.\nAssessed value: It depends.' },
-      { sys: 'System C — By SKU', type: 'err', text: 'AMBIGUOUS IDENTIFIER.\nMatched 847,000 records.\nAll called "Parcel."\nNone agree on the address.' },
-      { sys: 'System D — By Vendor Code', type: 'warn', text: '"Herb, Fresh, Flat-Leaf."\nSee also: Parsley.\nSee also: Parcel (land).\nSee also: Parcel (shipping).\nSystem D regrets the confusion.' },
     ],
   },
   {
