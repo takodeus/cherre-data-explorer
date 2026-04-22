@@ -229,6 +229,17 @@ const ItemLookupScreen = ({
             </div>
           </div>
 
+          {item.description && (
+            <div className="rounded-lg border border-border bg-card/50 px-4 py-3 mb-1">
+              <div className="text-[9px] font-semibold tracking-wide uppercase text-muted-foreground mb-1">
+                Product details
+              </div>
+              <div className="text-[12px] text-foreground/80 leading-relaxed whitespace-pre-line">
+                {item.description}
+              </div>
+            </div>
+          )}
+
           {LOOKUP_METHODS.map((method, methodIdx) => {
             const isDone    = queriedMethods[currentItem]?.has(methodIdx) && !loadingCards[cardKey(currentItem, methodIdx)];
             const isLoading = !!loadingCards[cardKey(currentItem, methodIdx)];
