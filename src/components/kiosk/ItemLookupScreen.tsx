@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { ITEMS, LOOKUP_METHODS, LOADING_MESSAGES, type LookupType } from '@/lib/kiosk-data';
 import { scanBeep } from '@/lib/kiosk-audio';
 import cherreOsImg from '@/assets/Cherre-Os.png';
@@ -92,6 +92,15 @@ const ItemLookupScreen = ({
   const [loadingMsgs, setLoadingMsgs] = useState<string[][]>(
     ITEMS.map(() => LOOKUP_METHODS.map(() => ''))
   );
+
+  // Preload every product image on mount so back-of-package shots are
+  // instantly available when users open the lightbox or switch slides.
+  useEffect(() => {
+    Object.values(ITEM_IMAGES).forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
 
   const cardKey = (itemIdx: number, methodIdx: number) => `${itemIdx}-${methodIdx}`;
 
