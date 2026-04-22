@@ -70,7 +70,7 @@ export const ITEMS: Item[] = [
     category: 'Shipping & Receiving',
     price: '$3.49',
     conflictPrice: 'or assessed value?',
-    description: 'Standard small corrugated shipping box. 8" × 8" × 8".\nMaterial: 32 ECT double-wall kraft (70% recycled content).\nMax gross weight: 20 lb · Burst strength: 200 psi.\nRecyclable curbside. Compatible with all major carriers.',
+    description: 'For the smooth flow of portfolio data. 8" × 8" × 8" corrugated kraft box.\nUses: resolves duplicate assets, aligns definitions, improves visibility.\nContents: resolved entities, shared ontology, traceable lineage, validated inputs.\nWarning: may expose spreadsheet dependency.\nNo disconnected silos. No mystery numbers.',
     lookups: [
       { sys: 'System A — By Name', type: 'ok', text: '"Package, Corrugated, Brown"\nDimensions: Unknown.\nContents: Unknown.' },
       { sys: 'System B — By Category', type: 'warn', text: '"Real Property > Land > Tax Lot"\nZoned: Mixed-Use Commercial.\nOwner of record: 3 LLCs and a trust.\nAssessed value: It depends.' },
