@@ -115,7 +115,7 @@ export const ITEMS: Item[] = [
     category: 'Beverage (bottle)',
     price: '$1.99',
     conflictPrice: 'or $0.05 deposit?',
-    description: 'Classic cherry cola in a 12 fl oz (355mL) returnable glass bottle.\nIngredients: Carbonated water, cane sugar, caramel color, natural cherry flavor, phosphoric acid, caffeine.\nNutrition (per bottle): 150 cal · 0g fat · 30mg sodium · 39g carbs · 39g sugar (incl. 39g added sugars) · 35mg caffeine.\n$0.05 bottle deposit included. Return at any kiosk.',
+    description: 'Now with full data clarity.\n\nFORMULA\n• Resolved entities\n• Shared ontology\n• Validated inputs\n• Traceable lineage\n\nREFRESHES\n• Reporting workflows\n• Portfolio visibility\n• Decision confidence\n\nSERVING SUGGESTION\nBest consumed when moving from reporting to reasoning.\n\nNo artificial dashboards.\nNo synthetic definitions.\nNo disconnected silos.\n\nClarity you can scale.',
     lookups: [
       { sys: 'System A — By Name', type: 'warn', text: '"Soft Drink, Carbonated, Cherry"\nDid you mean: "Cherre O\'s"?\nDid you mean: "Cherries"?' },
       { sys: 'System B — By Category', type: 'ok', text: '"Beverages > Soda > Cola"\n12 fl oz glass bottle' },
