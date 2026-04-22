@@ -93,6 +93,15 @@ const ItemLookupScreen = ({
     ITEMS.map(() => LOOKUP_METHODS.map(() => ''))
   );
 
+  // Preload every product image on mount so back-of-package shots are
+  // instantly available when users open the lightbox or switch slides.
+  useEffect(() => {
+    Object.values(ITEM_IMAGES).forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
   const cardKey = (itemIdx: number, methodIdx: number) => `${itemIdx}-${methodIdx}`;
 
   const setCardLoading = useCallback((itemIdx: number, methodIdx: number, loading: boolean) => {
