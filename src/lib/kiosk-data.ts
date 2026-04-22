@@ -55,7 +55,7 @@ export const ITEMS: Item[] = [
     category: 'Produce',
     price: '$6.99',
     conflictPrice: 'or $120,000/yr',
-    description: 'Fresh sweet cherries, sold by the pound. Origin: Pacific Northwest, USA.\nIngredients: Fresh sweet cherries. That\'s it.\nNutrition (1 cup / 154g): 97 cal · 0g fat · 25g carbs · 3g fiber · 20g sugar · 2g protein · 16% DV vitamin C.\nKeep refrigerated. Best within 5 days. Pits not edible.',
+    description: 'Picked for clarity. Packed for decisions.\nContents: resolved entities, shared ontology, traceable lineage, validated inputs.\nQuality check: no duplicates, no conflicting definitions, no guesswork.\nOrigin: sourced across systems. Unified at the core.\nBest used for: portfolio visibility, cross-system alignment, decision-ready data.\nNote: the data did not change. The meaning did.\nNo disconnected silos. No mystery numbers.',
     lookups: [
       { sys: 'System A — By Name', type: 'ok', text: '"Fruit, Stone, Fresh"\nOrigin: Pacific Northwest' },
       { sys: 'System B — By Category', type: 'ok', text: '"Produce"\nSeasonal. Price fluctuates.' },
