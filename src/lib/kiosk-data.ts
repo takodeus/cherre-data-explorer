@@ -85,7 +85,7 @@ export const ITEMS: Item[] = [
     category: 'Baking & Pantry',
     price: '$4.29',
     conflictPrice: 'or $0.42?',
-    description: 'All-purpose enriched wheat flour. 5 lb (2.27 kg) paper sack.\nIngredients: Enriched wheat flour (wheat flour, niacin, reduced iron, thiamin mononitrate, riboflavin, folic acid), malted barley flour.\nNutrition (1/4 cup / 30g): 100 cal · 0g fat · 22g carbs · 1g fiber · 0g sugar · 3g protein.\nContains: wheat. Mill code WF-002.',
+    description: 'For baking structure into your data.\n\nUSES\n• Standardizes inputs\n• Reduces variability\n• Improves consistency\n\nMILLING PROCESS\n• Clean inputs\n• Defined measures\n• Repeatable workflows\n\nRESULT\nFrom raw ingredients to reliable outputs.\n\nNo guesswork.\nNo inconsistent results.',
     lookups: [
       { sys: 'System A — By Name', type: 'ok', text: '"Baking, Dry Goods, Milled Grain"\nUnit: 5 lb paper sack' },
       { sys: 'System B — By Category', type: 'warn', text: '"Powder, White, Bulk"\nMatched 14 records.\nIncludes: sugar, salt, drywall compound.' },
