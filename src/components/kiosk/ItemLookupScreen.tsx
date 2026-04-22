@@ -160,7 +160,7 @@ const ItemLookupScreen = ({
                     : 'bg-background border-transparent hover:border-border hover:bg-card'
                 }`}
               >
-                <div className="w-14 h-10 rounded-lg border border-border bg-background flex items-center justify-center text-lg flex-shrink-0 overflow-hidden">
+                <div className="w-12 h-12 rounded-lg border border-border bg-background flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
                   {it.images?.[0] && ITEM_IMAGES[it.images[0]]
                     ? <img src={ITEM_IMAGES[it.images[0]]} alt={it.name} className="w-full h-full object-contain p-0.5" />
                     : it.icon}
