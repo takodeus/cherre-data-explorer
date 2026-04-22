@@ -71,6 +71,45 @@ export const ITEMS: Item[] = [
       { sys: 'System D — By Vendor Code', type: 'warn', text: '"Herb, Fresh, Flat-Leaf."\nSee also: Parsley.\nSee also: Parcel (land).\nSee also: Parcel (shipping).\nSystem D regrets the confusion.' },
     ],
   },
+  {
+    name: 'Bag of Flour',
+    icon: '🌾',
+    category: 'Baking & Pantry',
+    price: '$4.29',
+    conflictPrice: 'or $0.42?',
+    lookups: [
+      { sys: 'System A — By Name', type: 'ok', text: '"Baking, Dry Goods, Milled Grain"\nUnit: 5 lb paper sack' },
+      { sys: 'System B — By Category', type: 'warn', text: '"Powder, White, Bulk"\nMatched 14 records.\nIncludes: sugar, salt, drywall compound.' },
+      { sys: 'System C — By SKU', type: 'err', text: 'WEIGHT MISMATCH.\nExpected: 5 lb.\nReceived: 5 lb (per scale).\nDiscrepancy unresolved.' },
+      { sys: 'System D — By Vendor Code', type: 'ok', text: '"Wheat Flour, All-Purpose, Enriched"\nMill code: WF-002\nLot stable.' },
+    ],
+  },
+  {
+    name: 'Sardines',
+    icon: '🐟',
+    category: 'Canned Seafood',
+    price: '$2.79',
+    conflictPrice: 'or $14.00?',
+    lookups: [
+      { sys: 'System A — By Name', type: 'ok', text: '"Fish, Small, Preserved in Oil"\nNet weight: 3.75 oz' },
+      { sys: 'System B — By Category', type: 'warn', text: '"Pet Food > Cat > Wet"\nNOTE: Cats love it.\nHumans also eat it. Confusing.' },
+      { sys: 'System C — By SKU', type: 'ok', text: '"Canned Sardines in Olive Oil"\nOrigin: Portugal\nBest by: 2029-04' },
+      { sys: 'System D — By Vendor Code', type: 'err', text: 'BARCODE MISREAD.\nReturned: "Yacht, 42ft, Used."\nMSRP: $14,000.\nPlease rescan.' },
+    ],
+  },
+  {
+    name: 'Cherre Cola',
+    icon: '🥤',
+    category: 'Beverage (bottle)',
+    price: '$1.99',
+    conflictPrice: 'or $0.05 deposit?',
+    lookups: [
+      { sys: 'System A — By Name', type: 'warn', text: '"Soft Drink, Carbonated, Cherry"\nDid you mean: "Cherre O\'s"?\nDid you mean: "Cherries"?' },
+      { sys: 'System B — By Category', type: 'ok', text: '"Beverages > Soda > Cola"\n12 fl oz glass bottle' },
+      { sys: 'System C — By SKU', type: 'err', text: 'TRADEMARK CONFLICT.\nName too similar to: "Cherre" (vendor).\nLegal hold: 1998–present.' },
+      { sys: 'System D — By Vendor Code', type: 'ok', text: '"Bottled Cola, Cherry Flavor"\nDeposit: $0.05/bottle\nReturn at any kiosk.' },
+    ],
+  },
 ];
 
 export const LOOKUP_METHODS = ['By Name', 'By Category', 'By SKU', 'By Vendor'];
