@@ -85,7 +85,7 @@ export const ITEMS: Item[] = [
     category: 'Baking & Pantry',
     price: '$4.29',
     conflictPrice: 'or $0.42?',
-    description: 'All-purpose enriched wheat flour. 5 lb (2.27 kg) paper sack.\nIngredients: Enriched wheat flour (wheat flour, niacin, reduced iron, thiamin mononitrate, riboflavin, folic acid), malted barley flour.\nNutrition (1/4 cup / 30g): 100 cal · 0g fat · 22g carbs · 1g fiber · 0g sugar · 3g protein.\nContains: wheat. Mill code WF-002.',
+    description: 'For baking structure into your data.\n\nUSES\n• Standardizes inputs\n• Reduces variability\n• Improves consistency\n\nMILLING PROCESS\n• Clean inputs\n• Defined measures\n• Repeatable workflows\n\nRESULT\nFrom raw ingredients to reliable outputs.\n\nNo guesswork.\nNo inconsistent results.',
     lookups: [
       { sys: 'System A — By Name', type: 'ok', text: '"Baking, Dry Goods, Milled Grain"\nUnit: 5 lb paper sack' },
       { sys: 'System B — By Category', type: 'warn', text: '"Powder, White, Bulk"\nMatched 14 records.\nIncludes: sugar, salt, drywall compound.' },
@@ -100,7 +100,7 @@ export const ITEMS: Item[] = [
     category: 'Canned Seafood',
     price: '$2.79',
     conflictPrice: 'or $14.00?',
-    description: 'Wild-caught Atlantic sardines packed in olive oil. 3.75 oz (106g) tin.\nIngredients: Sardines, olive oil, salt.\nNutrition (1 can drained / 75g): 190 cal · 11g fat (1.5g sat) · 380mg sodium · 22g protein · 27% DV calcium · 25% DV vitamin D · 1,400mg omega-3 (EPA+DHA).\nContains: fish. Product of Portugal.',
+    description: 'Tightly packed. Fully traceable.\n\nCONTENTS\n• Connected records\n• Preserved context\n• Continuous lineage\n\nPACKED IN\nStructured workflows and governed definitions\n\nBENEFIT\nEverything in its place. Nothing lost in transit.\n\nNo loose ends.\nNo hidden gaps.',
     lookups: [
       { sys: 'System A — By Name', type: 'ok', text: '"Fish, Small, Preserved in Oil"\nNet weight: 3.75 oz' },
       { sys: 'System B — By Category', type: 'warn', text: '"Pet Food > Cat > Wet"\nNOTE: Cats love it.\nHumans also eat it. Confusing.' },
@@ -115,7 +115,7 @@ export const ITEMS: Item[] = [
     category: 'Beverage (bottle)',
     price: '$1.99',
     conflictPrice: 'or $0.05 deposit?',
-    description: 'Classic cherry cola in a 12 fl oz (355mL) returnable glass bottle.\nIngredients: Carbonated water, cane sugar, caramel color, natural cherry flavor, phosphoric acid, caffeine.\nNutrition (per bottle): 150 cal · 0g fat · 30mg sodium · 39g carbs · 39g sugar (incl. 39g added sugars) · 35mg caffeine.\n$0.05 bottle deposit included. Return at any kiosk.',
+    description: 'Now with full data clarity.\n\nFORMULA\n• Resolved entities\n• Shared ontology\n• Validated inputs\n• Traceable lineage\n\nREFRESHES\n• Reporting workflows\n• Portfolio visibility\n• Decision confidence\n\nSERVING SUGGESTION\nBest consumed when moving from reporting to reasoning.\n\nNo artificial dashboards.\nNo synthetic definitions.\nNo disconnected silos.\n\nClarity you can scale.',
     lookups: [
       { sys: 'System A — By Name', type: 'warn', text: '"Soft Drink, Carbonated, Cherry"\nDid you mean: "Cherre O\'s"?\nDid you mean: "Cherries"?' },
       { sys: 'System B — By Category', type: 'ok', text: '"Beverages > Soda > Cola"\n12 fl oz glass bottle' },
