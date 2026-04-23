@@ -88,6 +88,7 @@ const ItemLookupScreen = ({
   const [loadingMsgs, setLoadingMsgs] = useState<string[][]>(
     ITEMS.map(() => LOOKUP_METHODS.map(() => ''))
   );
+  const cardsScrollRef = useRef<HTMLDivElement | null>(null);
 
   // Preload every product image on mount so back-of-package shots are
   // instantly available when users open the lightbox or switch slides.
@@ -97,6 +98,12 @@ const ItemLookupScreen = ({
       img.src = src;
     });
   }, []);
+
+  // Scroll the product details / lookups area back to the top whenever
+  // the user opens a new product.
+  useEffect(() => {
+    cardsScrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentItem]);
 
   const cardKey = (itemIdx: number, methodIdx: number) => `${itemIdx}-${methodIdx}`;
 
@@ -207,7 +214,7 @@ const ItemLookupScreen = ({
         </div>
 
         {/* Cards area */}
-        <div className="flex-1 px-6 py-5 overflow-y-auto flex flex-col gap-3 min-h-0">
+        <div ref={cardsScrollRef} className="flex-1 px-6 py-5 overflow-y-auto flex flex-col gap-3 min-h-0">
           <div className="flex items-center gap-3 mb-1">
             {(() => {
               const srcs = (item.images ?? []).map(f => ITEM_IMAGES[f]).filter(Boolean);

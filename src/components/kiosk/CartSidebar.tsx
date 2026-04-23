@@ -26,6 +26,16 @@ const CartSidebar = ({ itemsWithQuery, queriedMethods, currentScreen, quantities
   const scannedItems = ITEMS.filter((_, i) => itemsWithQuery.has(i));
   const totalMethods = queriedMethods.reduce((sum, s) => sum + s.size, 0);
 
+  // Multiply unit price by quantity for line-item display.
+  const lineTotal = (price: string, qty: number): string => {
+    const match = price.match(/([^\d.,-]*)([\d,]+(?:\.\d+)?)/);
+    if (!match) return price;
+    const prefix = match[1] ?? '';
+    const num = parseFloat(match[2].replace(/,/g, ''));
+    if (!Number.isFinite(num)) return price;
+    return `${prefix}${(num * qty).toFixed(2)}`;
+  };
+
   return (
     <div className="w-[200px] flex-shrink-0 border-l border-border bg-card flex flex-col h-full">
       {/* Cart header */}
@@ -70,7 +80,16 @@ const CartSidebar = ({ itemsWithQuery, queriedMethods, currentScreen, quantities
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-[11px] font-bold text-foreground truncate">{item.name}</div>
-                      <div className="text-[9px] text-muted-foreground">{item.price}</div>
+                      <div className="text-[9px] text-muted-foreground">
+                        {qty > 1 ? (
+                          <>
+                            <span className="tabular-nums font-semibold text-foreground">{lineTotal(item.price, qty)}</span>
+                            <span className="opacity-60"> ({item.price} × {qty})</span>
+                          </>
+                        ) : (
+                          item.price
+                        )}
+                      </div>
                     </div>
                     {/* Delete button */}
                     <button
