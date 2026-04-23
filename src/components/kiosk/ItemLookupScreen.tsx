@@ -162,9 +162,13 @@ const ItemLookupScreen = ({
   const count = itemsWithQuery.size;
   const item = ITEMS[currentItem];
   const inCart = itemsWithQuery.has(currentItem);
+  const queriedCountForItem = queriedMethods[currentItem]?.size ?? 0;
+  const allQueried = queriedCountForItem >= LOOKUP_METHODS.length;
+  const canAddToCart = allQueried && !anyLoading;
 
   const toggleCart = useCallback(() => {
     const itemIdx = currentItem;
+    if (!inCart && !canAddToCart) return;
     checkoutBeep();
     setItemsWithQuery(prev => {
       const next = new Set(prev);
@@ -172,7 +176,7 @@ const ItemLookupScreen = ({
       else next.add(itemIdx);
       return next;
     });
-  }, [currentItem, setItemsWithQuery]);
+  }, [currentItem, setItemsWithQuery, inCart, canAddToCart]);
 
   return (
     <>
