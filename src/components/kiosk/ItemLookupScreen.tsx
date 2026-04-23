@@ -552,17 +552,17 @@ const ItemLookupScreen = ({
           </div>
 
           {/* Label + dots */}
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-2 mb-6">
             <span className="text-white/80 font-mono text-[11px] tracking-[0.12em] uppercase">
               {lightbox.name}
             </span>
             {lightbox.srcs.length > 1 && (
-              <div className="flex gap-1.5">
+              <div className="flex gap-2">
                 {lightbox.srcs.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => { setPan({ x: 0, y: 0 }); setLightbox(lb => lb && { ...lb, idx: i, zoom: 1 }); }}
-                    className={`w-1.5 h-1.5 rounded-full transition-colors focus:outline-none ${
+                    className={`w-2 h-2 rounded-full transition-colors focus:outline-none ${
                       i === lightbox.idx ? 'bg-white' : 'bg-white/30 hover:bg-white/50'
                     }`}
                     aria-label={`Go to image ${i + 1}`}
