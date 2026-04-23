@@ -188,7 +188,9 @@ const ItemLookupScreen = ({
             Self-checkout — Item Lookup
           </div>
           <div className="text-primary-foreground font-extrabold tracking-tight" style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}>
-            Each system has an answer, but they might not agree.
+            Each system has an answer
+            <br />
+            but they might not always agree.
           </div>
         </div>
         <div className="pill-badge text-[10px]" style={{ background: 'hsl(var(--primary-deep))' }}>Step 2 of 5</div>
@@ -263,7 +265,7 @@ const ItemLookupScreen = ({
                   ? 'bg-primary-light-bg text-primary border border-primary/30 hover:bg-primary/10 active:scale-[0.97]'
                   : canAddToCart
                   ? 'bg-primary text-primary-foreground border border-primary hover:bg-primary-light hover:shadow-md active:scale-[0.97]'
-                  : 'bg-muted text-muted-foreground/60 border border-border cursor-not-allowed opacity-60'
+                  : 'bg-muted text-foreground/80 border border-border cursor-not-allowed'
               }`}
               aria-label={inCart ? `Remove ${item.name} from cart` : canAddToCart ? `Add ${item.name} to cart` : `Query all systems before adding ${item.name} to cart`}
               title={!inCart && !canAddToCart ? `Query all ${LOOKUP_METHODS.length} systems first (${queriedCountForItem}/${LOOKUP_METHODS.length} done)` : undefined}
@@ -390,7 +392,7 @@ const ItemLookupScreen = ({
                   ? 'bg-primary-light-bg text-primary border border-primary/30 hover:bg-primary/10 active:scale-[0.98]'
                   : canAddToCart
                   ? 'bg-primary text-primary-foreground border border-primary hover:bg-primary-light hover:shadow-md active:scale-[0.98]'
-                  : 'bg-muted text-muted-foreground/60 border border-border cursor-not-allowed opacity-60'
+                  : 'bg-muted text-foreground/80 border border-border cursor-not-allowed'
               }`}
               aria-label={inCart ? `Remove ${item.name} from cart` : canAddToCart ? `Add ${item.name} to cart` : `Query all systems before adding ${item.name} to cart`}
               title={!inCart && !canAddToCart ? `Query all ${LOOKUP_METHODS.length} systems first (${queriedCountForItem}/${LOOKUP_METHODS.length} done)` : undefined}
