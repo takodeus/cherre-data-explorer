@@ -265,7 +265,7 @@ const ItemLookupScreen = ({
                   ? 'bg-primary-light-bg text-primary border border-primary/30 hover:bg-primary/10 active:scale-[0.97]'
                   : canAddToCart
                   ? 'bg-primary text-primary-foreground border border-primary hover:bg-primary-light hover:shadow-md active:scale-[0.97]'
-                  : 'bg-muted text-muted-foreground/60 border border-border cursor-not-allowed opacity-60'
+                  : 'bg-muted text-foreground/80 border border-border cursor-not-allowed'
               }`}
               aria-label={inCart ? `Remove ${item.name} from cart` : canAddToCart ? `Add ${item.name} to cart` : `Query all systems before adding ${item.name} to cart`}
               title={!inCart && !canAddToCart ? `Query all ${LOOKUP_METHODS.length} systems first (${queriedCountForItem}/${LOOKUP_METHODS.length} done)` : undefined}
@@ -392,7 +392,7 @@ const ItemLookupScreen = ({
                   ? 'bg-primary-light-bg text-primary border border-primary/30 hover:bg-primary/10 active:scale-[0.98]'
                   : canAddToCart
                   ? 'bg-primary text-primary-foreground border border-primary hover:bg-primary-light hover:shadow-md active:scale-[0.98]'
-                  : 'bg-muted text-muted-foreground/60 border border-border cursor-not-allowed opacity-60'
+                  : 'bg-muted text-foreground/80 border border-border cursor-not-allowed'
               }`}
               aria-label={inCart ? `Remove ${item.name} from cart` : canAddToCart ? `Add ${item.name} to cart` : `Query all systems before adding ${item.name} to cart`}
               title={!inCart && !canAddToCart ? `Query all ${LOOKUP_METHODS.length} systems first (${queriedCountForItem}/${LOOKUP_METHODS.length} done)` : undefined}
