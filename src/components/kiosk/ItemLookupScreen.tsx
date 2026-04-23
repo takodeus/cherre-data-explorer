@@ -213,7 +213,7 @@ const ItemLookupScreen = ({
               >
                 <div className="w-12 h-12 rounded-lg border border-border bg-background flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
                   {it.images?.[0] && ITEM_IMAGES[it.images[0]]
-                    ? <img src={ITEM_IMAGES[it.images[0]]} alt={it.name} className="w-full h-full object-contain p-0.5" />
+                    ? <img src={ITEM_IMAGES[it.images[0]]} alt={it.name} className="w-full h-full object-contain p-0.5" loading="eager" decoding="sync" />
                     : it.icon}
                 </div>
                 <div className="flex-1 min-w-0">
