@@ -5,6 +5,26 @@ function getAudio(): AudioContext {
   return audioCtx;
 }
 
+// Play a single tone immediately — no scheduling, no clock offset.
+// Used for click/softClick so button presses feel instantaneous.
+function playInstant(freq: number, dur: number, type: OscillatorType, vol: number) {
+  try {
+    const ctx = getAudio();
+    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+    const now = ctx.currentTime;
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g);
+    g.connect(ctx.destination);
+    o.type = type;
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now + dur);
+    o.start(now);
+    o.stop(now + dur);
+  } catch {}
+}
+
 // Schedule a single tone at an absolute AudioContext time. Using the
 // audio clock (instead of setTimeout) avoids JS event-loop jitter so
 // multi-tone sequences feel tight rather than echoey.
@@ -39,7 +59,7 @@ function playSequence(tones: Tone[]) {
 }
 
 const beep = (freq: number, dur: number, type: OscillatorType = 'sine', vol = 0.3) =>
-  playSequence([{ f: freq, d: dur, t: type, v: vol }]);
+  playInstant(freq, dur, type, vol);
 
 export const scanBeep = () =>
   playSequence([
@@ -60,9 +80,9 @@ export const successChime = () =>
     }))
   );
 
-export const clickBeep = () => beep(900, 0.06, 'square', 0.1);
+export const clickBeep = () => playInstant(900, 0.06, 'square', 0.1);
 // Very subtle, quiet UI click — used as a global button-press feedback.
-export const softClick = () => beep(2400, 0.02, 'sine', 0.04);
+export const softClick = () => playInstant(2400, 0.02, 'sine', 0.04);
 
 export const initAudio = () => {
   try {
@@ -73,7 +93,7 @@ export const initAudio = () => {
 
 // Same family as clickBeep (square wave, similar volume) but a two-tone
 // rising chirp so Add to Cart feels related yet distinct from the
-// stepper-bar nav clicks.
+// stepper-bar nav clicks. Multi-tone — uses the audio clock for tight gap.
 export const checkoutBeep = () =>
   playSequence([
     { f: 900, d: 0.06, t: 'square', v: 0.18 },
