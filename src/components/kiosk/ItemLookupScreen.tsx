@@ -1,6 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { ITEMS, LOOKUP_METHODS, LOADING_MESSAGES, type LookupType } from '@/lib/kiosk-data';
-import { scanBeep, checkoutBeep } from '@/lib/kiosk-audio';
 import cherreOsImg from '@/assets/Cherre-Os.png';
 import ontoloPrimaryImg from '@/assets/ontolo with a8185e.png';
 import ontoloCan1Img from '@/assets/1can back mockup NBG.png';
@@ -36,7 +35,6 @@ const ITEM_IMAGES: Record<string, string> = {
 type CardState = 'idle' | 'loading' | 'done';
 
 interface ItemLookupScreenProps {
-  soundOn: boolean;
   currentItem: number;
   onSelectItem: (idx: number) => void;
   itemsWithQuery: Set<number>;
@@ -70,7 +68,6 @@ const bodyClass = (type: LookupType) => {
 };
 
 const ItemLookupScreen = ({
-  soundOn,
   currentItem,
   onSelectItem,
   itemsWithQuery,
@@ -131,8 +128,6 @@ const ItemLookupScreen = ({
     if (queriedMethods[itemIdx]?.has(methodIdx)) return;
     if (loadingCards[cardKey(itemIdx, methodIdx)]) return;
 
-    scanBeep();
-
     const ck = cardKey(itemIdx, methodIdx);
     setScanningCard(ck);
     setTimeout(() => setScanningCard(null), 800);
@@ -157,7 +152,7 @@ const ItemLookupScreen = ({
       clearInterval(msgInterval);
       setCardLoading(itemIdx, methodIdx, false);
     }, delay);
-  }, [currentItem, queriedMethods, loadingCards, soundOn, setQueriedMethods, setItemsWithQuery, setCardLoading, setCardMsg]);
+  }, [currentItem, queriedMethods, loadingCards, setQueriedMethods, setItemsWithQuery, setCardLoading, setCardMsg]);
 
   const count = itemsWithQuery.size;
   const item = ITEMS[currentItem];
