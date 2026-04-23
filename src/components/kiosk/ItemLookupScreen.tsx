@@ -262,7 +262,7 @@ const ItemLookupScreen = ({
             </div>
             <button
               onClick={toggleCart}
-              data-sound={!inCart && !canAddToCart ? 'none' : 'checkout'}
+              data-sound={!inCart && !canAddToCart ? 'none' : 'click'}
               disabled={!inCart && !canAddToCart}
               className={`flex-shrink-0 rounded-lg px-4 py-2 text-[11px] font-bold tracking-wide uppercase transition-all shadow-sm ${
                 inCart
@@ -389,7 +389,7 @@ const ItemLookupScreen = ({
           <div className="mt-2 pt-2 flex justify-center">
             <button
               onClick={toggleCart}
-              data-sound={!inCart && !canAddToCart ? 'none' : 'checkout'}
+              data-sound={!inCart && !canAddToCart ? 'none' : 'click'}
               disabled={!inCart && !canAddToCart}
               className={`w-full rounded-xl px-6 py-3.5 text-[12px] font-bold tracking-wide uppercase transition-all shadow-sm ${
                 inCart
@@ -429,7 +429,7 @@ const ItemLookupScreen = ({
         <button
           onClick={onCheckout}
           disabled={count < 2 || anyLoading}
-          data-sound={count >= 2 && !anyLoading ? 'error' : 'none'}
+          data-sound={count >= 2 && !anyLoading ? 'click' : 'none'}
           className={`bg-primary text-primary-foreground border-none rounded-xl px-8 py-3 font-sans text-xs font-bold tracking-wide uppercase cursor-pointer transition-all active:scale-[0.97] ${
             count >= 2 && !anyLoading
               ? 'opacity-100 hover:bg-primary-light shadow-md hover:shadow-lg'
