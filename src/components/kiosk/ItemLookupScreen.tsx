@@ -182,15 +182,15 @@ const ItemLookupScreen = ({
     <>
     <div className="flex flex-col bg-background h-full" style={{ position: 'absolute', inset: 0, minHeight: 0 }}>
       {/* Header */}
-      <div className="bg-primary px-10 pt-3 pb-3 flex items-end justify-between">
+      <div className="bg-primary px-10 pt-4 pb-4 flex items-end justify-between">
         <div>
-          <div className="text-[10px] font-semibold tracking-wide uppercase text-primary-foreground/70 mb-0.5">
+          <div className="text-[10px] font-semibold tracking-wide uppercase text-primary-foreground/70 mb-1">
             Self-checkout — Item Lookup
           </div>
-          <div className="text-primary-foreground font-extrabold tracking-tight leading-[1.15]" style={{ fontSize: 'clamp(13px, 2vw, 17px)' }}>
+          <div className="text-primary-foreground font-extrabold tracking-tight leading-[1.15]" style={{ fontSize: 'clamp(15px, 2.4vw, 20px)' }}>
             Each system has an answer,
             <br />
-            but they might not always agree.
+            yet they don't always agree.
           </div>
         </div>
         <div className="pill-badge text-[10px]" style={{ background: 'hsl(var(--primary-deep))' }}>Step 2 of 5</div>
