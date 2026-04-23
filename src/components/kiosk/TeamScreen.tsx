@@ -142,7 +142,7 @@ const TeamScreen = ({ onContinue }: TeamScreenProps) => {
       <div className="px-8 py-4 border-t border-border bg-card flex-shrink-0 flex justify-end">
         <button
           onClick={onContinue}
-          data-sound="scan"
+          data-sound="click"
           className="bg-primary text-primary-foreground border-none rounded-xl px-8 py-3 font-sans text-xs font-bold tracking-wide uppercase cursor-pointer transition-all hover:bg-primary-light shadow-md hover:shadow-lg active:scale-[0.97]"
         >
           Complete checkout →
