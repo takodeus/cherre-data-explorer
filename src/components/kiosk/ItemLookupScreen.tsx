@@ -188,7 +188,7 @@ const ItemLookupScreen = ({
             Self-checkout — Item Lookup
           </div>
           <div className="text-primary-foreground font-extrabold tracking-tight" style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}>
-            Each system has an answer
+            Each system has an answer,
             <br />
             but they might not always agree.
           </div>
