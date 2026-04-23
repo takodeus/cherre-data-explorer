@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import cherreLogo from '@/assets/cherre-logo.jpeg';
 import backdropImg from '@/assets/backdrop.jpg';
-import { checkoutBeep, initAudio } from '@/lib/kiosk-audio';
+import { initAudio } from '@/lib/kiosk-audio';
 
 interface WelcomeScreenProps {
   onStart: () => void;
@@ -69,10 +69,7 @@ const WelcomeScreen = ({ onStart, active, forceIdle, onIdleAcknowledged }: Welco
 
   const handleStart = () => {
     resetTimer();
-    // Unlock the AudioContext via this user-gesture click, then play a
-    // classic supermarket-checkout scanner beep.
     initAudio();
-    checkoutBeep();
     onStart();
   };
 
@@ -189,7 +186,7 @@ const WelcomeScreen = ({ onStart, active, forceIdle, onIdleAcknowledged }: Welco
 
         <button
           onClick={handleStart}
-          data-no-click-sound="true"
+          data-sound="checkout"
           className="bg-primary text-primary-foreground border-none rounded-xl px-14 py-5 font-sans text-sm font-bold tracking-wide uppercase cursor-pointer transition-all hover:bg-primary-light hover:shadow-lg active:scale-[0.98] shadow-md"
         >
           Start Lookup

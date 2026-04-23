@@ -72,6 +72,7 @@ const ReceiptScreen = ({ onRestart, itemsWithQuery, queriedMethods }: ReceiptScr
       <div className="flex gap-3 mt-4 mb-4 justify-center">
         <button
           onClick={onRestart}
+          data-sound="click"
           className="bg-background border border-border text-muted-foreground rounded-xl px-7 py-3 font-sans text-[11px] font-semibold tracking-wide uppercase cursor-pointer transition-all hover:border-primary hover:text-foreground hover:shadow-sm"
         >
           Start over
