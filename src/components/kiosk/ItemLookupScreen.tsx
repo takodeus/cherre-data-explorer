@@ -523,7 +523,12 @@ const ItemLookupScreen = ({
           </div>
 
           {/* Zoom slider */}
-          <div className="flex flex-col gap-1" style={{ width: imgContainerSize }}>
+          <div
+            className="flex flex-col gap-1"
+            style={{ width: imgContainerSize }}
+            onClick={e => e.stopPropagation()}
+            onPointerDown={e => e.stopPropagation()}
+          >
             <span className="text-white/60 font-mono text-[10px] tracking-[0.12em] uppercase text-center">
               Drag slider to zoom in / out
             </span>
