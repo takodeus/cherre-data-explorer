@@ -189,6 +189,7 @@ const WelcomeScreen = ({ onStart, active, forceIdle, onIdleAcknowledged }: Welco
 
         <button
           onClick={handleStart}
+          data-no-click-sound="true"
           className="bg-primary text-primary-foreground border-none rounded-xl px-14 py-5 font-sans text-sm font-bold tracking-wide uppercase cursor-pointer transition-all hover:bg-primary-light hover:shadow-lg active:scale-[0.98] shadow-md"
         >
           Start Lookup

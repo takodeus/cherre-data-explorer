@@ -37,6 +37,8 @@ export const scanBeep = () => { beep(1800, 0.08, 'square', 0.2); setTimeout(() =
 export const errorTone = () => { beep(220, 0.4, 'sawtooth', 0.15); setTimeout(() => beep(180, 0.5, 'sawtooth', 0.12), 300); };
 export const successChime = () => { [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => beep(f, 0.25, 'sine', 0.2), i * 80)); };
 export const clickBeep = () => { beep(900, 0.06, 'square', 0.1); };
+// Very subtle, quiet UI click — used as a global button-press feedback.
+export const softClick = () => { beep(2400, 0.02, 'sine', 0.04); };
 export const initAudio = () => {
   try {
     const ctx = getAudio();

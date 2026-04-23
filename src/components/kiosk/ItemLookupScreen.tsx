@@ -184,7 +184,7 @@ const ItemLookupScreen = ({
             Self-checkout — Item Lookup
           </div>
           <div className="text-primary-foreground font-extrabold tracking-tight" style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}>
-            Each system has an answer. They don't agree.
+            Each system has an answer, but they might not agree.
           </div>
         </div>
         <div className="pill-badge text-[10px]" style={{ background: 'hsl(var(--primary-deep))' }}>Step 2 of 5</div>
@@ -252,6 +252,7 @@ const ItemLookupScreen = ({
             </div>
             <button
               onClick={toggleCart}
+              data-no-click-sound="true"
               className={`flex-shrink-0 rounded-lg px-4 py-2 text-[11px] font-bold tracking-wide uppercase transition-all active:scale-[0.97] shadow-sm ${
                 inCart
                   ? 'bg-primary-light-bg text-primary border border-primary/30 hover:bg-primary/10'
@@ -325,6 +326,7 @@ const ItemLookupScreen = ({
                     {isIdle && (
                       <button
                         onClick={() => runLookup(methodIdx)}
+                        data-no-click-sound="true"
                         className="bg-background border border-border text-muted-foreground rounded-lg px-3.5 py-1.5 text-[10px] font-bold tracking-wide uppercase cursor-pointer transition-all hover:border-primary hover:text-primary hover:shadow-sm"
                       >
                         Query →
@@ -373,6 +375,7 @@ const ItemLookupScreen = ({
           <div className="mt-2 pt-2 flex justify-center">
             <button
               onClick={toggleCart}
+              data-no-click-sound="true"
               className={`w-full rounded-xl px-6 py-3.5 text-[12px] font-bold tracking-wide uppercase transition-all active:scale-[0.98] shadow-sm ${
                 inCart
                   ? 'bg-primary-light-bg text-primary border border-primary/30 hover:bg-primary/10'

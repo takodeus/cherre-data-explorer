@@ -11,7 +11,7 @@ import StepperBar from '@/components/kiosk/StepperBar';
 import CartSidebar from '@/components/kiosk/CartSidebar';
 import DeviceBezel from '@/components/kiosk/DeviceBezel';
 import { ITEMS } from '@/lib/kiosk-data';
-import { clickBeep, errorTone, successChime, scanBeep, initAudio } from '@/lib/kiosk-audio';
+import { clickBeep, errorTone, successChime, scanBeep, initAudio, softClick } from '@/lib/kiosk-audio';
 
 const TRANSITION_MS = 340;
 const SCREEN_MIN = 1;
@@ -47,6 +47,21 @@ const Index = () => {
   const prevScreenRef = useRef(currentScreen);
   const transitioning = useRef(false);
   const internalNavRef = useRef(0);
+
+  // Global subtle click sound on every <button>. Buttons that already
+  // emit their own sound can opt out via data-no-click-sound="true".
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      const btn = target?.closest('button');
+      if (!btn) return;
+      if ((btn as HTMLButtonElement).disabled) return;
+      if (btn.dataset.noClickSound === 'true') return;
+      softClick();
+    };
+    document.addEventListener('click', handler, true);
+    return () => document.removeEventListener('click', handler, true);
+  }, []);
 
   const pushParams = useCallback((screen: number, item: number) => {
     internalNavRef.current++;
