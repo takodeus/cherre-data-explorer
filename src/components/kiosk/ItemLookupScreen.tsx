@@ -252,6 +252,7 @@ const ItemLookupScreen = ({
             </div>
             <button
               onClick={toggleCart}
+              data-no-click-sound="true"
               className={`flex-shrink-0 rounded-lg px-4 py-2 text-[11px] font-bold tracking-wide uppercase transition-all active:scale-[0.97] shadow-sm ${
                 inCart
                   ? 'bg-primary-light-bg text-primary border border-primary/30 hover:bg-primary/10'
