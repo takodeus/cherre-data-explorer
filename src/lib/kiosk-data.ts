@@ -22,7 +22,7 @@ export const ITEMS: Item[] = [
     name: 'Ontolo-Tea',
     icon: '🫙',
     images: ['ontolo with a8185e.png', '1can back mockup NBG.png'],
-    category: 'Beverage (can)',
+    category: 'Beverage',
     price: '$4.99',
     conflictPrice: 'or $12.50?',
     description: 'Functional cold-brew tea, lightly sparkling. 12 fl oz aluminum can.\nIngredients: Filtered water, organic black tea, organic cane sugar, citric acid, natural cherry flavor, L-theanine.\nNutrition (per can): 60 cal · 14g sugar · 0g fat · 25mg caffeine.',
