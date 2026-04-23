@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { ITEMS, LOOKUP_METHODS, LOADING_MESSAGES, type LookupType } from '@/lib/kiosk-data';
-import { scanBeep } from '@/lib/kiosk-audio';
+import { scanBeep, checkoutBeep } from '@/lib/kiosk-audio';
 import cherreOsImg from '@/assets/Cherre-Os.png';
 import ontoloPrimaryImg from '@/assets/ontolo with a8185e.png';
 import ontoloCan1Img from '@/assets/1can back mockup NBG.png';
@@ -145,7 +145,6 @@ const ItemLookupScreen = ({
       next[itemIdx].add(methodIdx);
       return next;
     });
-    setItemsWithQuery(prev => new Set(prev).add(itemIdx));
 
     let mi = 0;
     const msgInterval = setInterval(() => {
@@ -162,6 +161,18 @@ const ItemLookupScreen = ({
 
   const count = itemsWithQuery.size;
   const item = ITEMS[currentItem];
+  const inCart = itemsWithQuery.has(currentItem);
+
+  const toggleCart = useCallback(() => {
+    const itemIdx = currentItem;
+    if (soundOn) checkoutBeep();
+    setItemsWithQuery(prev => {
+      const next = new Set(prev);
+      if (next.has(itemIdx)) next.delete(itemIdx);
+      else next.add(itemIdx);
+      return next;
+    });
+  }, [currentItem, soundOn, setItemsWithQuery]);
 
   return (
     <>
@@ -235,10 +246,21 @@ const ItemLookupScreen = ({
                 </button>
               );
             })()}
-            <div>
+            <div className="flex-1 min-w-0">
               <div className="text-[11px] font-semibold tracking-wide uppercase text-muted-foreground">Looking up</div>
               <div className="text-[15px] font-extrabold text-foreground tracking-tight">{item.name}</div>
             </div>
+            <button
+              onClick={toggleCart}
+              className={`flex-shrink-0 rounded-lg px-4 py-2 text-[11px] font-bold tracking-wide uppercase transition-all active:scale-[0.97] shadow-sm ${
+                inCart
+                  ? 'bg-primary-light-bg text-primary border border-primary/30 hover:bg-primary/10'
+                  : 'bg-primary text-primary-foreground border border-primary hover:bg-primary-light hover:shadow-md'
+              }`}
+              aria-label={inCart ? `Remove ${item.name} from cart` : `Add ${item.name} to cart`}
+            >
+              {inCart ? '✓ In Cart' : '+ Add to Cart'}
+            </button>
           </div>
 
           {item.description && (
@@ -248,6 +270,19 @@ const ItemLookupScreen = ({
               </div>
               <div className="text-[12px] text-foreground/80 leading-relaxed whitespace-pre-line">
                 {item.description}
+              </div>
+              <div className="mt-3 pt-3 border-t border-border/40 flex justify-end">
+                <button
+                  onClick={toggleCart}
+                  className={`rounded-lg px-5 py-2 text-[11px] font-bold tracking-wide uppercase transition-all active:scale-[0.97] shadow-sm ${
+                    inCart
+                      ? 'bg-primary-light-bg text-primary border border-primary/30 hover:bg-primary/10'
+                      : 'bg-primary text-primary-foreground border border-primary hover:bg-primary-light hover:shadow-md'
+                  }`}
+                  aria-label={inCart ? `Remove ${item.name} from cart` : `Add ${item.name} to cart`}
+                >
+                  {inCart ? '✓ In Cart' : '+ Add to Cart'}
+                </button>
               </div>
             </div>
           )}
