@@ -131,7 +131,7 @@ const ItemLookupScreen = ({
     if (queriedMethods[itemIdx]?.has(methodIdx)) return;
     if (loadingCards[cardKey(itemIdx, methodIdx)]) return;
 
-    if (soundOn) scanBeep();
+    scanBeep();
 
     const ck = cardKey(itemIdx, methodIdx);
     setScanningCard(ck);
@@ -165,14 +165,14 @@ const ItemLookupScreen = ({
 
   const toggleCart = useCallback(() => {
     const itemIdx = currentItem;
-    if (soundOn) checkoutBeep();
+    checkoutBeep();
     setItemsWithQuery(prev => {
       const next = new Set(prev);
       if (next.has(itemIdx)) next.delete(itemIdx);
       else next.add(itemIdx);
       return next;
     });
-  }, [currentItem, soundOn, setItemsWithQuery]);
+  }, [currentItem, setItemsWithQuery]);
 
   return (
     <>

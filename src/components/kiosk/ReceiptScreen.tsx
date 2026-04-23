@@ -14,7 +14,7 @@ const ReceiptScreen = ({ onRestart, itemsWithQuery, queriedMethods }: ReceiptScr
       <div className="receipt bg-background w-full max-w-[400px] rounded-2xl px-8 py-6 font-mono text-foreground relative border border-border shadow-lg mt-2">
         <div className="text-center mb-5">
           <div className="text-base font-bold tracking-wide mb-1 text-primary">CHERRE DATA MART</div>
-          <div className="text-[9px] text-muted-foreground tracking-wide">Self-Checkout Terminal — Aisle F</div>
+          <div className="text-[9px] text-muted-foreground tracking-wide">Self-Checkout Terminal</div>
         </div>
 
         <div className="w-full h-px bg-border my-3" />
@@ -27,21 +27,18 @@ const ReceiptScreen = ({ onRestart, itemsWithQuery, queriedMethods }: ReceiptScr
 
         {ITEMS.map((item, i) => {
           const wasQueried = itemsWithQuery.has(i);
+          if (!wasQueried) return null;
           const methodCount = queriedMethods[i]?.size ?? 0;
           return (
             <div key={item.name} className="flex justify-between items-start text-xs py-1.5 border-b border-border/50 gap-2">
-              <span className={`font-normal flex items-center gap-1.5 ${wasQueried ? 'text-foreground/70' : 'text-muted-foreground/40'}`}>
+              <span className="font-normal flex items-center gap-1.5 text-foreground/70">
                 <span>{item.icon}</span>
                 <span>{item.name}</span>
               </span>
-              {wasQueried ? (
-                <div className="text-right">
-                  <div className="text-success font-bold">Resolved</div>
-                  <div className="text-[9px] text-muted-foreground/50 mt-0.5">{methodCount} system{methodCount !== 1 ? 's' : ''} queried</div>
-                </div>
-              ) : (
-                <span className="text-muted-foreground/30 italic text-[10px]">Not checked</span>
-              )}
+              <div className="text-right">
+                <div className="text-success font-bold">Resolved</div>
+                <div className="text-[9px] text-muted-foreground/50 mt-0.5">{methodCount} system{methodCount !== 1 ? 's' : ''} queried</div>
+              </div>
             </div>
           );
         })}
