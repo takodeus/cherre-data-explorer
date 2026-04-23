@@ -1,45 +1,71 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ITEMS, TOTAL_VALUES } from '@/lib/kiosk-data';
+import { ITEMS } from '@/lib/kiosk-data';
 
 interface ReconciliationScreenProps {
   onBetterWay: () => void;
   active: boolean;
   itemsWithQuery: Set<number>;
   queriedMethods: Set<number>[];
+  quantities: Record<number, number>;
 }
 
-const ReconciliationScreen = ({ onBetterWay, active, itemsWithQuery, queriedMethods }: ReconciliationScreenProps) => {
-  // Deterministic pick from TOTAL_VALUES based on which items are in the cart.
-  // Same cart contents → same totals on every revisit. Cart changes / restart → reshuffle.
+const parsePrice = (s: string): number => {
+  const m = s.match(/[\d,]+\.?\d*/);
+  if (!m) return 0;
+  return parseFloat(m[0].replace(/,/g, ''));
+};
+
+const ReconciliationScreen = ({ onBetterWay, active, itemsWithQuery, queriedMethods, quantities }: ReconciliationScreenProps) => {
+  // Build a key reflecting which items are in cart AND their quantities.
+  // Same cart + quantities → same totals. Any change → recompute.
   const cartKey = useMemo(
-    () => Array.from(itemsWithQuery).sort((a, b) => a - b).join(','),
-    [itemsWithQuery]
+    () =>
+      Array.from(itemsWithQuery)
+        .sort((a, b) => a - b)
+        .map(i => `${i}x${quantities[i] ?? 1}`)
+        .join(','),
+    [itemsWithQuery, quantities]
   );
-  const pick = useMemo(() => {
+
+  // Compute totals directly from the cart so they reflect quantities & combo.
+  const { mainText, altText } = useMemo(() => {
+    let main = 0;
+    let alt = 0;
+    Array.from(itemsWithQuery).forEach(i => {
+      const item = ITEMS[i];
+      if (!item) return;
+      const qty = quantities[i] ?? 1;
+      main += parsePrice(item.price) * qty;
+      alt  += parsePrice(item.conflictPrice) * qty;
+    });
+    // Add a small deterministic jitter so totals don't always end in clean numbers.
     let hash = 0;
     for (let i = 0; i < cartKey.length; i++) hash = (hash * 31 + cartKey.charCodeAt(i)) >>> 0;
-    return TOTAL_VALUES[hash % TOTAL_VALUES.length];
-  }, [cartKey]);
+    const jitter = ((hash % 97) / 100); // 0.00 – 0.96
+    main += jitter;
+    alt  += ((hash >> 7) % 73) / 100;
+    const fmt = (n: number) => '$' + n.toFixed(2);
+    return { mainText: fmt(main), altText: 'Or ' + fmt(alt) + '.' };
+  }, [itemsWithQuery, quantities, cartKey]);
 
-  const [mainTotal, setMainTotal] = useState(pick[0]);
-  const [altTotal,  setAltTotal]  = useState(pick[1]);
+  const [mainTotal, setMainTotal] = useState(mainText);
+  const [altTotal,  setAltTotal]  = useState(altText);
   const hasScrambledForCart = useRef<string | null>(null);
 
   // Keep totals in sync when cart contents change while not on this screen.
   useEffect(() => {
     if (!active) {
-      setMainTotal(pick[0]);
-      setAltTotal(pick[1]);
+      setMainTotal(mainText);
+      setAltTotal(altText);
     }
-  }, [pick, active]);
+  }, [mainText, altText, active]);
 
   useEffect(() => {
     if (!active) return;
-    // Only scramble once per unique cart — revisiting with the same cart
-    // shows the stable total immediately.
+    // Only scramble once per unique cart+quantity combination.
     if (hasScrambledForCart.current === cartKey) {
-      setMainTotal(pick[0]);
-      setAltTotal(pick[1]);
+      setMainTotal(mainText);
+      setAltTotal(altText);
       return;
     }
     hasScrambledForCart.current = cartKey;
@@ -50,12 +76,12 @@ const ReconciliationScreen = ({ onBetterWay, active, itemsWithQuery, queriedMeth
       flips++;
       if (flips > 10) {
         clearInterval(scramble);
-        setMainTotal(pick[0]);
-        setAltTotal(pick[1]);
+        setMainTotal(mainText);
+        setAltTotal(altText);
       }
     }, 80);
     return () => clearInterval(scramble);
-  }, [active, cartKey, pick]);
+  }, [active, cartKey, mainText, altText]);
 
   // Items the user actually queried, in order
   const queriedItems = ITEMS.filter((_, i) => itemsWithQuery.has(i));
