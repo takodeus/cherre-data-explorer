@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ITEMS, TOTAL_VALUES } from '@/lib/kiosk-data';
 
 interface ReconciliationScreenProps {
@@ -9,12 +9,40 @@ interface ReconciliationScreenProps {
 }
 
 const ReconciliationScreen = ({ onBetterWay, active, itemsWithQuery, queriedMethods }: ReconciliationScreenProps) => {
-  const [mainTotal, setMainTotal] = useState(() => '$' + (Math.random() * 120 + 30).toFixed(2));
-  const [altTotal,  setAltTotal]  = useState(() => 'Or $' + (Math.random() * 80 + 20).toFixed(2) + '.');
+  // Deterministic pick from TOTAL_VALUES based on which items are in the cart.
+  // Same cart contents → same totals on every revisit. Cart changes / restart → reshuffle.
+  const cartKey = useMemo(
+    () => Array.from(itemsWithQuery).sort((a, b) => a - b).join(','),
+    [itemsWithQuery]
+  );
+  const pick = useMemo(() => {
+    let hash = 0;
+    for (let i = 0; i < cartKey.length; i++) hash = (hash * 31 + cartKey.charCodeAt(i)) >>> 0;
+    return TOTAL_VALUES[hash % TOTAL_VALUES.length];
+  }, [cartKey]);
+
+  const [mainTotal, setMainTotal] = useState(pick[0]);
+  const [altTotal,  setAltTotal]  = useState(pick[1]);
+  const hasScrambledForCart = useRef<string | null>(null);
+
+  // Keep totals in sync when cart contents change while not on this screen.
+  useEffect(() => {
+    if (!active) {
+      setMainTotal(pick[0]);
+      setAltTotal(pick[1]);
+    }
+  }, [pick, active]);
 
   useEffect(() => {
     if (!active) return;
-    const pick = TOTAL_VALUES[Math.floor(Math.random() * TOTAL_VALUES.length)];
+    // Only scramble once per unique cart — revisiting with the same cart
+    // shows the stable total immediately.
+    if (hasScrambledForCart.current === cartKey) {
+      setMainTotal(pick[0]);
+      setAltTotal(pick[1]);
+      return;
+    }
+    hasScrambledForCart.current = cartKey;
     let flips = 0;
     const scramble = setInterval(() => {
       setMainTotal('$' + (Math.random() * 120 + 30).toFixed(2));
@@ -27,7 +55,7 @@ const ReconciliationScreen = ({ onBetterWay, active, itemsWithQuery, queriedMeth
       }
     }, 80);
     return () => clearInterval(scramble);
-  }, [active]);
+  }, [active, cartKey, pick]);
 
   // Items the user actually queried, in order
   const queriedItems = ITEMS.filter((_, i) => itemsWithQuery.has(i));
