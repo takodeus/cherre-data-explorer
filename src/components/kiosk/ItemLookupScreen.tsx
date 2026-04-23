@@ -340,7 +340,7 @@ const ItemLookupScreen = ({
                     {isIdle && (
                       <button
                         onClick={() => runLookup(methodIdx)}
-                        data-sound="scan"
+                        data-sound="none"
                         className="bg-background border border-border text-muted-foreground rounded-lg px-3.5 py-1.5 text-[10px] font-bold tracking-wide uppercase cursor-pointer transition-all hover:border-primary hover:text-primary hover:shadow-sm"
                       >
                         Query →
