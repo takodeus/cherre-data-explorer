@@ -22,6 +22,8 @@ interface CartSidebarProps {
 
 const CartSidebar = ({ itemsWithQuery, queriedMethods, currentScreen, quantities, onChangeQuantity, onRemoveItem }: CartSidebarProps) => {
   if (currentScreen < 2 || currentScreen > 3) return null;
+  // Cart is read-only on the Problem slide — only allow edits during Lookup.
+  const editable = currentScreen === 2;
 
   const scannedItems = ITEMS.filter((_, i) => itemsWithQuery.has(i));
   const totalMethods = queriedMethods.reduce((sum, s) => sum + s.size, 0);
@@ -92,32 +94,45 @@ const CartSidebar = ({ itemsWithQuery, queriedMethods, currentScreen, quantities
                       </div>
                     </div>
                     {/* Delete button */}
-                    <button
-                      onClick={() => onRemoveItem(itemIdx)}
-                      className="text-[10px] text-muted-foreground/40 hover:text-primary transition-colors flex-shrink-0 mt-0.5"
-                      aria-label={`Remove ${item.name}`}
-                    >
-                      ✕
-                    </button>
+                    {editable && (
+                      <button
+                        onClick={() => onRemoveItem(itemIdx)}
+                        data-sound="click"
+                        className="text-[10px] text-muted-foreground/40 hover:text-primary transition-colors flex-shrink-0 mt-0.5"
+                        aria-label={`Remove ${item.name}`}
+                      >
+                        ✕
+                      </button>
+                    )}
                   </div>
 
                   {/* Quantity controls */}
                   <div className="flex items-center justify-between mt-1.5 ml-11">
                     <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => onChangeQuantity(itemIdx, -1)}
-                        disabled={qty <= 1}
-                        className="w-5 h-5 rounded border border-border bg-background text-[10px] font-bold text-foreground flex items-center justify-center hover:bg-primary/10 hover:text-primary hover:border-primary/30 disabled:opacity-30 disabled:hover:bg-background disabled:hover:text-foreground disabled:hover:border-border transition-colors"
-                      >
-                        −
-                      </button>
-                      <span className="text-[11px] font-bold text-foreground w-5 text-center tabular-nums">{qty}</span>
-                      <button
-                        onClick={() => onChangeQuantity(itemIdx, 1)}
-                        className="w-5 h-5 rounded border border-border bg-background text-[10px] font-bold text-foreground flex items-center justify-center hover:bg-primary/10 hover:text-primary hover:border-primary/30 transition-colors"
-                      >
-                        +
-                      </button>
+                      {editable ? (
+                        <>
+                          <button
+                            onClick={() => onChangeQuantity(itemIdx, -1)}
+                            disabled={qty <= 1}
+                            data-sound="click"
+                            className="w-5 h-5 rounded border border-border bg-background text-[10px] font-bold text-foreground flex items-center justify-center hover:bg-primary/10 hover:text-primary hover:border-primary/30 disabled:opacity-30 disabled:hover:bg-background disabled:hover:text-foreground disabled:hover:border-border transition-colors"
+                          >
+                            −
+                          </button>
+                          <span className="text-[11px] font-bold text-foreground w-5 text-center tabular-nums">{qty}</span>
+                          <button
+                            onClick={() => onChangeQuantity(itemIdx, 1)}
+                            data-sound="click"
+                            className="w-5 h-5 rounded border border-border bg-background text-[10px] font-bold text-foreground flex items-center justify-center hover:bg-primary/10 hover:text-primary hover:border-primary/30 transition-colors"
+                          >
+                            +
+                          </button>
+                        </>
+                      ) : (
+                        <span className="text-[10px] font-bold text-muted-foreground tabular-nums">
+                          Qty: <span className="text-foreground">{qty}</span>
+                        </span>
+                      )}
                     </div>
                     <div className="flex gap-0.5">
                       {LOOKUP_METHODS.map((_, mi) => (
