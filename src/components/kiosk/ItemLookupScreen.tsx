@@ -246,10 +246,21 @@ const ItemLookupScreen = ({
                 </button>
               );
             })()}
-            <div>
+            <div className="flex-1 min-w-0">
               <div className="text-[11px] font-semibold tracking-wide uppercase text-muted-foreground">Looking up</div>
               <div className="text-[15px] font-extrabold text-foreground tracking-tight">{item.name}</div>
             </div>
+            <button
+              onClick={toggleCart}
+              className={`flex-shrink-0 rounded-lg px-4 py-2 text-[11px] font-bold tracking-wide uppercase transition-all active:scale-[0.97] shadow-sm ${
+                inCart
+                  ? 'bg-primary-light-bg text-primary border border-primary/30 hover:bg-primary/10'
+                  : 'bg-primary text-primary-foreground border border-primary hover:bg-primary-light hover:shadow-md'
+              }`}
+              aria-label={inCart ? `Remove ${item.name} from cart` : `Add ${item.name} to cart`}
+            >
+              {inCart ? '✓ In Cart' : '+ Add to Cart'}
+            </button>
           </div>
 
           {item.description && (
@@ -259,6 +270,19 @@ const ItemLookupScreen = ({
               </div>
               <div className="text-[12px] text-foreground/80 leading-relaxed whitespace-pre-line">
                 {item.description}
+              </div>
+              <div className="mt-3 pt-3 border-t border-border/40 flex justify-end">
+                <button
+                  onClick={toggleCart}
+                  className={`rounded-lg px-5 py-2 text-[11px] font-bold tracking-wide uppercase transition-all active:scale-[0.97] shadow-sm ${
+                    inCart
+                      ? 'bg-primary-light-bg text-primary border border-primary/30 hover:bg-primary/10'
+                      : 'bg-primary text-primary-foreground border border-primary hover:bg-primary-light hover:shadow-md'
+                  }`}
+                  aria-label={inCart ? `Remove ${item.name} from cart` : `Add ${item.name} to cart`}
+                >
+                  {inCart ? '✓ In Cart' : '+ Add to Cart'}
+                </button>
               </div>
             </div>
           )}
