@@ -26,6 +26,7 @@ const DeviceBezel = ({ children, soundOn, onToggleSound, onLock }: DeviceBezelPr
               {onLock && (
                 <button
                   onClick={onLock}
+                  data-sound="click"
                   className="text-[9px] font-mono text-primary-foreground/50 hover:text-primary-foreground/80 transition-colors cursor-pointer"
                   title="Lock screen"
                   aria-label="Lock screen"
@@ -36,6 +37,7 @@ const DeviceBezel = ({ children, soundOn, onToggleSound, onLock }: DeviceBezelPr
               {onToggleSound && (
                 <button
                   onClick={onToggleSound}
+                  data-sound="click"
                   className="text-[9px] font-mono text-primary-foreground/50 hover:text-primary-foreground/80 transition-colors cursor-pointer"
                 >
                   {soundOn ? '🔊' : '🔇'}
