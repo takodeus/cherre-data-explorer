@@ -8,8 +8,6 @@ import ontoloCans2Img from '@/assets/2 cans mockup NBG.png';
 import cherreOsBackImg from '@/assets/cherre-os-back.png';
 import cherriesFrontImg from '@/assets/cherries-front.png';
 import cherriesBackImg from '@/assets/cherries-back.png';
-import parcelFrontImg from '@/assets/parcel-front.png';
-import parcelBackImg from '@/assets/parcel-back.png';
 import flourFrontImg from '@/assets/flour-front.png';
 import flourBackImg from '@/assets/flour-back.png';
 import sardinesFrontImg from '@/assets/sardines-front.png';
@@ -27,8 +25,6 @@ const ITEM_IMAGES: Record<string, string> = {
   '2 cans mockup NBG.png': ontoloCans2Img,
   'cherries-front.png': cherriesFrontImg,
   'cherries-back.png': cherriesBackImg,
-  'parcel-front.png': parcelFrontImg,
-  'parcel-back.png': parcelBackImg,
   'flour-front.png': flourFrontImg,
   'flour-back.png': flourBackImg,
   'sardines-front.png': sardinesFrontImg,
