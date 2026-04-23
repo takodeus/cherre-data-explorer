@@ -125,25 +125,31 @@ const ReconciliationScreen = ({ onBetterWay, active, itemsWithQuery, queriedMeth
             )}
           </div>
 
-          {/* Item rows */}
           {queriedItems.length > 0 ? (
-            queriedItems.map((item, idx) => (
-              <div
-                key={item.name}
-                className={`flex items-center justify-between px-5 py-3 ${
-                  idx < queriedItems.length - 1 ? 'border-b border-border/60' : ''
-                }`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <span className="text-base leading-none">{item.icon}</span>
-                  <span className="text-[13px] font-medium text-foreground">{item.name}</span>
+            queriedItems.map((item, idx) => {
+              const origIdx = ITEMS.indexOf(item);
+              const qty = quantities[origIdx] ?? 1;
+              return (
+                <div
+                  key={item.name}
+                  className={`flex items-center justify-between px-5 py-3 ${
+                    idx < queriedItems.length - 1 ? 'border-b border-border/60' : ''
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-base leading-none">{item.icon}</span>
+                    <span className="text-[13px] font-medium text-foreground">{item.name}</span>
+                    {qty > 1 && (
+                      <span className="text-[10px] font-mono text-muted-foreground">× {qty}</span>
+                    )}
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[14px] font-bold text-foreground">{item.price}</div>
+                    <div className="text-[10px] text-destructive/70 line-through font-mono">{item.conflictPrice}</div>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-[14px] font-bold text-foreground">{item.price}</div>
-                  <div className="text-[10px] text-destructive/70 line-through font-mono">{item.conflictPrice}</div>
-                </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             /* Fallback if somehow landed here with no items */
             ITEMS.slice(0, 3).map((item, idx) => (
