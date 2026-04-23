@@ -11,7 +11,7 @@ import StepperBar from '@/components/kiosk/StepperBar';
 import CartSidebar from '@/components/kiosk/CartSidebar';
 import DeviceBezel from '@/components/kiosk/DeviceBezel';
 import { ITEMS } from '@/lib/kiosk-data';
-import { clickBeep, checkoutBeep, errorTone, successChime, scanBeep, initAudio, softClick } from '@/lib/kiosk-audio';
+import { clickBeep, checkoutBeep, errorTone, successChime, scanBeep, initAudio, softClick, setSoundEnabled } from '@/lib/kiosk-audio';
 
 const TRANSITION_MS = 340;
 const SCREEN_MIN = 1;
@@ -48,7 +48,10 @@ const Index = () => {
   const transitioning = useRef(false);
   const internalNavRef = useRef(0);
   const soundOnRef = useRef(false);
-  useEffect(() => { soundOnRef.current = soundOn; }, [soundOn]);
+  useEffect(() => {
+    soundOnRef.current = soundOn;
+    setSoundEnabled(soundOn);
+  }, [soundOn]);
 
   // Global button sound router: fires on pointer-down so sounds start on
   // press instead of waiting for click / mouse-up.

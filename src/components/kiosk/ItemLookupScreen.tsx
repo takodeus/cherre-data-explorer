@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { ITEMS, LOOKUP_METHODS, LOADING_MESSAGES, type LookupType } from '@/lib/kiosk-data';
+import { scanBeep } from '@/lib/kiosk-audio';
 import cherreOsImg from '@/assets/Cherre-Os.png';
 import ontoloPrimaryImg from '@/assets/ontolo with a8185e.png';
 import ontoloCan1Img from '@/assets/1can back mockup NBG.png';
@@ -151,6 +152,8 @@ const ItemLookupScreen = ({
     setTimeout(() => {
       clearInterval(msgInterval);
       setCardLoading(itemIdx, methodIdx, false);
+      // Play the scan/result sound exactly when results render.
+      scanBeep();
     }, delay);
   }, [currentItem, queriedMethods, loadingCards, setQueriedMethods, setItemsWithQuery, setCardLoading, setCardMsg]);
 
@@ -259,7 +262,7 @@ const ItemLookupScreen = ({
             </div>
             <button
               onClick={toggleCart}
-              data-sound={!inCart && !canAddToCart ? 'none' : 'checkout'}
+              data-sound={!inCart && !canAddToCart ? 'none' : 'click'}
               disabled={!inCart && !canAddToCart}
               className={`flex-shrink-0 rounded-lg px-4 py-2 text-[11px] font-bold tracking-wide uppercase transition-all shadow-sm ${
                 inCart
@@ -337,7 +340,7 @@ const ItemLookupScreen = ({
                     {isIdle && (
                       <button
                         onClick={() => runLookup(methodIdx)}
-                        data-sound="scan"
+                        data-sound="none"
                         className="bg-background border border-border text-muted-foreground rounded-lg px-3.5 py-1.5 text-[10px] font-bold tracking-wide uppercase cursor-pointer transition-all hover:border-primary hover:text-primary hover:shadow-sm"
                       >
                         Query →
@@ -386,7 +389,7 @@ const ItemLookupScreen = ({
           <div className="mt-2 pt-2 flex justify-center">
             <button
               onClick={toggleCart}
-              data-sound={!inCart && !canAddToCart ? 'none' : 'checkout'}
+              data-sound={!inCart && !canAddToCart ? 'none' : 'click'}
               disabled={!inCart && !canAddToCart}
               className={`w-full rounded-xl px-6 py-3.5 text-[12px] font-bold tracking-wide uppercase transition-all shadow-sm ${
                 inCart
@@ -426,7 +429,7 @@ const ItemLookupScreen = ({
         <button
           onClick={onCheckout}
           disabled={count < 2 || anyLoading}
-          data-sound={count >= 2 && !anyLoading ? 'error' : 'none'}
+          data-sound={count >= 2 && !anyLoading ? 'click' : 'none'}
           className={`bg-primary text-primary-foreground border-none rounded-xl px-8 py-3 font-sans text-xs font-bold tracking-wide uppercase cursor-pointer transition-all active:scale-[0.97] ${
             count >= 2 && !anyLoading
               ? 'opacity-100 hover:bg-primary-light shadow-md hover:shadow-lg'

@@ -123,31 +123,11 @@ const WelcomeScreen = ({ onStart, active, forceIdle, onIdleAcknowledged }: Welco
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-end',
             padding: '60px 40px 40px',
           }}
           aria-label="Tap to begin"
         >
-          {/* Idle headline */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-            <img
-              src={cherreLogo}
-              alt="Cherre"
-              style={{ height: 36, mixBlendMode: 'multiply' }}
-            />
-            <div
-              className="text-foreground font-black leading-none tracking-tight text-center"
-              style={{
-                fontSize: 'clamp(28px, 5vw, 48px)',
-                background: 'rgba(255,255,255,0.55)',
-                backdropFilter: 'blur(6px)',
-                padding: '12px 24px',
-                borderRadius: '14px',
-              }}
-            >
-              Cherre <span className="text-primary">Data Mart</span>
-            </div>
-          </div>
           <div style={{
             background: 'rgba(0,0,0,0.50)',
             color: 'rgba(255,255,255,0.9)',
@@ -207,7 +187,7 @@ const WelcomeScreen = ({ onStart, active, forceIdle, onIdleAcknowledged }: Welco
 
         <button
           onClick={handleStart}
-          data-sound="checkout"
+          data-sound="click"
           className="bg-primary text-primary-foreground border-none rounded-xl px-14 py-5 font-sans text-sm font-bold tracking-wide uppercase cursor-pointer transition-all hover:bg-primary-light hover:shadow-lg active:scale-[0.98] shadow-md"
         >
           Start Lookup

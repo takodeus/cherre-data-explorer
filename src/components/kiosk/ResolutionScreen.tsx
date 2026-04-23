@@ -42,7 +42,7 @@ const ResolutionScreen = ({ onTalk, onSkipToReceipt }: ResolutionScreenProps) =>
           <div className="flex items-center gap-4 flex-shrink-0">
             <button
               onClick={onTalk}
-              data-sound="success"
+              data-sound="click"
               className="bg-primary-foreground text-primary border-none rounded-xl px-10 py-4 font-sans text-[13px] font-extrabold tracking-wide uppercase cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02] active:scale-[0.97] shadow-md"
             >
               Talk to the team
