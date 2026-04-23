@@ -5,40 +5,71 @@ function getAudio(): AudioContext {
   return audioCtx;
 }
 
-function playBeep(ctx: AudioContext, freq: number, dur: number, type: OscillatorType, vol: number) {
+// Schedule a single tone at an absolute AudioContext time. Using the
+// audio clock (instead of setTimeout) avoids JS event-loop jitter so
+// multi-tone sequences feel tight rather than echoey.
+function scheduleTone(ctx: AudioContext, when: number, freq: number, dur: number, type: OscillatorType, vol: number) {
   const o = ctx.createOscillator();
   const g = ctx.createGain();
   o.connect(g);
   g.connect(ctx.destination);
   o.type = type;
   o.frequency.value = freq;
-  g.gain.setValueAtTime(vol, ctx.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-  o.start();
-  o.stop(ctx.currentTime + dur);
+  g.gain.setValueAtTime(vol, when);
+  g.gain.exponentialRampToValueAtTime(0.001, when + dur);
+  o.start(when);
+  o.stop(when + dur);
 }
 
-function beep(freq: number, dur: number, type: OscillatorType = 'sine', vol = 0.3) {
+// Play a sequence of tones starting immediately. Each tone is
+// {f, d, t?, v?, gap?} — gap is the offset (s) from the previous tone's start.
+type Tone = { f: number; d: number; t?: OscillatorType; v?: number; gap?: number };
+function playSequence(tones: Tone[]) {
   try {
     const ctx = getAudio();
-    // Browsers start the AudioContext in 'suspended' state until a user
-    // gesture resumes it. We must wait for resume() to resolve before
-    // scheduling the oscillator — otherwise the beep plays into a paused
-    // clock and is silently lost.
+    const start = () => {
+      // currentTime + tiny epsilon so the very first tone starts on
+      // the next audio block (no perceptible delay, but never in the past).
+      let t = ctx.currentTime + 0.001;
+      tones.forEach((tone, i) => {
+        if (i > 0) t += tone.gap ?? 0;
+        scheduleTone(ctx, t, tone.f, tone.d, tone.t ?? 'sine', tone.v ?? 0.2);
+      });
+    };
     if (ctx.state === 'suspended') {
-      ctx.resume().then(() => playBeep(ctx, freq, dur, type, vol)).catch(() => {});
+      ctx.resume().then(start).catch(() => {});
     } else {
-      playBeep(ctx, freq, dur, type, vol);
+      start();
     }
   } catch {}
 }
 
-export const scanBeep = () => { beep(1800, 0.08, 'square', 0.2); setTimeout(() => beep(2200, 0.08, 'square', 0.15), 80); };
-export const errorTone = () => { beep(220, 0.4, 'sawtooth', 0.15); setTimeout(() => beep(180, 0.5, 'sawtooth', 0.12), 300); };
-export const successChime = () => { [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => beep(f, 0.25, 'sine', 0.2), i * 80)); };
-export const clickBeep = () => { beep(900, 0.06, 'square', 0.1); };
+const beep = (freq: number, dur: number, type: OscillatorType = 'sine', vol = 0.3) =>
+  playSequence([{ f: freq, d: dur, t: type, v: vol }]);
+
+export const scanBeep = () =>
+  playSequence([
+    { f: 1800, d: 0.07, t: 'square', v: 0.2 },
+    { f: 2200, d: 0.07, t: 'square', v: 0.15, gap: 0.06 },
+  ]);
+
+export const errorTone = () =>
+  playSequence([
+    { f: 220, d: 0.28, t: 'sawtooth', v: 0.15 },
+    { f: 180, d: 0.32, t: 'sawtooth', v: 0.12, gap: 0.18 },
+  ]);
+
+export const successChime = () =>
+  playSequence(
+    [523, 659, 784, 1047].map((f, i) => ({
+      f, d: 0.22, t: 'sine' as OscillatorType, v: 0.2, gap: i === 0 ? 0 : 0.06,
+    }))
+  );
+
+export const clickBeep = () => beep(900, 0.06, 'square', 0.1);
 // Very subtle, quiet UI click — used as a global button-press feedback.
-export const softClick = () => { beep(2400, 0.02, 'sine', 0.04); };
+export const softClick = () => beep(2400, 0.02, 'sine', 0.04);
+
 export const initAudio = () => {
   try {
     const ctx = getAudio();
@@ -47,9 +78,10 @@ export const initAudio = () => {
 };
 
 // Same family as clickBeep (square wave, similar volume) but a two-tone
-// rising chirp so Start Lookup feels related yet distinct from the
+// rising chirp so Add to Cart feels related yet distinct from the
 // stepper-bar nav clicks.
-export const checkoutBeep = () => {
-  beep(900, 0.07, 'square', 0.18);
-  setTimeout(() => beep(1300, 0.09, 'square', 0.18), 70);
-};
+export const checkoutBeep = () =>
+  playSequence([
+    { f: 900, d: 0.06, t: 'square', v: 0.18 },
+    { f: 1300, d: 0.07, t: 'square', v: 0.18, gap: 0.05 },
+  ]);
