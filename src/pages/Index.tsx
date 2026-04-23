@@ -11,7 +11,7 @@ import StepperBar from '@/components/kiosk/StepperBar';
 import CartSidebar from '@/components/kiosk/CartSidebar';
 import DeviceBezel from '@/components/kiosk/DeviceBezel';
 import { ITEMS } from '@/lib/kiosk-data';
-import { clickBeep, errorTone, successChime, scanBeep, initAudio, softClick } from '@/lib/kiosk-audio';
+import { clickBeep, checkoutBeep, errorTone, successChime, scanBeep, initAudio, softClick } from '@/lib/kiosk-audio';
 
 const TRANSITION_MS = 340;
 const SCREEN_MIN = 1;
@@ -76,8 +76,7 @@ const Index = () => {
           successChime();
           break;
         case 'checkout':
-          // Reuse the scan family for cart/lookup start, but tighter.
-          scanBeep();
+          checkoutBeep();
           break;
         default:
           softClick();
