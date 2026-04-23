@@ -368,6 +368,21 @@ const ItemLookupScreen = ({
               </div>
             );
           })}
+
+          {/* Bottom Add to Cart — at the very end of the details scroll */}
+          <div className="mt-2 pt-2 flex justify-center">
+            <button
+              onClick={toggleCart}
+              className={`w-full rounded-xl px-6 py-3.5 text-[12px] font-bold tracking-wide uppercase transition-all active:scale-[0.98] shadow-sm ${
+                inCart
+                  ? 'bg-primary-light-bg text-primary border border-primary/30 hover:bg-primary/10'
+                  : 'bg-primary text-primary-foreground border border-primary hover:bg-primary-light hover:shadow-md'
+              }`}
+              aria-label={inCart ? `Remove ${item.name} from cart` : `Add ${item.name} to cart`}
+            >
+              {inCart ? `✓ ${item.name} is in your cart` : `+ Add ${item.name} to Cart`}
+            </button>
+          </div>
         </div>
       </div>
 
