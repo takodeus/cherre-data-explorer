@@ -205,7 +205,6 @@ const Index = () => {
             </div>
             <div data-screen="2" className={`screen ${currentScreen === 2 ? `active enter-${direction}` : ''}`}>
               <ItemLookupScreen
-                soundOn={soundOn}
                 currentItem={currentItem}
                 onSelectItem={selectItem}
                 itemsWithQuery={itemsWithQuery}
