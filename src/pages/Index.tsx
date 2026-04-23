@@ -47,6 +47,8 @@ const Index = () => {
   const prevScreenRef = useRef(currentScreen);
   const transitioning = useRef(false);
   const internalNavRef = useRef(0);
+  const soundOnRef = useRef(false);
+  useEffect(() => { soundOnRef.current = soundOn; }, [soundOn]);
 
   // Global button sound router: fires on pointer-down so sounds start on
   // press instead of waiting for click / mouse-up.
@@ -54,6 +56,7 @@ const Index = () => {
     const handler = (e: PointerEvent) => {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       initAudio();
+      if (!soundOnRef.current) return;
       const target = e.target as HTMLElement | null;
       const btn = target?.closest('button') as HTMLButtonElement | null;
       if (!btn) return;
