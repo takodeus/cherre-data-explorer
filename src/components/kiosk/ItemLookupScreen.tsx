@@ -572,16 +572,8 @@ const ItemLookupScreen = ({
             )}
           </div>
 
-          {/* Close button */}
-          <button
-            onClick={() => setLightbox(null)}
-            className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-white/20 hover:bg-white/35 text-white text-sm flex items-center justify-center transition-colors focus:outline-none"
-            aria-label="Close"
-          >
-            ✕
-          </button>
         </div>
-        <p className="absolute bottom-6 text-white/30 text-[10px] font-mono tracking-wide">
+        <p className="absolute bottom-2 text-white/40 text-[10px] font-mono tracking-wide">
           click anywhere to close
         </p>
       </div>
