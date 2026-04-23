@@ -44,10 +44,10 @@ const ReceiptScreen = ({ onRestart, itemsWithQuery, queriedMethods }: ReceiptScr
         })}
 
         <div className="flex justify-between items-start text-xs py-1.5 gap-2">
-          <span className="text-muted-foreground/50 font-normal">Mystery Item</span>
+          <span className="text-foreground/50 font-normal">Mystery Item</span>
           <div className="text-right">
-            <div className="text-[10px] text-muted-foreground/60 leading-snug">Classification Pending.</div>
-            <div className="text-[9px] text-muted-foreground/40 leading-snug mt-0.5">Check back at<br />Realcomm 2026.</div>
+            <div className="text-[10px] text-foreground/55 leading-snug">Classification Pending.</div>
+            <div className="text-[9px] text-foreground/45 leading-snug mt-0.5">Check back at<br />Realcomm 2026.</div>
           </div>
         </div>
 
