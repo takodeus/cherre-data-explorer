@@ -46,5 +46,10 @@ export const initAudio = () => {
   } catch {}
 };
 
-// Classic supermarket-checkout scanner beep — single sharp ~2.7 kHz tone.
-export const checkoutBeep = () => { beep(2700, 0.15, 'square', 0.5); };
+// Same family as clickBeep (square wave, similar volume) but a two-tone
+// rising chirp so Start Lookup feels related yet distinct from the
+// stepper-bar nav clicks.
+export const checkoutBeep = () => {
+  beep(900, 0.07, 'square', 0.18);
+  setTimeout(() => beep(1300, 0.09, 'square', 0.18), 70);
+};
