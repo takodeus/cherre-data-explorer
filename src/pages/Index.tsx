@@ -199,7 +199,7 @@ const Index = () => {
               />
             </div>
             <div data-screen="3" className={`screen ${currentScreen === 3 ? `active enter-${direction}` : ''}`}>
-              <ReconciliationScreen onBetterWay={() => goTo(4)} active={currentScreen === 3} itemsWithQuery={itemsWithQuery} queriedMethods={queriedMethods} />
+              <ReconciliationScreen onBetterWay={() => goTo(4)} active={currentScreen === 3} itemsWithQuery={itemsWithQuery} queriedMethods={queriedMethods} quantities={quantities} />
             </div>
             <div data-screen="4" className={`screen ${currentScreen === 4 ? `active enter-${direction}` : ''}`}>
               <ResolutionScreen onTalk={() => goTo(5)} onSkipToReceipt={() => goTo(6)} />

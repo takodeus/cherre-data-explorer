@@ -454,7 +454,6 @@ const ItemLookupScreen = ({
       >
         <div
           className="relative flex flex-col items-center gap-4 p-4"
-          onClick={e => e.stopPropagation()}
         >
           {/* Main image — transform-scale zoom with drag-to-pan */}
           <div
@@ -536,6 +535,8 @@ const ItemLookupScreen = ({
               max={4}
               step={0.05}
               value={lightbox.zoom}
+              onClick={e => e.stopPropagation()}
+              onPointerDown={e => e.stopPropagation()}
               onChange={e => {
                 const z = parseFloat(e.target.value);
                 setLightbox(lb => lb && { ...lb, zoom: z });
@@ -561,7 +562,7 @@ const ItemLookupScreen = ({
                 {lightbox.srcs.map((_, i) => (
                   <button
                     key={i}
-                    onClick={() => { setPan({ x: 0, y: 0 }); setLightbox(lb => lb && { ...lb, idx: i, zoom: 1 }); }}
+                    onClick={(e) => { e.stopPropagation(); setPan({ x: 0, y: 0 }); setLightbox(lb => lb && { ...lb, idx: i, zoom: 1 }); }}
                     className={`w-2 h-2 rounded-full transition-colors focus:outline-none ${
                       i === lightbox.idx ? 'bg-white' : 'bg-white/30 hover:bg-white/50'
                     }`}
