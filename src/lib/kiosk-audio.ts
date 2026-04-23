@@ -1,4 +1,9 @@
 let audioCtx: AudioContext | null = null;
+let soundEnabled = false;
+
+// Global gate — when false, all sound functions are no-ops.
+// Index.tsx flips this whenever the user toggles the sound icon.
+export const setSoundEnabled = (on: boolean) => { soundEnabled = on; };
 
 function getAudio(): AudioContext {
   if (!audioCtx) audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -8,6 +13,7 @@ function getAudio(): AudioContext {
 // Play a single tone immediately — no scheduling, no clock offset.
 // Used for click/softClick so button presses feel instantaneous.
 function playInstant(freq: number, dur: number, type: OscillatorType, vol: number) {
+  if (!soundEnabled) return;
   try {
     const ctx = getAudio();
     if (ctx.state === 'suspended') ctx.resume().catch(() => {});
@@ -45,6 +51,7 @@ function scheduleTone(ctx: AudioContext, when: number, freq: number, dur: number
 // {f, d, t?, v?, gap?} — gap is the offset (s) from the previous tone's start.
 type Tone = { f: number; d: number; t?: OscillatorType; v?: number; gap?: number };
 function playSequence(tones: Tone[]) {
+  if (!soundEnabled) return;
   try {
     const ctx = getAudio();
     // Fire and forget resume — don't await it. If still suspended, the
