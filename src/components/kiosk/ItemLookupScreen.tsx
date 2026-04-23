@@ -131,7 +131,7 @@ const ItemLookupScreen = ({
     if (queriedMethods[itemIdx]?.has(methodIdx)) return;
     if (loadingCards[cardKey(itemIdx, methodIdx)]) return;
 
-    if (soundOn) scanBeep();
+    scanBeep();
 
     const ck = cardKey(itemIdx, methodIdx);
     setScanningCard(ck);
