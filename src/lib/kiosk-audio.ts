@@ -27,20 +27,14 @@ type Tone = { f: number; d: number; t?: OscillatorType; v?: number; gap?: number
 function playSequence(tones: Tone[]) {
   try {
     const ctx = getAudio();
-    const start = () => {
-      // currentTime + tiny epsilon so the very first tone starts on
-      // the next audio block (no perceptible delay, but never in the past).
-      let t = ctx.currentTime + 0.001;
-      tones.forEach((tone, i) => {
-        if (i > 0) t += tone.gap ?? 0;
-        scheduleTone(ctx, t, tone.f, tone.d, tone.t ?? 'sine', tone.v ?? 0.2);
-      });
-    };
-    if (ctx.state === 'suspended') {
-      ctx.resume().then(start).catch(() => {});
-    } else {
-      start();
-    }
+    // Fire and forget resume — don't await it. If still suspended, the
+    // scheduled oscillators will play as soon as the clock unpauses.
+    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+    let t = ctx.currentTime + 0.001;
+    tones.forEach((tone, i) => {
+      if (i > 0) t += tone.gap ?? 0;
+      scheduleTone(ctx, t, tone.f, tone.d, tone.t ?? 'sine', tone.v ?? 0.2);
+    });
   } catch {}
 }
 

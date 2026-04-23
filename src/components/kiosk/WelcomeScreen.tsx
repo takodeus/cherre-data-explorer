@@ -121,12 +121,33 @@ const WelcomeScreen = ({ onStart, active, forceIdle, onIdleAcknowledged }: Welco
             border: 'none',
             cursor: 'pointer',
             display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'center',
-            paddingBottom: '40px',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '60px 40px 40px',
           }}
           aria-label="Tap to begin"
         >
+          {/* Idle headline */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+            <img
+              src={cherreLogo}
+              alt="Cherre"
+              style={{ height: 36, mixBlendMode: 'multiply' }}
+            />
+            <div
+              className="text-foreground font-black leading-none tracking-tight text-center"
+              style={{
+                fontSize: 'clamp(28px, 5vw, 48px)',
+                background: 'rgba(255,255,255,0.55)',
+                backdropFilter: 'blur(6px)',
+                padding: '12px 24px',
+                borderRadius: '14px',
+              }}
+            >
+              Cherre <span className="text-primary">Data Mart</span>
+            </div>
+          </div>
           <div style={{
             background: 'rgba(0,0,0,0.50)',
             color: 'rgba(255,255,255,0.9)',
