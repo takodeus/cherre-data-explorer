@@ -52,6 +52,7 @@ const Index = () => {
   // emit their own sound can opt out via data-no-click-sound="true".
   useEffect(() => {
     const handler = (e: MouseEvent) => {
+      initAudio();
       const target = e.target as HTMLElement | null;
       const btn = target?.closest('button');
       if (!btn) return;
