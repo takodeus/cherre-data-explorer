@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { ITEMS, LOOKUP_METHODS, LOADING_MESSAGES, type LookupType } from '@/lib/kiosk-data';
-import { scanBeep } from '@/lib/kiosk-audio';
+import { scanBeep, checkoutBeep } from '@/lib/kiosk-audio';
 import cherreOsImg from '@/assets/Cherre-Os.png';
 import ontoloPrimaryImg from '@/assets/ontolo with a8185e.png';
 import ontoloCan1Img from '@/assets/1can back mockup NBG.png';
@@ -161,6 +161,18 @@ const ItemLookupScreen = ({
 
   const count = itemsWithQuery.size;
   const item = ITEMS[currentItem];
+  const inCart = itemsWithQuery.has(currentItem);
+
+  const toggleCart = useCallback(() => {
+    const itemIdx = currentItem;
+    if (soundOn) checkoutBeep();
+    setItemsWithQuery(prev => {
+      const next = new Set(prev);
+      if (next.has(itemIdx)) next.delete(itemIdx);
+      else next.add(itemIdx);
+      return next;
+    });
+  }, [currentItem, soundOn, setItemsWithQuery]);
 
   return (
     <>
