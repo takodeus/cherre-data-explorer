@@ -101,7 +101,7 @@ const Index = () => {
 
   const goTo = useCallback((n: number) => {
     if (transitioning.current) return;
-    if (soundOn) clickBeep();
+    clickBeep();
 
     const dir = n > prevScreenRef.current ? 'forward' : 'back';
     setDirection(dir);
@@ -126,10 +126,10 @@ const Index = () => {
     setMaxReached(prev => Math.max(prev, n));
     pushParams(n, currentItem);
 
-    if (n === 3 && soundOn) errorTone();
-    if (n === 4 && soundOn) successChime();
-    if (n === 5 && soundOn) scanBeep();
-  }, [soundOn, currentItem, pushParams]);
+    if (n === 3) errorTone();
+    if (n === 4) successChime();
+    if (n === 5) scanBeep();
+  }, [currentItem, pushParams]);
 
   const selectItem = useCallback((idx: number) => {
     setCurrentItem(idx);
