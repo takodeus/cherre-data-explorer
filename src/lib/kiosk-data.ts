@@ -97,7 +97,7 @@ export const ITEMS: Item[] = [
     name: 'Cherre Cola',
     icon: '🥤',
     images: ['cherre-cola-front.png', 'cherre-cola-back.png'],
-    category: 'Beverage (bottle)',
+    category: 'Beverage',
     price: '$1.99',
     conflictPrice: 'or $0.05 deposit?',
     description: 'Cherry-flavored cola in a 12 fl oz glass bottle.\nIngredients: Carbonated water, cane sugar, caramel color, natural cherry flavor, phosphoric acid, caffeine.\nNutrition (per bottle): 150 cal · 39g sugar · 0g fat · 35mg caffeine · 30mg sodium.\nServe chilled. $0.05 bottle deposit — return at any kiosk.',
