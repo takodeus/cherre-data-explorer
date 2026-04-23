@@ -562,7 +562,7 @@ const ItemLookupScreen = ({
                 {lightbox.srcs.map((_, i) => (
                   <button
                     key={i}
-                    onClick={() => { setPan({ x: 0, y: 0 }); setLightbox(lb => lb && { ...lb, idx: i, zoom: 1 }); }}
+                    onClick={(e) => { e.stopPropagation(); setPan({ x: 0, y: 0 }); setLightbox(lb => lb && { ...lb, idx: i, zoom: 1 }); }}
                     className={`w-2 h-2 rounded-full transition-colors focus:outline-none ${
                       i === lightbox.idx ? 'bg-white' : 'bg-white/30 hover:bg-white/50'
                     }`}
