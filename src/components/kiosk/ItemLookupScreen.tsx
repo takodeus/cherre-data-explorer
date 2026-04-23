@@ -182,12 +182,12 @@ const ItemLookupScreen = ({
     <>
     <div className="flex flex-col bg-background h-full" style={{ position: 'absolute', inset: 0, minHeight: 0 }}>
       {/* Header */}
-      <div className="bg-primary px-10 pt-6 pb-5 flex items-end justify-between">
+      <div className="bg-primary px-10 pt-3 pb-3 flex items-end justify-between">
         <div>
-          <div className="text-[11px] font-semibold tracking-wide uppercase text-primary-foreground/70 mb-1">
+          <div className="text-[10px] font-semibold tracking-wide uppercase text-primary-foreground/70 mb-0.5">
             Self-checkout — Item Lookup
           </div>
-          <div className="text-primary-foreground font-extrabold tracking-tight" style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}>
+          <div className="text-primary-foreground font-extrabold tracking-tight leading-[1.15]" style={{ fontSize: 'clamp(13px, 2vw, 17px)' }}>
             Each system has an answer,
             <br />
             but they might not always agree.
