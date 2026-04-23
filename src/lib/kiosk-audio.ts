@@ -2,6 +2,11 @@ let audioCtx: AudioContext | null = null;
 
 function getAudio(): AudioContext {
   if (!audioCtx) audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+  // Browsers start the AudioContext in 'suspended' state until a user
+  // gesture resumes it. Always attempt to resume — safe to call repeatedly.
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume().catch(() => {});
+  }
   return audioCtx;
 }
 
@@ -25,4 +30,7 @@ export const scanBeep = () => { beep(1800, 0.08, 'square', 0.2); setTimeout(() =
 export const errorTone = () => { beep(220, 0.4, 'sawtooth', 0.15); setTimeout(() => beep(180, 0.5, 'sawtooth', 0.12), 300); };
 export const successChime = () => { [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => beep(f, 0.25, 'sine', 0.2), i * 80)); };
 export const clickBeep = () => { beep(900, 0.06, 'square', 0.1); };
-export const initAudio = () => { try { getAudio(); beep(1200, 0.1, 'sine', 0.2); } catch {} };
+export const initAudio = () => { try { getAudio(); } catch {} };
+
+// Classic supermarket-checkout scanner beep — single sharp ~2.7 kHz tone.
+export const checkoutBeep = () => { beep(2700, 0.13, 'square', 0.35); };
