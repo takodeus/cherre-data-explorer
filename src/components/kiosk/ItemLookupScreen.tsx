@@ -145,7 +145,6 @@ const ItemLookupScreen = ({
       next[itemIdx].add(methodIdx);
       return next;
     });
-    setItemsWithQuery(prev => new Set(prev).add(itemIdx));
 
     let mi = 0;
     const msgInterval = setInterval(() => {
