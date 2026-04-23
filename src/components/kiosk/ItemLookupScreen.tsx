@@ -524,9 +524,13 @@ const ItemLookupScreen = ({
           </div>
 
           {/* Zoom slider */}
-          <div className="flex items-center gap-3" style={{ width: imgContainerSize }}>
-            <span className="text-white/40 font-mono text-[10px] flex-shrink-0">1×</span>
-            <input
+          <div className="flex flex-col gap-1" style={{ width: imgContainerSize }}>
+            <span className="text-white/60 font-mono text-[10px] tracking-[0.12em] uppercase text-center">
+              Drag slider to zoom in / out
+            </span>
+            <div className="flex items-center gap-3">
+              <span className="text-white/40 font-mono text-[10px] flex-shrink-0">1×</span>
+              <input
               type="range"
               min={1}
               max={4}
@@ -539,11 +543,12 @@ const ItemLookupScreen = ({
               }}
               className="flex-1 h-1 appearance-none rounded-full cursor-pointer accent-white opacity-70 hover:opacity-100 transition-opacity"
               aria-label="Zoom level"
-            />
-            <span className="text-white/40 font-mono text-[10px] flex-shrink-0">4×</span>
-            <span className="text-white/60 font-mono text-[10px] w-8 text-right flex-shrink-0">
-              {lightbox.zoom.toFixed(1)}×
-            </span>
+              />
+              <span className="text-white/40 font-mono text-[10px] flex-shrink-0">4×</span>
+              <span className="text-white/60 font-mono text-[10px] w-8 text-right flex-shrink-0">
+                {lightbox.zoom.toFixed(1)}×
+              </span>
+            </div>
           </div>
 
           {/* Label + dots */}
