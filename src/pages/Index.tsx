@@ -48,20 +48,43 @@ const Index = () => {
   const transitioning = useRef(false);
   const internalNavRef = useRef(0);
 
-  // Global subtle click sound on every <button>. Buttons that already
-  // emit their own sound can opt out via data-no-click-sound="true".
+  // Global button sound router: fires on pointer-down so sounds start on
+  // press instead of waiting for click / mouse-up.
   useEffect(() => {
-    const handler = (e: MouseEvent) => {
+    const handler = (e: PointerEvent) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
       initAudio();
       const target = e.target as HTMLElement | null;
-      const btn = target?.closest('button');
+      const btn = target?.closest('button') as HTMLButtonElement | null;
       if (!btn) return;
-      if ((btn as HTMLButtonElement).disabled) return;
-      if (btn.dataset.noClickSound === 'true') return;
-      softClick();
+      if (btn.disabled) return;
+
+      const sound = btn.dataset.sound;
+      if (sound === 'none' || (!sound && btn.dataset.noClickSound === 'true')) return;
+
+      switch (sound) {
+        case 'click':
+          clickBeep();
+          break;
+        case 'scan':
+          scanBeep();
+          break;
+        case 'error':
+          errorTone();
+          break;
+        case 'success':
+          successChime();
+          break;
+        case 'checkout':
+          // Reuse the scan family for cart/lookup start, but tighter.
+          scanBeep();
+          break;
+        default:
+          softClick();
+      }
     };
-    document.addEventListener('click', handler, true);
-    return () => document.removeEventListener('click', handler, true);
+    document.addEventListener('pointerdown', handler, true);
+    return () => document.removeEventListener('pointerdown', handler, true);
   }, []);
 
   const pushParams = useCallback((screen: number, item: number) => {
@@ -102,7 +125,6 @@ const Index = () => {
 
   const goTo = useCallback((n: number) => {
     if (transitioning.current) return;
-    clickBeep();
 
     const dir = n > prevScreenRef.current ? 'forward' : 'back';
     setDirection(dir);
@@ -126,10 +148,6 @@ const Index = () => {
     setCurrentScreen(n);
     setMaxReached(prev => Math.max(prev, n));
     pushParams(n, currentItem);
-
-    if (n === 3) errorTone();
-    if (n === 4) successChime();
-    if (n === 5) scanBeep();
   }, [currentItem, pushParams]);
 
   const selectItem = useCallback((idx: number) => {
