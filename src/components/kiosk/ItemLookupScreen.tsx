@@ -162,9 +162,13 @@ const ItemLookupScreen = ({
   const count = itemsWithQuery.size;
   const item = ITEMS[currentItem];
   const inCart = itemsWithQuery.has(currentItem);
+  const queriedCountForItem = queriedMethods[currentItem]?.size ?? 0;
+  const allQueried = queriedCountForItem >= LOOKUP_METHODS.length;
+  const canAddToCart = allQueried && !anyLoading;
 
   const toggleCart = useCallback(() => {
     const itemIdx = currentItem;
+    if (!inCart && !canAddToCart) return;
     checkoutBeep();
     setItemsWithQuery(prev => {
       const next = new Set(prev);
@@ -172,7 +176,7 @@ const ItemLookupScreen = ({
       else next.add(itemIdx);
       return next;
     });
-  }, [currentItem, setItemsWithQuery]);
+  }, [currentItem, setItemsWithQuery, inCart, canAddToCart]);
 
   return (
     <>
@@ -253,14 +257,18 @@ const ItemLookupScreen = ({
             <button
               onClick={toggleCart}
               data-no-click-sound="true"
-              className={`flex-shrink-0 rounded-lg px-4 py-2 text-[11px] font-bold tracking-wide uppercase transition-all active:scale-[0.97] shadow-sm ${
+              disabled={!inCart && !canAddToCart}
+              className={`flex-shrink-0 rounded-lg px-4 py-2 text-[11px] font-bold tracking-wide uppercase transition-all shadow-sm ${
                 inCart
-                  ? 'bg-primary-light-bg text-primary border border-primary/30 hover:bg-primary/10'
-                  : 'bg-primary text-primary-foreground border border-primary hover:bg-primary-light hover:shadow-md'
+                  ? 'bg-primary-light-bg text-primary border border-primary/30 hover:bg-primary/10 active:scale-[0.97]'
+                  : canAddToCart
+                  ? 'bg-primary text-primary-foreground border border-primary hover:bg-primary-light hover:shadow-md active:scale-[0.97]'
+                  : 'bg-muted text-muted-foreground/60 border border-border cursor-not-allowed opacity-60'
               }`}
-              aria-label={inCart ? `Remove ${item.name} from cart` : `Add ${item.name} to cart`}
+              aria-label={inCart ? `Remove ${item.name} from cart` : canAddToCart ? `Add ${item.name} to cart` : `Query all systems before adding ${item.name} to cart`}
+              title={!inCart && !canAddToCart ? `Query all ${LOOKUP_METHODS.length} systems first (${queriedCountForItem}/${LOOKUP_METHODS.length} done)` : undefined}
             >
-              {inCart ? '✓ In Cart' : '+ Add to Cart'}
+              {inCart ? '✓ In Cart' : canAddToCart ? '+ Add to Cart' : `🔒 Query All (${queriedCountForItem}/${LOOKUP_METHODS.length})`}
             </button>
           </div>
 
@@ -376,14 +384,22 @@ const ItemLookupScreen = ({
             <button
               onClick={toggleCart}
               data-no-click-sound="true"
-              className={`w-full rounded-xl px-6 py-3.5 text-[12px] font-bold tracking-wide uppercase transition-all active:scale-[0.98] shadow-sm ${
+              disabled={!inCart && !canAddToCart}
+              className={`w-full rounded-xl px-6 py-3.5 text-[12px] font-bold tracking-wide uppercase transition-all shadow-sm ${
                 inCart
-                  ? 'bg-primary-light-bg text-primary border border-primary/30 hover:bg-primary/10'
-                  : 'bg-primary text-primary-foreground border border-primary hover:bg-primary-light hover:shadow-md'
+                  ? 'bg-primary-light-bg text-primary border border-primary/30 hover:bg-primary/10 active:scale-[0.98]'
+                  : canAddToCart
+                  ? 'bg-primary text-primary-foreground border border-primary hover:bg-primary-light hover:shadow-md active:scale-[0.98]'
+                  : 'bg-muted text-muted-foreground/60 border border-border cursor-not-allowed opacity-60'
               }`}
-              aria-label={inCart ? `Remove ${item.name} from cart` : `Add ${item.name} to cart`}
+              aria-label={inCart ? `Remove ${item.name} from cart` : canAddToCart ? `Add ${item.name} to cart` : `Query all systems before adding ${item.name} to cart`}
+              title={!inCart && !canAddToCart ? `Query all ${LOOKUP_METHODS.length} systems first (${queriedCountForItem}/${LOOKUP_METHODS.length} done)` : undefined}
             >
-              {inCart ? `✓ ${item.name} is in your cart` : `+ Add ${item.name} to Cart`}
+              {inCart
+                ? `✓ ${item.name} is in your cart`
+                : canAddToCart
+                ? `+ Add ${item.name} to Cart`
+                : `🔒 Query all systems first (${queriedCountForItem}/${LOOKUP_METHODS.length})`}
             </button>
           </div>
         </div>
