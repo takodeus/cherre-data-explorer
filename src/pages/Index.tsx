@@ -37,7 +37,7 @@ const Index = () => {
   const [currentItem, setCurrentItem] = useState<number>(() => clampItem(searchParams.get('item')));
 
   const [direction, setDirection] = useState<'forward' | 'back'>('forward');
-  const [soundOn, setSoundOn] = useState(false);
+  const [soundOn, setSoundOn] = useState(true);
   const [itemsWithQuery, setItemsWithQuery] = useState<Set<number>>(new Set());
   const [queriedMethods, setQueriedMethods] = useState<Set<number>[]>(ITEMS.map(() => new Set()));
   const [quantities, setQuantities] = useState<Record<number, number>>({});
@@ -47,7 +47,7 @@ const Index = () => {
   const prevScreenRef = useRef(currentScreen);
   const transitioning = useRef(false);
   const internalNavRef = useRef(0);
-  const soundOnRef = useRef(false);
+  const soundOnRef = useRef(true);
   useEffect(() => {
     soundOnRef.current = soundOn;
     setSoundEnabled(soundOn);
@@ -165,6 +165,21 @@ const Index = () => {
       if (!prev) initAudio();
       return !prev;
     });
+  }, []);
+
+  // Initialize audio on first user interaction so the default-on sound can play
+  useEffect(() => {
+    const onFirstInteract = () => {
+      initAudio();
+      document.removeEventListener('pointerdown', onFirstInteract, true);
+      document.removeEventListener('keydown', onFirstInteract, true);
+    };
+    document.addEventListener('pointerdown', onFirstInteract, true);
+    document.addEventListener('keydown', onFirstInteract, true);
+    return () => {
+      document.removeEventListener('pointerdown', onFirstInteract, true);
+      document.removeEventListener('keydown', onFirstInteract, true);
+    };
   }, []);
 
   const lockScreen = useCallback(() => {
