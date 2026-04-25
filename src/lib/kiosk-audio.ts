@@ -87,6 +87,22 @@ export const successChime = () =>
     }))
   );
 
+// Short victory chirp for the Solution screen — bright two-note rise.
+export const solutionVictory = () =>
+  playSequence([
+    { f: 784, d: 0.12, t: 'triangle', v: 0.22 },
+    { f: 1175, d: 0.18, t: 'triangle', v: 0.22, gap: 0.09 },
+  ]);
+
+// Slightly different victory chirp for the Receipt screen — three-note
+// resolved arpeggio so it feels like a "completed" cousin of solutionVictory.
+export const receiptVictory = () =>
+  playSequence([
+    { f: 880, d: 0.1, t: 'triangle', v: 0.2 },
+    { f: 1175, d: 0.1, t: 'triangle', v: 0.2, gap: 0.08 },
+    { f: 1568, d: 0.2, t: 'triangle', v: 0.22, gap: 0.08 },
+  ]);
+
 export const clickBeep = () => playInstant(900, 0.06, 'square', 0.1);
 // Very subtle, quiet UI click — used as a global button-press feedback.
 export const softClick = () => playInstant(2400, 0.02, 'sine', 0.04);
