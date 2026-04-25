@@ -2,9 +2,9 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { ITEMS, LOOKUP_METHODS, LOADING_MESSAGES, type LookupType } from '@/lib/kiosk-data';
 import { scanBeep } from '@/lib/kiosk-audio';
 import cherreOsImg from '@/assets/Cherre-Os.png';
-import ontoloPrimaryImg from '@/assets/ontolo with a8185e.png';
-import ontoloCan1Img from '@/assets/1can back mockup NBG.png';
-import ontoloCans2Img from '@/assets/2 cans mockup NBG.png';
+import ontoloPrimaryImg from '@/assets/ontolo-front.png';
+import ontoloCan1Img from '@/assets/ontolo-back.png';
+import ontoloCans2Img from '@/assets/ontolo-cans.png';
 import cherreOsBackImg from '@/assets/cherre-os-back.png';
 import cherriesFrontImg from '@/assets/cherries-front.png';
 import cherriesBackImg from '@/assets/cherries-back.png';
@@ -20,9 +20,9 @@ import cherreColaBackImg from '@/assets/cherre-cola-back.png';
 const ITEM_IMAGES: Record<string, string> = {
   'Cherre-Os.png': cherreOsImg,
   'cherre-os-back.png': cherreOsBackImg,
-  'ontolo with a8185e.png': ontoloPrimaryImg,
-  '1can back mockup NBG.png': ontoloCan1Img,
-  '2 cans mockup NBG.png': ontoloCans2Img,
+  'ontolo-front.png': ontoloPrimaryImg,
+  'ontolo-back.png': ontoloCan1Img,
+  'ontolo-cans.png': ontoloCans2Img,
   'cherries-front.png': cherriesFrontImg,
   'cherries-back.png': cherriesBackImg,
   'flour-front.png': flourFrontImg,

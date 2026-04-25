@@ -1,14 +1,14 @@
 import { ITEMS, LOOKUP_METHODS } from '@/lib/kiosk-data';
 import cherreOsImg from '@/assets/Cherre-Os.png';
-import ontoloPrimaryImg from '@/assets/ontolo with a8185e.png';
-import ontoloCan1Img from '@/assets/1can back mockup NBG.png';
-import ontoloCans2Img from '@/assets/2 cans mockup NBG.png';
+import ontoloPrimaryImg from '@/assets/ontolo-front.png';
+import ontoloCan1Img from '@/assets/ontolo-back.png';
+import ontoloCans2Img from '@/assets/ontolo-cans.png';
 
 const ITEM_IMAGES: Record<string, string> = {
   'Cherre-Os.png': cherreOsImg,
-  'ontolo with a8185e.png': ontoloPrimaryImg,
-  '1can back mockup NBG.png': ontoloCan1Img,
-  '2 cans mockup NBG.png': ontoloCans2Img,
+  'ontolo-front.png': ontoloPrimaryImg,
+  'ontolo-back.png': ontoloCan1Img,
+  'ontolo-cans.png': ontoloCans2Img,
 };
 
 interface CartSidebarProps {
