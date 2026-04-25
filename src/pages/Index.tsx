@@ -200,6 +200,7 @@ const Index = () => {
   }, []);
 
   const restart = useCallback(() => {
+    window.dispatchEvent(new Event('kiosk:reset'));
     setItemsWithQuery(new Set());
     setQueriedMethods(ITEMS.map(() => new Set()));
     setQuantities({});
@@ -233,6 +234,7 @@ const Index = () => {
   useEffect(() => {
     if (currentScreen !== 1) return;
     if (!didMount.current) { didMount.current = true; return; }
+    window.dispatchEvent(new Event('kiosk:reset'));
     setItemsWithQuery(new Set());
     setQueriedMethods(ITEMS.map(() => new Set()));
     setQuantities({});
