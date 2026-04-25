@@ -11,7 +11,7 @@ import StepperBar from '@/components/kiosk/StepperBar';
 import CartSidebar from '@/components/kiosk/CartSidebar';
 import DeviceBezel from '@/components/kiosk/DeviceBezel';
 import { ITEMS } from '@/lib/kiosk-data';
-import { clickBeep, checkoutBeep, errorTone, successChime, scanBeep, initAudio, softClick, setSoundEnabled, startBeep } from '@/lib/kiosk-audio';
+import { clickBeep, checkoutBeep, errorTone, successChime, scanBeep, initAudio, softClick, setSoundEnabled, startBeep, solutionVictory, receiptVictory } from '@/lib/kiosk-audio';
 
 const TRANSITION_MS = 340;
 const SCREEN_MIN = 1;
@@ -225,6 +225,27 @@ const Index = () => {
       clearTimeout(timer);
       events.forEach(e => document.removeEventListener(e, reset));
     };
+  }, [currentScreen]);
+
+  // Auto-reset all session state whenever the Welcome screen is shown
+  // (covers the stepper "Welcome" jump as well as initial mount).
+  const didMount = useRef(false);
+  useEffect(() => {
+    if (currentScreen !== 1) return;
+    if (!didMount.current) { didMount.current = true; return; }
+    setItemsWithQuery(new Set());
+    setQueriedMethods(ITEMS.map(() => new Set()));
+    setQuantities({});
+    setCurrentItem(0);
+    setMaxReached(1);
+  }, [currentScreen]);
+
+  // Per-screen arrival sounds: error on Problem, victory on Solution & Receipt.
+  useEffect(() => {
+    if (!soundOnRef.current) return;
+    if (currentScreen === 3) errorTone();
+    else if (currentScreen === 4) solutionVictory();
+    else if (currentScreen === 6) receiptVictory();
   }, [currentScreen]);
 
   return (
