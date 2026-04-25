@@ -244,9 +244,27 @@ const ItemLookupScreen = ({
                     title={hasImages ? `Click to enlarge${srcs.length > 1 ? ` · ${srcs.length} photos` : ''}` : item.name}
                     aria-label={hasImages ? `View full image of ${item.name}` : item.name}
                   >
-                    {hasImages
-                      ? <img src={srcs[0]} alt={item.name} className="w-full h-full object-contain p-1" loading="eager" decoding="sync" fetchPriority="high" />
-                      : <span>{item.icon}</span>}
+                    {hasImages ? (
+                      <div className="relative w-full h-full">
+                        {ITEMS.map((it, i) => {
+                          const itSrc = it.images?.[0] ? ITEM_IMAGES[it.images[0]] : null;
+                          if (!itSrc) return null;
+                          return (
+                            <img
+                              key={i}
+                              src={itSrc}
+                              alt={it.name}
+                              className="absolute inset-0 w-full h-full object-contain p-1"
+                              style={{ visibility: i === currentItem ? 'visible' : 'hidden' }}
+                              loading="eager"
+                              decoding="sync"
+                            />
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <span>{item.icon}</span>
+                    )}
                   </button>
                   {hasImages && (
                     <span className="text-[8px] text-primary/70 font-semibold tracking-wide uppercase leading-none">
