@@ -97,6 +97,14 @@ const ItemLookupScreen = ({
     });
   }, []);
 
+  // Close any open product lightbox whenever the kiosk session resets
+  // (reset button, return to Welcome, or idle timeout).
+  useEffect(() => {
+    const close = () => { setLightbox(null); setPan({ x: 0, y: 0 }); };
+    window.addEventListener('kiosk:reset', close);
+    return () => window.removeEventListener('kiosk:reset', close);
+  }, []);
+
   // Scroll the product details / lookups area back to the top whenever
   // the user opens a new product.
   useEffect(() => {
