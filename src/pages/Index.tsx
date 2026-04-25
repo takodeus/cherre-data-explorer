@@ -208,6 +208,25 @@ const Index = () => {
     goTo(1);
   }, [goTo]);
 
+  // Auto-reset to welcome after 60s of inactivity (excluding screen 1 itself,
+  // which already has its own idle backdrop behavior).
+  const restartRef = useRef(restart);
+  useEffect(() => { restartRef.current = restart; }, [restart]);
+  useEffect(() => {
+    if (currentScreen === 1) return;
+    let timer = setTimeout(() => restartRef.current(), 60000);
+    const reset = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => restartRef.current(), 60000);
+    };
+    const events: (keyof DocumentEventMap)[] = ['pointerdown', 'keydown', 'touchstart', 'mousemove'];
+    events.forEach(e => document.addEventListener(e, reset, { passive: true }));
+    return () => {
+      clearTimeout(timer);
+      events.forEach(e => document.removeEventListener(e, reset));
+    };
+  }, [currentScreen]);
+
   return (
     <DeviceBezel soundOn={soundOn} onToggleSound={toggleSound} onLock={lockScreen}>
       <div className="w-full h-full flex flex-col bg-background overflow-hidden relative">
