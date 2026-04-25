@@ -155,9 +155,11 @@ const ReconciliationScreen = ({ onBetterWay, active, itemsWithQuery, queriedMeth
                 >
                   <div className="flex items-center gap-2.5">
                     {item.images?.[0] && ITEM_IMAGES[item.images[0]] ? (
-                      <div className="w-7 h-7 rounded-md bg-muted/40 border border-border/60 flex items-center justify-center overflow-hidden flex-shrink-0">
-                        <img src={ITEM_IMAGES[item.images[0]]} alt={item.name} className="w-full h-full object-contain p-0.5" />
-                      </div>
+                      <img
+                        src={ITEM_IMAGES[item.images[0]]}
+                        alt={item.name}
+                        className="w-8 h-8 object-contain flex-shrink-0"
+                      />
                     ) : (
                       <span className="text-base leading-none">{item.icon}</span>
                     )}
@@ -182,9 +184,11 @@ const ReconciliationScreen = ({ onBetterWay, active, itemsWithQuery, queriedMeth
               >
                 <div className="flex items-center gap-2.5">
                   {item.images?.[0] && ITEM_IMAGES[item.images[0]] ? (
-                    <div className="w-7 h-7 rounded-md bg-muted/40 border border-border/60 flex items-center justify-center overflow-hidden flex-shrink-0">
-                      <img src={ITEM_IMAGES[item.images[0]]} alt={item.name} className="w-full h-full object-contain p-0.5" />
-                    </div>
+                    <img
+                      src={ITEM_IMAGES[item.images[0]]}
+                      alt={item.name}
+                      className="w-8 h-8 object-contain flex-shrink-0"
+                    />
                   ) : (
                     <span className="text-base leading-none">{item.icon}</span>
                   )}
