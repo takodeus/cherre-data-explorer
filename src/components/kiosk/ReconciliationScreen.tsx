@@ -1,5 +1,22 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ITEMS } from '@/lib/kiosk-data';
+import cherreOsImg from '@/assets/Cherre-Os.png';
+import ontoloPrimaryImg from '@/assets/ontolo-front.png';
+import ontoloBackImg from '@/assets/ontolo-back.png';
+import cherriesFrontImg from '@/assets/cherries-front.png';
+import flourFrontImg from '@/assets/flour-front.png';
+import sardinesFrontImg from '@/assets/sardines-front.png';
+import cherreColaFrontImg from '@/assets/cherre-cola-front.png';
+
+const ITEM_IMAGES: Record<string, string> = {
+  'Cherre-Os.png': cherreOsImg,
+  'ontolo-front.png': ontoloPrimaryImg,
+  'ontolo-back.png': ontoloBackImg,
+  'cherries-front.png': cherriesFrontImg,
+  'flour-front.png': flourFrontImg,
+  'sardines-front.png': sardinesFrontImg,
+  'cherre-cola-front.png': cherreColaFrontImg,
+};
 
 interface ReconciliationScreenProps {
   onBetterWay: () => void;
@@ -137,7 +154,13 @@ const ReconciliationScreen = ({ onBetterWay, active, itemsWithQuery, queriedMeth
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="text-base leading-none">{item.icon}</span>
+                    {item.images?.[0] && ITEM_IMAGES[item.images[0]] ? (
+                      <div className="w-7 h-7 rounded-md bg-muted/40 border border-border/60 flex items-center justify-center overflow-hidden flex-shrink-0">
+                        <img src={ITEM_IMAGES[item.images[0]]} alt={item.name} className="w-full h-full object-contain p-0.5" />
+                      </div>
+                    ) : (
+                      <span className="text-base leading-none">{item.icon}</span>
+                    )}
                     <span className="text-[13px] font-medium text-foreground">{item.name}</span>
                     {qty > 1 && (
                       <span className="text-[10px] font-mono text-muted-foreground">× {qty}</span>
@@ -158,7 +181,13 @@ const ReconciliationScreen = ({ onBetterWay, active, itemsWithQuery, queriedMeth
                 className={`flex items-center justify-between px-5 py-3 ${idx < 2 ? 'border-b border-border/60' : ''}`}
               >
                 <div className="flex items-center gap-2.5">
-                  <span className="text-base leading-none">{item.icon}</span>
+                  {item.images?.[0] && ITEM_IMAGES[item.images[0]] ? (
+                    <div className="w-7 h-7 rounded-md bg-muted/40 border border-border/60 flex items-center justify-center overflow-hidden flex-shrink-0">
+                      <img src={ITEM_IMAGES[item.images[0]]} alt={item.name} className="w-full h-full object-contain p-0.5" />
+                    </div>
+                  ) : (
+                    <span className="text-base leading-none">{item.icon}</span>
+                  )}
                   <span className="text-[13px] font-medium text-foreground">{item.name}</span>
                 </div>
                 <div className="text-right">
