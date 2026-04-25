@@ -245,7 +245,7 @@ const ItemLookupScreen = ({
                     aria-label={hasImages ? `View full image of ${item.name}` : item.name}
                   >
                     {hasImages
-                      ? <img src={srcs[0]} alt={item.name} className="w-full h-full object-contain p-1" loading="eager" />
+                      ? <img key={srcs[0]} src={srcs[0]} alt={item.name} className="w-full h-full object-contain p-1" loading="eager" decoding="sync" fetchPriority="high" />
                       : <span>{item.icon}</span>}
                   </button>
                   {hasImages && (
