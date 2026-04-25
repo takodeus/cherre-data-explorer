@@ -494,21 +494,33 @@ const ItemLookupScreen = ({
             onPointerUp={() => { dragRef.current = null; }}
             onPointerLeave={() => { dragRef.current = null; }}
           >
-            <img
-              src={lightbox.srcs[lightbox.idx]}
-              alt={`${lightbox.name} ${lightbox.idx + 1}`}
-              draggable={false}
-              style={{
-                width: imgContainerSize,
-                height: imgContainerSize,
-                objectFit: 'contain',
-                display: 'block',
-                transform: `scale(${lightbox.zoom}) translate(${pan.x / lightbox.zoom}px, ${pan.y / lightbox.zoom}px)`,
-                transformOrigin: 'center',
-                transition: dragRef.current ? 'none' : 'transform 0.15s ease',
-                userSelect: 'none',
-              }}
-            />
+            {/* Stack every sibling image and toggle visibility — avoids the
+                decode/paint flash you get when swapping a single <img>'s src. */}
+            {lightbox.srcs.map((src, i) => (
+              <img
+                key={src}
+                src={src}
+                alt={`${lightbox.name} ${i + 1}`}
+                draggable={false}
+                loading="eager"
+                decoding="sync"
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: imgContainerSize,
+                  height: imgContainerSize,
+                  objectFit: 'contain',
+                  display: 'block',
+                  transform: i === lightbox.idx
+                    ? `scale(${lightbox.zoom}) translate(${pan.x / lightbox.zoom}px, ${pan.y / lightbox.zoom}px)`
+                    : 'none',
+                  transformOrigin: 'center',
+                  transition: dragRef.current ? 'none' : 'transform 0.15s ease',
+                  userSelect: 'none',
+                  visibility: i === lightbox.idx ? 'visible' : 'hidden',
+                }}
+              />
+            ))}
             {/* Prev / next arrows — overlaid on the image so they're always visible */}
             {lightbox.srcs.length > 1 && (
               <>
