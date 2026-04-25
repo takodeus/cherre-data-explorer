@@ -106,3 +106,13 @@ export const checkoutBeep = () =>
     { f: 900, d: 0.06, t: 'square', v: 0.18 },
     { f: 1300, d: 0.07, t: 'square', v: 0.18, gap: 0.05 },
   ]);
+
+// Friendly three-note "power-on" chirp for the Start Lookup button.
+// Distinct from clickBeep / checkoutBeep — uses triangle wave and a
+// rising arpeggio so the kiosk feels like it's booting into the flow.
+export const startBeep = () =>
+  playSequence([
+    { f: 660, d: 0.09, t: 'triangle', v: 0.18 },
+    { f: 880, d: 0.09, t: 'triangle', v: 0.18, gap: 0.07 },
+    { f: 1320, d: 0.14, t: 'triangle', v: 0.2, gap: 0.07 },
+  ]);

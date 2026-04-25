@@ -11,7 +11,7 @@ import StepperBar from '@/components/kiosk/StepperBar';
 import CartSidebar from '@/components/kiosk/CartSidebar';
 import DeviceBezel from '@/components/kiosk/DeviceBezel';
 import { ITEMS } from '@/lib/kiosk-data';
-import { clickBeep, checkoutBeep, errorTone, successChime, scanBeep, initAudio, softClick, setSoundEnabled } from '@/lib/kiosk-audio';
+import { clickBeep, checkoutBeep, errorTone, successChime, scanBeep, initAudio, softClick, setSoundEnabled, startBeep } from '@/lib/kiosk-audio';
 
 const TRANSITION_MS = 340;
 const SCREEN_MIN = 1;
@@ -71,6 +71,9 @@ const Index = () => {
       switch (sound) {
         case 'click':
           clickBeep();
+          break;
+        case 'start':
+          startBeep();
           break;
         case 'scan':
           scanBeep();
