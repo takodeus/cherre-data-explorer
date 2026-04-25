@@ -21,7 +21,7 @@ export const ITEMS: Item[] = [
   {
     name: 'Ontolo-Tea',
     icon: '🫙',
-    images: ['ontolo with a8185e.png', '1can back mockup NBG.png'],
+    images: ['ontolo-front.png', 'ontolo-back.png'],
     category: 'Beverage',
     price: '$4.99',
     conflictPrice: 'or $12.50?',
