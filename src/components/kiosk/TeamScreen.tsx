@@ -10,6 +10,7 @@ import qrMargaret from '@/assets/team/qr-margaret.jpg';
 import qrLd from '@/assets/team/qr-ld.jpg';
 import qrTama from '@/assets/team/qr-tama.jpg';
 import qrCho from '@/assets/team/qr-cho.jpg';
+import qrAustin from '@/assets/team/qr-austin.png';
 
 interface TeamMember {
   name: string;
@@ -74,6 +75,7 @@ const TEAM: TeamMember[] = [
     initials: 'AH',
     linkedinUrl: 'https://linkedin.com/in/placeholder',
     photo: austinHicks,
+    qrImage: qrAustin,
   },
 ];
 
