@@ -227,7 +227,7 @@ const ItemLookupScreen = ({
                   <div className="text-[10px] text-muted-foreground font-medium mt-px">{it.category}</div>
                   {doneCount > 0 && (
                     <div className="text-[9px] font-medium text-primary mt-1">
-                      {doneCount}/{LOOKUP_METHODS.length} queried
+                      {Math.min(doneCount, 2)}/2 queried
                     </div>
                   )}
                 </div>
@@ -299,9 +299,9 @@ const ItemLookupScreen = ({
                   : 'bg-muted text-foreground/80 border border-border cursor-not-allowed'
               }`}
               aria-label={inCart ? `Remove ${item.name} from cart` : canAddToCart ? `Add ${item.name} to cart` : `Query all systems before adding ${item.name} to cart`}
-              title={!inCart && !canAddToCart ? `Query all ${LOOKUP_METHODS.length} systems first (${queriedCountForItem}/${LOOKUP_METHODS.length} done)` : undefined}
+              title={!inCart && !canAddToCart ? `Query at least 2 systems first (${queriedCountForItem}/2 done)` : undefined}
             >
-              {inCart ? '✓ In Cart' : canAddToCart ? '+ Add to Cart' : `🔒 Query All (${queriedCountForItem}/${LOOKUP_METHODS.length})`}
+              {inCart ? '✓ In Cart' : canAddToCart ? '+ Add to Cart' : `🔒 Query 2 Systems (${queriedCountForItem}/2)`}
             </button>
           </div>
 
@@ -426,13 +426,13 @@ const ItemLookupScreen = ({
                   : 'bg-muted text-foreground/80 border border-border cursor-not-allowed'
               }`}
               aria-label={inCart ? `Remove ${item.name} from cart` : canAddToCart ? `Add ${item.name} to cart` : `Query all systems before adding ${item.name} to cart`}
-              title={!inCart && !canAddToCart ? `Query all ${LOOKUP_METHODS.length} systems first (${queriedCountForItem}/${LOOKUP_METHODS.length} done)` : undefined}
+              title={!inCart && !canAddToCart ? `Query at least 2 systems first (${queriedCountForItem}/2 done)` : undefined}
             >
               {inCart
                 ? `✓ ${item.name} is in your cart`
                 : canAddToCart
                 ? `+ Add ${item.name} to Cart`
-                : `🔒 Query all systems first (${queriedCountForItem}/${LOOKUP_METHODS.length})`}
+                : `🔒 Query at least 2 systems first (${queriedCountForItem}/2)`}
             </button>
           </div>
         </div>
