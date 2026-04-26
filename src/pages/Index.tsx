@@ -258,7 +258,7 @@ const Index = () => {
           <img
             src={cherreLogo}
             alt="Cherre"
-            className="absolute bottom-3 right-3 h-6 object-contain z-[100] pointer-events-none"
+            className="absolute top-3 left-3 h-6 object-contain z-[100] pointer-events-none"
             style={{ mixBlendMode: 'multiply', opacity: currentScreen === 4 ? 0.8 : 0.4 }}
           />
         )}
