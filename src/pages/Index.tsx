@@ -253,15 +253,13 @@ const Index = () => {
   return (
     <DeviceBezel soundOn={soundOn} onToggleSound={toggleSound} onLock={lockScreen}>
       <div className="w-full h-full flex flex-col bg-background overflow-hidden relative">
-        {/* Persistent Cherre logo watermark */}
-        {currentScreen !== 1 && (
-          <img
-            src={cherreLogo}
-            alt="Cherre"
-            className="absolute top-3 left-3 h-6 object-contain z-[100] pointer-events-none"
-            style={{ mixBlendMode: 'multiply', opacity: currentScreen === 4 ? 0.8 : 0.4 }}
-          />
-        )}
+        {/* Persistent Cherre logo watermark — top-left on every screen */}
+        <img
+          src={cherreLogo}
+          alt="Cherre"
+          className="absolute top-3 left-3 h-6 object-contain z-[100] pointer-events-none"
+          style={{ mixBlendMode: 'multiply', opacity: currentScreen === 4 ? 0.8 : 0.4 }}
+        />
         <StepperBar currentScreen={currentScreen} maxReached={maxReached} onNavigate={goTo} onReset={restart} />
 
         <div className="flex-1 flex overflow-hidden">
