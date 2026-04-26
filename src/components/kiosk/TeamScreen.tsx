@@ -1,4 +1,5 @@
 import austinHicks from '@/assets/team/austin-hicks.png';
+import { useState } from 'react';
 import tamaHuang from '@/assets/team/tama-huang.jpg';
 import choXue from '@/assets/team/cho-xue.jpg';
 import margaretGuelzow from '@/assets/team/margaret-guelzow.jpg';
@@ -115,6 +116,8 @@ interface TeamScreenProps {
 }
 
 const TeamScreen = ({ onContinue }: TeamScreenProps) => {
+  const [zoomedMember, setZoomedMember] = useState<TeamMember | null>(null);
+
   return (
     <div
       className="flex flex-col"
