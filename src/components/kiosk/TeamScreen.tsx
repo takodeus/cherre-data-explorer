@@ -7,6 +7,7 @@ import ldSalmanson from '@/assets/team/ld-salmanson.jpg';
 import tylerChristensen from '@/assets/team/tyler-christensen.jpg';
 import qrTyler from '@/assets/team/qr-tyler.jpg';
 import qrMargaret from '@/assets/team/qr-margaret.jpg';
+import qrTama from '@/assets/team/qr-tama.jpg';
 
 interface TeamMember {
   name: string;
@@ -34,6 +35,7 @@ const TEAM: TeamMember[] = [
     initials: 'TH',
     linkedinUrl: 'https://linkedin.com/in/placeholder',
     photo: tamaHuang,
+    qrImage: qrTama,
   },
   {
     name: 'Margaret Guelzow',
