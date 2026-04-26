@@ -4,7 +4,7 @@ import choXue from '@/assets/team/cho-xue.jpg';
 import margaretGuelzow from '@/assets/team/margaret-guelzow.jpg';
 import ldSalmanson from '@/assets/team/ld-salmanson.jpg';
 import tylerChristensen from '@/assets/team/tyler-christensen.jpg';
-import qrTama from '@/assets/team/qr-tama.jpg';
+import qrTyler from '@/assets/team/qr-tyler.jpg';
 
 interface TeamMember {
   name: string;
@@ -32,7 +32,6 @@ const TEAM: TeamMember[] = [
     initials: 'TH',
     linkedinUrl: 'https://linkedin.com/in/placeholder',
     photo: tamaHuang,
-    qrImage: qrTama,
   },
   {
     name: 'Margaret Guelzow',
@@ -49,6 +48,7 @@ const TEAM: TeamMember[] = [
     initials: 'TC',
     linkedinUrl: 'https://linkedin.com/in/placeholder',
     photo: tylerChristensen,
+    qrImage: qrTyler,
   },
   {
     name: 'Cho Xue',
