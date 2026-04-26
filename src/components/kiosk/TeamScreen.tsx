@@ -4,6 +4,7 @@ import choXue from '@/assets/team/cho-xue.jpg';
 import margaretGuelzow from '@/assets/team/margaret-guelzow.jpg';
 import ldSalmanson from '@/assets/team/ld-salmanson.jpg';
 import tylerChristensen from '@/assets/team/tyler-christensen.jpg';
+import qrTama from '@/assets/team/qr-tama.jpg';
 
 interface TeamMember {
   name: string;
@@ -12,6 +13,7 @@ interface TeamMember {
   initials: string;
   linkedinUrl: string;
   photo: string;
+  qrImage?: string;
 }
 
 const TEAM: TeamMember[] = [
@@ -30,6 +32,7 @@ const TEAM: TeamMember[] = [
     initials: 'TH',
     linkedinUrl: 'https://linkedin.com/in/placeholder',
     photo: tamaHuang,
+    qrImage: qrTama,
   },
   {
     name: 'Margaret Guelzow',
@@ -162,8 +165,16 @@ const TeamScreen = ({ onContinue }: TeamScreenProps) => {
 
             {/* QR */}
             <div className="flex flex-col items-center gap-1 flex-shrink-0">
-              <div className="text-primary rounded-md overflow-hidden shadow-sm">
-                <QRPlaceholder size={44} />
+              <div className="text-primary rounded-md overflow-hidden shadow-sm bg-white">
+                {member.qrImage ? (
+                  <img
+                    src={member.qrImage}
+                    alt={`${member.name} LinkedIn QR`}
+                    className="w-11 h-11 object-contain"
+                  />
+                ) : (
+                  <QRPlaceholder size={44} />
+                )}
               </div>
               <span className="text-[8px] text-muted-foreground/50 font-mono tracking-wide text-center">
                 LinkedIn
