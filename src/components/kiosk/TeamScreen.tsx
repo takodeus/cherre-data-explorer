@@ -1,4 +1,5 @@
 import austinHicks from '@/assets/team/austin-hicks.png';
+import { useState } from 'react';
 import tamaHuang from '@/assets/team/tama-huang.jpg';
 import choXue from '@/assets/team/cho-xue.jpg';
 import margaretGuelzow from '@/assets/team/margaret-guelzow.jpg';
@@ -115,6 +116,8 @@ interface TeamScreenProps {
 }
 
 const TeamScreen = ({ onContinue }: TeamScreenProps) => {
+  const [zoomedMember, setZoomedMember] = useState<TeamMember | null>(null);
+
   return (
     <div
       className="flex flex-col"
@@ -167,7 +170,13 @@ const TeamScreen = ({ onContinue }: TeamScreenProps) => {
 
             {/* QR */}
             <div className="flex flex-col items-center gap-1 flex-shrink-0">
-              <div className="text-primary rounded-md overflow-hidden shadow-sm bg-white">
+              <button
+                type="button"
+                onClick={() => setZoomedMember(member)}
+                data-sound="click"
+                aria-label={`Enlarge ${member.name} LinkedIn QR code`}
+                className="text-primary rounded-md overflow-hidden shadow-sm bg-white cursor-pointer transition-transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary"
+              >
                 {member.qrImage ? (
                   <img
                     src={member.qrImage}
@@ -177,7 +186,7 @@ const TeamScreen = ({ onContinue }: TeamScreenProps) => {
                 ) : (
                   <QRPlaceholder size={44} />
                 )}
-              </div>
+              </button>
               <span className="text-[8px] text-muted-foreground/50 font-mono tracking-wide text-center">
                 LinkedIn
               </span>
@@ -196,6 +205,48 @@ const TeamScreen = ({ onContinue }: TeamScreenProps) => {
           Complete checkout →
         </button>
       </div>
+
+      {/* Zoomed QR overlay */}
+      {zoomedMember && (
+        <div
+          onClick={() => setZoomedMember(null)}
+          className="absolute inset-0 z-[200] flex items-center justify-center bg-foreground/70 backdrop-blur-sm animate-in fade-in duration-150"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-card rounded-2xl shadow-2xl p-6 flex flex-col items-center gap-3 max-w-[90%]"
+          >
+            <div className="text-center">
+              <div className="text-sm font-bold text-foreground">{zoomedMember.name}</div>
+              <div className="text-[10px] font-semibold tracking-wide uppercase text-primary/70 mt-0.5">
+                {zoomedMember.title}
+              </div>
+            </div>
+            <div className="text-primary rounded-lg overflow-hidden bg-white p-3 shadow-inner">
+              {zoomedMember.qrImage ? (
+                <img
+                  src={zoomedMember.qrImage}
+                  alt={`${zoomedMember.name} LinkedIn QR`}
+                  className="w-72 h-72 object-contain"
+                />
+              ) : (
+                <QRPlaceholder size={288} />
+              )}
+            </div>
+            <div className="text-[10px] text-muted-foreground font-mono tracking-wide">
+              Scan with your phone camera
+            </div>
+            <button
+              type="button"
+              onClick={() => setZoomedMember(null)}
+              data-sound="click"
+              className="mt-1 bg-primary text-primary-foreground border-none rounded-lg px-5 py-2 text-[11px] font-bold tracking-wide uppercase cursor-pointer transition-all hover:bg-primary-light active:scale-95"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
