@@ -8,7 +8,7 @@ import tylerChristensen from '@/assets/team/tyler-christensen.jpg';
 interface TeamMember {
   name: string;
   title: string;
-  bio: string;
+  location: string;
   initials: string;
   linkedinUrl: string;
   photo: string;
@@ -18,7 +18,7 @@ const TEAM: TeamMember[] = [
   {
     name: 'L.D. Salmanson',
     title: 'CEO & Co-Founder',
-    bio: 'Leads Cherre’s vision for connected real estate data.',
+    location: 'New York, NY',
     initials: 'LD',
     linkedinUrl: 'https://linkedin.com/in/placeholder',
     photo: ldSalmanson,
@@ -26,7 +26,7 @@ const TEAM: TeamMember[] = [
   {
     name: 'Tama Huang',
     title: 'Chief Strategy Officer',
-    bio: 'Drives go-to-market strategy across institutional clients.',
+    location: 'Seattle, WA',
     initials: 'TH',
     linkedinUrl: 'https://linkedin.com/in/placeholder',
     photo: tamaHuang,
@@ -34,7 +34,7 @@ const TEAM: TeamMember[] = [
   {
     name: 'Margaret Guelzow',
     title: 'Chief Client Officer',
-    bio: 'Onboards and scales Cherre deployments across asset managers.',
+    location: 'Minnesota, MN',
     initials: 'MG',
     linkedinUrl: 'https://linkedin.com/in/placeholder',
     photo: margaretGuelzow,
@@ -42,7 +42,7 @@ const TEAM: TeamMember[] = [
   {
     name: 'Tyler Christensen',
     title: 'Chief Growth Officer',
-    bio: 'Partners with proptech and investment teams nationwide.',
+    location: 'Chicago, IL',
     initials: 'TC',
     linkedinUrl: 'https://linkedin.com/in/placeholder',
     photo: tylerChristensen,
@@ -50,7 +50,7 @@ const TEAM: TeamMember[] = [
   {
     name: 'Cho Xue',
     title: 'Senior Director, AI Enablement',
-    bio: 'Architects data pipelines for institutional investors.',
+    location: 'New York, NY',
     initials: 'CX',
     linkedinUrl: 'https://linkedin.com/in/placeholder',
     photo: choXue,
@@ -58,7 +58,7 @@ const TEAM: TeamMember[] = [
   {
     name: 'Austin Hicks',
     title: 'Senior Strategic Account Manager',
-    bio: 'Helps real estate firms turn fragmented data into decisions.',
+    location: 'New York, NY',
     initials: 'AH',
     linkedinUrl: 'https://linkedin.com/in/placeholder',
     photo: austinHicks,
@@ -149,14 +149,14 @@ const TeamScreen = ({ onContinue }: TeamScreenProps) => {
               />
             </div>
 
-            {/* Bio */}
+            {/* Info */}
             <div className="flex-1 min-w-0">
               <div className="text-[12px] font-bold text-foreground truncate">{member.name}</div>
               <div className="text-[9px] font-semibold tracking-wide uppercase text-primary/70 mt-0.5 truncate">
                 {member.title}
               </div>
-              <div className="text-[10px] text-muted-foreground leading-snug mt-1 line-clamp-2">
-                {member.bio}
+              <div className="text-[10px] text-muted-foreground leading-snug mt-1 truncate">
+                {member.location}
               </div>
             </div>
 
