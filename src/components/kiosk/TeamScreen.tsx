@@ -25,7 +25,7 @@ const TEAM: TeamMember[] = [
   },
   {
     name: 'Tama Huang',
-    title: 'Chief Commercial Officer',
+    title: 'Chief Strategy Officer',
     bio: 'Drives go-to-market strategy across institutional clients.',
     initials: 'TH',
     linkedinUrl: 'https://linkedin.com/in/placeholder',
@@ -33,23 +33,15 @@ const TEAM: TeamMember[] = [
   },
   {
     name: 'Margaret Guelzow',
-    title: 'VP, Customer Success',
+    title: 'Chief Client Officer',
     bio: 'Onboards and scales Cherre deployments across asset managers.',
     initials: 'MG',
     linkedinUrl: 'https://linkedin.com/in/placeholder',
     photo: margaretGuelzow,
   },
   {
-    name: 'Austin Hicks',
-    title: 'Senior Account Executive',
-    bio: 'Helps real estate firms turn fragmented data into decisions.',
-    initials: 'AH',
-    linkedinUrl: 'https://linkedin.com/in/placeholder',
-    photo: austinHicks,
-  },
-  {
     name: 'Tyler Christensen',
-    title: 'Account Executive',
+    title: 'Chief Growth Officer',
     bio: 'Partners with proptech and investment teams nationwide.',
     initials: 'TC',
     linkedinUrl: 'https://linkedin.com/in/placeholder',
@@ -57,11 +49,19 @@ const TEAM: TeamMember[] = [
   },
   {
     name: 'Cho Xue',
-    title: 'Solutions Engineer',
+    title: 'Senior Director, AI Enablement',
     bio: 'Architects data pipelines for institutional investors.',
     initials: 'CX',
     linkedinUrl: 'https://linkedin.com/in/placeholder',
     photo: choXue,
+  },
+  {
+    name: 'Austin Hicks',
+    title: 'Senior Strategic Account Manager',
+    bio: 'Helps real estate firms turn fragmented data into decisions.',
+    initials: 'AH',
+    linkedinUrl: 'https://linkedin.com/in/placeholder',
+    photo: austinHicks,
   },
 ];
 
