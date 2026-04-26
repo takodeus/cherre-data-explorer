@@ -1,32 +1,67 @@
+import austinHicks from '@/assets/team/austin-hicks.png';
+import tamaHuang from '@/assets/team/tama-huang.jpg';
+import choXue from '@/assets/team/cho-xue.jpg';
+import margaretGuelzow from '@/assets/team/margaret-guelzow.jpg';
+import ldSalmanson from '@/assets/team/ld-salmanson.jpg';
+import tylerChristensen from '@/assets/team/tyler-christensen.jpg';
+
 interface TeamMember {
   name: string;
   title: string;
   bio: string;
   initials: string;
   linkedinUrl: string;
+  photo: string;
 }
 
 const TEAM: TeamMember[] = [
   {
-    name: 'Alex Rivera',
+    name: 'L.D. Salmanson',
+    title: 'CEO & Co-Founder',
+    bio: 'Leads Cherre’s vision for connected real estate data.',
+    initials: 'LD',
+    linkedinUrl: 'https://linkedin.com/in/placeholder',
+    photo: ldSalmanson,
+  },
+  {
+    name: 'Tama Huang',
+    title: 'Chief Commercial Officer',
+    bio: 'Drives go-to-market strategy across institutional clients.',
+    initials: 'TH',
+    linkedinUrl: 'https://linkedin.com/in/placeholder',
+    photo: tamaHuang,
+  },
+  {
+    name: 'Margaret Guelzow',
+    title: 'VP, Customer Success',
+    bio: 'Onboards and scales Cherre deployments across asset managers.',
+    initials: 'MG',
+    linkedinUrl: 'https://linkedin.com/in/placeholder',
+    photo: margaretGuelzow,
+  },
+  {
+    name: 'Austin Hicks',
     title: 'Senior Account Executive',
-    bio: 'Helps real estate firms turn fragmented data into decisions. 8 years in proptech.',
-    initials: 'AR',
+    bio: 'Helps real estate firms turn fragmented data into decisions.',
+    initials: 'AH',
     linkedinUrl: 'https://linkedin.com/in/placeholder',
+    photo: austinHicks,
   },
   {
-    name: 'Jordan Kim',
+    name: 'Tyler Christensen',
+    title: 'Account Executive',
+    bio: 'Partners with proptech and investment teams nationwide.',
+    initials: 'TC',
+    linkedinUrl: 'https://linkedin.com/in/placeholder',
+    photo: tylerChristensen,
+  },
+  {
+    name: 'Cho Xue',
     title: 'Solutions Engineer',
-    bio: 'Architects data pipelines for institutional investors and fund admins.',
-    initials: 'JK',
+    bio: 'Architects data pipelines for institutional investors.',
+    initials: 'CX',
     linkedinUrl: 'https://linkedin.com/in/placeholder',
-  },
-  {
-    name: 'Morgan Chen',
-    title: 'Customer Success Lead',
-    bio: 'Onboards and scales Cherre deployments across alternative asset managers.',
-    initials: 'MC',
-    linkedinUrl: 'https://linkedin.com/in/placeholder',
+    photo: choXue,
   },
 ];
 
@@ -98,39 +133,39 @@ const TeamScreen = ({ onContinue }: TeamScreenProps) => {
         </div>
       </div>
 
-      {/* Team cards */}
-      <div className="flex-1 overflow-y-auto px-8 py-6 flex flex-col gap-4">
+      {/* Team cards — 2 columns × 3 rows */}
+      <div className="flex-1 overflow-y-auto px-6 py-5 grid grid-cols-2 grid-rows-3 gap-3">
         {TEAM.map((member) => (
           <div
             key={member.name}
-            className="flex items-center gap-5 bg-card border border-border rounded-2xl px-6 py-5 shadow-sm"
+            className="flex items-center gap-3 bg-card border border-border rounded-2xl px-4 py-3 shadow-sm min-w-0"
           >
             {/* Avatar */}
-            <div
-              className="w-16 h-16 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center flex-shrink-0"
-            >
-              <span className="text-primary font-black text-lg tracking-tight">
-                {member.initials}
-              </span>
+            <div className="w-14 h-14 rounded-full bg-primary/10 border-2 border-primary/20 overflow-hidden flex-shrink-0">
+              <img
+                src={member.photo}
+                alt={member.name}
+                className="w-full h-full object-cover object-center"
+              />
             </div>
 
             {/* Bio */}
             <div className="flex-1 min-w-0">
-              <div className="text-[14px] font-bold text-foreground">{member.name}</div>
-              <div className="text-[10px] font-semibold tracking-wide uppercase text-primary/70 mt-0.5">
+              <div className="text-[12px] font-bold text-foreground truncate">{member.name}</div>
+              <div className="text-[9px] font-semibold tracking-wide uppercase text-primary/70 mt-0.5 truncate">
                 {member.title}
               </div>
-              <div className="text-[12px] text-muted-foreground leading-snug mt-1.5">
+              <div className="text-[10px] text-muted-foreground leading-snug mt-1 line-clamp-2">
                 {member.bio}
               </div>
             </div>
 
-            {/* QR + label */}
-            <div className="flex flex-col items-center gap-1.5 flex-shrink-0">
-              <div className="text-primary rounded-lg overflow-hidden shadow-sm">
-                <QRPlaceholder size={56} />
+            {/* QR */}
+            <div className="flex flex-col items-center gap-1 flex-shrink-0">
+              <div className="text-primary rounded-md overflow-hidden shadow-sm">
+                <QRPlaceholder size={44} />
               </div>
-              <span className="text-[9px] text-muted-foreground/50 font-mono tracking-wide text-center">
+              <span className="text-[8px] text-muted-foreground/50 font-mono tracking-wide text-center">
                 LinkedIn
               </span>
             </div>
