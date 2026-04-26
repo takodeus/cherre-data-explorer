@@ -169,7 +169,8 @@ const ItemLookupScreen = ({
   const item = ITEMS[currentItem];
   const inCart = itemsWithQuery.has(currentItem);
   const queriedCountForItem = queriedMethods[currentItem]?.size ?? 0;
-  const allQueried = queriedCountForItem >= LOOKUP_METHODS.length;
+  const REQUIRED_LOOKUPS = 2;
+  const allQueried = queriedCountForItem >= REQUIRED_LOOKUPS;
   const canAddToCart = allQueried && !anyLoading;
 
   const toggleCart = useCallback(() => {
