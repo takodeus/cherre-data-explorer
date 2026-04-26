@@ -5,6 +5,7 @@ import margaretGuelzow from '@/assets/team/margaret-guelzow.jpg';
 import ldSalmanson from '@/assets/team/ld-salmanson.jpg';
 import tylerChristensen from '@/assets/team/tyler-christensen.jpg';
 import qrTyler from '@/assets/team/qr-tyler.jpg';
+import qrMargaret from '@/assets/team/qr-margaret.jpg';
 
 interface TeamMember {
   name: string;
@@ -40,6 +41,7 @@ const TEAM: TeamMember[] = [
     initials: 'MG',
     linkedinUrl: 'https://linkedin.com/in/placeholder',
     photo: margaretGuelzow,
+    qrImage: qrMargaret,
   },
   {
     name: 'Tyler Christensen',
